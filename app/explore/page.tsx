@@ -1,7 +1,5 @@
-"use client";
-
-import { Sidebar } from "@/components/layouts/Nav";
+import Index from "@/components/layouts/AppLayout";
 
 export default function Page() {
-  return <Sidebar></Sidebar>;
+  return <Index />;
 }
