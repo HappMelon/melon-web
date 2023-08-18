@@ -1,17 +1,16 @@
-import "./globals.css";
-import { Inter } from "next/font/google";
-
-import { ClerkProvider, auth } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
-
 import { ThemeProvider } from "@/components/ui/themeProvider";
 import { Toaster } from "@/components/ui/toaster";
+import { ClerkProvider, auth } from "@clerk/nextjs";
+import { Inter } from "next/font/google";
+import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// https://clerk.com/docs/nextjs/get-started-with-nextjs
 export const metadata = {
-  title: "Flare",
-  description: "All lives matter!",
+  title: "flare",
+  description:
+    "User curated social platform, Your voice, your power | Predict to Earn.",
 };
 
 export default function RootLayout({
@@ -22,30 +21,18 @@ export default function RootLayout({
   const { userId } = auth();
 
   return (
-    <ClerkProvider
-      appearance={{
-        baseTheme: dark,
-      }}
-    >
+    <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
-          {" "}
-          <ThemeProvider attribute="class" defaultTheme="dark">
+          {/* https://ui.shadcn.com/docs/dark-mode/next */}
+          <ThemeProvider attribute="class" defaultTheme="system">
             {userId ? (
               <>
-                <main className="w-screen flex justify-center bg-neutral-950">
-                  <div className="min-h-screen text-base w-full max-w-[500px] bg-neutral-950 relative pb-14">
-                    {children}
-                  </div>
-                </main>
+                <main>{children}</main>
                 <Toaster />
               </>
             ) : (
-              <main className="w-screen flex justify-center bg-neutral-950">
-                <div className="min-h-screen flex flex-col justify-center items-center text-base w-full max-w-[500px] bg-neutral-950 relative">
-                  {children}
-                </div>
-              </main>
+              <main>{children}</main>
             )}
           </ThemeProvider>
         </body>

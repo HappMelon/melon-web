@@ -6,6 +6,7 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        // TODO
         hostname: "img.clerk.com",
       },
     ],
