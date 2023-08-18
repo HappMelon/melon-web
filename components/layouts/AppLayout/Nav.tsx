@@ -1,10 +1,25 @@
-import { cn } from "@/lib/utils";
+"use client";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Sidebar({ className }: SidebarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const [value, setValue] = useState("");
+
+  useEffect(() => {}, [value]);
+
+  function SwitchRouter(pathname: string) {
+    router.push(pathname);
+    setValue(pathname);
+  }
+
   return (
     <div className={cn("", className)}>
       <div className="space-y-4 py-4">
@@ -13,7 +28,15 @@ export function Sidebar({ className }: SidebarProps) {
             Discover
           </h2>
           <div className="space-y-1">
-            <Button variant="secondary" className="w-full justify-start">
+            <Button
+              variant={
+                pathname === "/explore"
+                  ? "secondary"
+                  : ("ghost" as unknown as any)
+              }
+              className="w-full justify-start"
+              onClick={() => SwitchRouter("/explore")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -29,7 +52,13 @@ export function Sidebar({ className }: SidebarProps) {
               </svg>
               Trending
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button
+              variant={
+                pathname === "/mill" ? "secondary" : ("ghost" as unknown as any)
+              }
+              className="w-full justify-start"
+              onClick={() => SwitchRouter("/mill")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -47,7 +76,15 @@ export function Sidebar({ className }: SidebarProps) {
               </svg>
               Mill
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button
+              variant={
+                pathname === "/wallet"
+                  ? "secondary"
+                  : ("ghost" as unknown as any)
+              }
+              className="w-full justify-start"
+              onClick={() => SwitchRouter("/wallet")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -58,15 +95,22 @@ export function Sidebar({ className }: SidebarProps) {
                 strokeLinejoin="round"
                 className="mr-2 h-4 w-4"
               >
-                <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9" />
-                <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5" />
-                <circle cx="12" cy="12" r="2" />
-                <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5" />
-                <path d="M19.1 4.9C23 8.8 23 15.1 19.1 19" />
+                <path d="m16 6 4 14" />
+                <path d="M12 6v14" />
+                <path d="M8 8v12" />
+                <path d="M4 4v16" />
               </svg>
               Wallet
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button
+              variant={
+                pathname === "/premium"
+                  ? "secondary"
+                  : ("ghost" as unknown as any)
+              }
+              className="w-full justify-start"
+              onClick={() => SwitchRouter("/premium")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -77,12 +121,21 @@ export function Sidebar({ className }: SidebarProps) {
                 strokeLinejoin="round"
                 className="mr-2 h-4 w-4"
               >
-                <path d="m12 8-9.04 9.06a2.82 2.82 0 1 0 3.98 3.98L16 12" />
-                <circle cx="17" cy="7" r="5" />
+                <path d="M21 15V6" />
+                <path d="M18.5 18a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />
+                <path d="M12 12H3" />
+                <path d="M16 6H3" />
+                <path d="M12 18H3" />
               </svg>
               Flare Premium
             </Button>
-            <Button variant="ghost" className="w-full justify-start">
+            <Button
+              variant={
+                pathname === "/post" ? "secondary" : ("ghost" as unknown as any)
+              }
+              className="w-full justify-start"
+              onClick={() => SwitchRouter("/post")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
