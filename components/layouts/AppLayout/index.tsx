@@ -1,11 +1,15 @@
+import React from "react";
 import Header from "./Header";
 import { Sidebar } from "./Nav";
 
-export default function Index() {
+export default function Index({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex">
       <Sidebar className="h-full w-auto" />
-      <Header />
+      <div className="flex flex-col w-full">
+        <Header />
+        {children}
+      </div>
     </div>
   );
 }
