@@ -4,11 +4,11 @@ import Link from "next/link";
 import logo from "@/assets/threads.svg";
 import { Button } from "@/components/ui/button";
 
-import { currentUser } from "@clerk/nextjs";
-import prisma from "@/lib/prisma";
-import Nav from "@/components/ui/nav";
-import { redirect } from "next/navigation";
 import HomePosts from "@/components/thread/homePosts";
+import Nav from "@/components/ui/nav";
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 export const revalidate = 0;
 
@@ -89,13 +89,7 @@ export default async function Page() {
           />
         </div>
       </div>
-
-      {/* <div className="whitespace-pre text-xs">
-        {JSON.stringify(posts, null, 2)}
-      </div> */}
       <HomePosts posts={posts} />
     </>
-    // </div>
-    // </main>
   );
 }
