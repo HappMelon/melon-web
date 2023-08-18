@@ -10,7 +10,7 @@ import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Meta's new app",
+  title: "Flare",
   description: "All lives matter!",
 };
 
