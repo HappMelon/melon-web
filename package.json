@@ -20,6 +20,12 @@
     "postinstall": "prisma generate",
     "lint": "next lint"
   },
+    "lint-staged": {
+      "*.{js,jsx,ts,tsx}": [
+        "eslint --cache --fix",
+        "prettier --ignore-unknown --ignore-path ./.gitignore --write "
+      ]
+    },
   "dependencies": {
     "@clerk/nextjs": "^4.21.14",
     "@clerk/themes": "^1.7.5",
@@ -53,6 +59,7 @@
   },
   "devDependencies": {
     "@types/bad-words": "^3.0.1",
+    "husky": "^8.0.3",
     "prisma": "^4.16.2"
   }
 }
