@@ -4,7 +4,7 @@ import { Sidebar } from "./Nav";
 
 export default function Index({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <Sidebar className="h-full w-auto" />
       <div className="flex flex-col w-full mr-[4.75rem]">
         <Header />
