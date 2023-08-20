@@ -4,10 +4,29 @@ import { revalidatePath } from "next/cache";
 import prisma from "../prisma";
 import { cleanup } from "../utils";
 
+export async function createNotes(
+  text: string,
+  authorId: string,
+  path: string,
+) {
+  await prisma.post.create({
+    data: {
+      text: cleanup(text),
+      author: {
+        connect: {
+          id: authorId,
+        },
+      },
+    },
+  });
+
+  revalidatePath(path);
+}
+
 export async function createThread(
   text: string,
   authorId: string,
-  path: string
+  path: string,
 ) {
   await prisma.post.create({
     data: {
@@ -27,7 +46,7 @@ export async function replyToThread(
   text: string,
   authorId: string,
   threadId: string,
-  path: string
+  path: string,
 ) {
   await prisma.post.create({
     data: {
@@ -51,7 +70,7 @@ export async function replyToThread(
 export async function repostThread(
   id: string,
   reposterId: string,
-  path: string
+  path: string,
 ) {
   await prisma.repost.create({
     data: {
