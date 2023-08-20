@@ -1,18 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import Others from "./others";
-import MoreMenu from "./moreMenu";
+import { Prisma } from "@prisma/client";
 import Controls from "./controls";
-import { Post, Prisma } from "@prisma/client";
+import MoreMenu from "./moreMenu";
+import Others from "./others";
 
 // import relativeTime from "dayjs/plugin/relativeTime";
 // import dayjs from "dayjs";
 // import updateLocale from "dayjs/plugin/updateLocale";
 
 import loop from "@/assets/loop.svg";
-import { timeSince } from "@/lib/utils";
-import Timestamp from "./timestamp";
 import NameLink from "./nameLink";
 
 export default function Item({
@@ -54,7 +52,7 @@ export default function Item({
     ? "px-3 pt-4 space-x-2 flex font-light"
     : comment
     ? `space-x-2 flex font-light ${noLink ? "pointer-events-none" : ""}`
-    : `px-3 py-4 space-x-2 flex border-b font-light border-neutral-900 ${
+    : `px-3 py-4 space-x-2 flex border-b font-light border-neutral-900 w-[50vw] ${
         noLink ? "pointer-events-none" : ""
       }`;
 
@@ -135,7 +133,7 @@ export default function Item({
                 : "text-base/relaxed text-left"
             }
           >
-            {data.text}
+            <div dangerouslySetInnerHTML={{ __html: data.text }} />
           </div>
           {comment ? null : (
             <>

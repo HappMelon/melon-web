@@ -47,7 +47,7 @@ export default function HomePosts({
       `/api/loadMore?cursor=${items[items.length - 1].id}`,
       {
         method: "GET",
-      }
+      },
     ).then((res) => res.json());
 
     if (morePosts.data.length === 0) {
@@ -69,7 +69,7 @@ export default function HomePosts({
           );
         return <Item key={item.id} posts={items} data={item} />;
       })}
-      <div className="w-full py-4 flex justify-center">
+      <div className="">
         {items.length === 0 ? (
           <div className="text-neutral-600 mt-4 text-center leading-loose">
             There are no threads... <br />
