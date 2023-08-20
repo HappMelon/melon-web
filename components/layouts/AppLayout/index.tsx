@@ -8,7 +8,7 @@ export default function Index({ children }: { children: React.ReactNode }) {
       <Sidebar className="h-full w-auto" />
       <div className="flex flex-col w-full mr-[4.75rem]">
         <Header />
-        {children}
+        <div> {children}</div>
       </div>
     </div>
   );

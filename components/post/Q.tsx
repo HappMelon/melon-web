@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { createNotes } from "@/lib/actions";
 import { UploadFile } from "@/lib/upload-file";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
@@ -28,13 +28,9 @@ export default function Q({
     };
 
     const handleFileUpload = (file: File) => {
-      UploadFile(file)
+      return UploadFile(file)
         .then((res) => {
-          const newValue = value.replace(
-            /src=['"]([^'"]*)['"]/g,
-            `src="${linktoipfs(res.key)}"`,
-          );
-          setValue(newValue);
+          return linktoipfs(res.key);
         })
         .catch((e) => console.error("Can't upload file", e));
     };
@@ -45,29 +41,30 @@ export default function Q({
     if (img && img.length > fileList.length) {
       console.log("fileList", fileList);
 
-      const src = img![fileList.length].match(/src=['"]?([^'"]*)['"]?/i)![1];
+      const lastImg = img.slice(-1)[0];
+      const src = lastImg.match(/src=['"]?([^'"]*)['"]?/i)![1];
 
       if (!fileList.includes(src)) {
-        setSrc(src);
         const file = fetch(src)
           .then((res) => res.blob())
           .then((blob) => {
-            const file = new File([blob], `${img![2]}`, {
-              type: `image/${img![1]}`,
+            const file = new File([blob], `${lastImg}`, {
+              type: `image/${lastImg.match(/image\/(\w+)/i)![1]}`,
             });
-            handleFileUpload(file);
+            return handleFileUpload(file);
           })
-          .then((res) => {
+          .then((newSrc) => {
             setFileList([...fileList, src]);
+            const newValue = value.replace(
+              lastImg,
+              lastImg.replace(/src=['"]?([^'"]*)['"]?/i, `src="${newSrc}"`),
+            );
+            setValue(newValue);
           })
-          .finally(() => {
-            console.log("finally");
-          });
+          .catch((e) => console.error("Can't upload file", e));
       }
     }
   }
-
-  useEffect(() => {}, []);
 
   // https://juejin.cn/post/7195124289501134905
   // TODO: React Quill like not support add Title Edit
@@ -89,7 +86,7 @@ export default function Q({
   };
 
   return (
-    <div>
+    <div className="h-[50vh]">
       <div className="flex justify-end mb-1 gap-1">
         <Button>Save as Draft</Button>
         <Button
