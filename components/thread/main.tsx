@@ -1,15 +1,9 @@
 import Image from "next/image";
 
-import MoreMenu from "./moreMenu";
+import { Prisma } from "@prisma/client";
 import Controls from "./controls";
-import { Post, Prisma } from "@prisma/client";
-import { timeSince } from "@/lib/utils";
-import Timestamp from "./timestamp";
+import MoreMenu from "./moreMenu";
 import NameLink from "./nameLink";
-
-// import relativeTime from "dayjs/plugin/relativeTime";
-// import dayjs from "dayjs";
-// import updateLocale from "dayjs/plugin/updateLocale";
 
 export default function MainItem({
   data,
@@ -41,31 +35,8 @@ export default function MainItem({
     };
   }>[];
 }) {
-  // dayjs.extend(relativeTime);
-  // const ago = dayjs(data.createdAt).fromNow();
-
-  // dayjs.extend(updateLocale);
-
-  // dayjs.updateLocale("en", {
-  //   relativeTime: {
-  //     future: "in %s",
-  //     past: "%s",
-  //     s: "now",
-  //     m: "1m",
-  //     mm: "%dm",
-  //     h: "1h",
-  //     hh: "%dh",
-  //     d: "1d",
-  //     dd: "%dd",
-  //     M: "1m",
-  //     MM: "%dm",
-  //     y: "1y",
-  //     yy: "%dy",
-  //   },
-  // });
-
   return (
-    <div className="px-3 py-4 space-y-3 flex flex-col border-b font-light border-neutral-900">
+    <div className="px-3 py-4 space-y-3 flex flex-col border-b font-light">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <div className="w-8 h-8 rounded-full bg-neutral-600 overflow-hidden">
@@ -89,7 +60,10 @@ export default function MainItem({
         </div>
       </div>
       <div className="w-full">
-        <div className="text-base/relaxed text-left mb-1">{data.text}</div>
+        <div
+          className="text-base/relaxed text-left mb-1"
+          dangerouslySetInnerHTML={{ __html: data.text }}
+        ></div>
         <Controls numPosts={posts ? posts.length : -1} data={data} />
         <div className="flex text-neutral-600 items-center space-x-2">
           {data.children.length > 0 ? (

@@ -20,16 +20,16 @@ export default function ShareButton({
 }) {
   const { toast } = useToast();
 
+  const host = typeof window !== "undefined" ? window.location.host : "";
   const shareData = {
     title: "Threads",
     text: "Link to " + name + "'s post on Threads",
-    url: "http://localhost:3000/t/" + post,
+    url: "http://" + host + "/t/" + post,
   };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        {" "}
         <Send className="w-[18px] h-[18px]" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
@@ -43,7 +43,6 @@ export default function ShareButton({
             });
           }}
         >
-          {" "}
           <Link className="mr-2 h-4 w-4" />
           Copy Link
         </DropdownMenuItem>
@@ -51,12 +50,15 @@ export default function ShareButton({
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            navigator.share(shareData);
+            window.open(
+              `https://twitter.com/intent/tweet?url=${
+                shareData.url
+              }&text=${encodeURIComponent(shareData.text)}&via=flaredapp`,
+            );
           }}
         >
-          {" "}
           <Share className="mr-2 h-4 w-4" />
-          Share Via...
+          Share Twitter
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

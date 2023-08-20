@@ -6,6 +6,7 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
+import Index from "@/components/layouts/AppLayout";
 
 export default async function ThreadPageLayout({
   children,
@@ -29,7 +30,7 @@ export default async function ThreadPageLayout({
   }
 
   return (
-    <>
+    <Index>
       <Nav
         create={{
           id: getUser.id,
@@ -44,8 +45,7 @@ export default async function ThreadPageLayout({
           Thread
         </div>
       </div>
-
       {children}
-    </>
+    </Index>
   );
 }

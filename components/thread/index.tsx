@@ -6,10 +6,6 @@ import Controls from "./controls";
 import MoreMenu from "./moreMenu";
 import Others from "./others";
 
-// import relativeTime from "dayjs/plugin/relativeTime";
-// import dayjs from "dayjs";
-// import updateLocale from "dayjs/plugin/updateLocale";
-
 import loop from "@/assets/loop.svg";
 import NameLink from "./nameLink";
 
@@ -52,32 +48,9 @@ export default function Item({
     ? "px-3 pt-4 space-x-2 flex font-light"
     : comment
     ? `space-x-2 flex font-light ${noLink ? "pointer-events-none" : ""}`
-    : `px-3 py-4 space-x-2 flex border-b font-light border-neutral-900 w-[50vw] ${
+    : `px-3 py-4 space-x-2 flex border-b font-light w-[50vw] ${
         noLink ? "pointer-events-none" : ""
       }`;
-
-  // dayjs.extend(relativeTime);
-  // const ago = dayjs(data.createdAt).fromNow();
-
-  // dayjs.extend(updateLocale);
-
-  // dayjs.updateLocale("en", {
-  //   relativeTime: {
-  //     future: "in %s",
-  //     past: "%s",
-  //     s: "now",
-  //     m: "1m",
-  //     mm: "%dm",
-  //     h: "1h",
-  //     hh: "%dh",
-  //     d: "1d",
-  //     dd: "%dd",
-  //     M: "1m",
-  //     MM: "%dm",
-  //     y: "1y",
-  //     yy: "%dy",
-  //   },
-  // });
 
   return (
     <>
@@ -92,11 +65,7 @@ export default function Item({
               alt={data.author.name + "'s profile image"}
             />
           </div>
-          <div
-            className={`w-0.5 grow mt-2 rounded-full bg-neutral-800 relative ${
-              parent ? "mb-5" : null
-            }`}
-          >
+          <div>
             {parent ? (
               <div className="-bottom-7 absolute right-0 w-4 h-8">
                 <Image
@@ -117,7 +86,6 @@ export default function Item({
 
             {comment ? null : (
               <div className="flex items-center space-x-2">
-                {/* <Timestamp time={data.createdAt} /> */}
                 <MoreMenu
                   name={data.author.name}
                   id={data.id}
