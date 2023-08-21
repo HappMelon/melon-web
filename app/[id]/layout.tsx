@@ -1,4 +1,4 @@
-import logo from "@/assets/threads.svg";
+import logo from "@/assets/logo.png";
 import Index from "@/components/layouts/AppLayout";
 import { EditModal } from "@/components/profile/edit";
 import FollowButton from "@/components/profile/follow";
