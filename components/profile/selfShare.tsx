@@ -9,10 +9,12 @@ export default function SelfShare({
   name: string;
   username: string;
 }) {
+  const host = typeof window !== "undefined" ? window.location.host : "";
+  console.log("host:", host);
   const shareData = {
     title: "Threads",
     text: "Link to " + name + "'s post on Threads",
-    url: "http://localhost:3000/" + username,
+    url: "http://" + host + "/" + username,
   };
 
   return (

@@ -1,12 +1,8 @@
-import BackButton from "@/components/thread/backButton";
-import { Button } from "@/components/ui/button";
-import Nav from "@/components/ui/nav";
-import { currentUser } from "@clerk/nextjs";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import prisma from "@/lib/prisma";
 import Index from "@/components/layouts/AppLayout";
+import BackButton from "@/components/thread/backButton";
+import prisma from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 export default async function ThreadPageLayout({
   children,
@@ -31,14 +27,6 @@ export default async function ThreadPageLayout({
 
   return (
     <Index>
-      <Nav
-        create={{
-          id: getUser.id,
-          name: getUser.name,
-          image: getUser.image,
-        }}
-        username={getUser.username}
-      />
       <div className="px-3 relative mt-8 mb-6">
         <BackButton />
         <div className="text-2xl font-semibold absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">

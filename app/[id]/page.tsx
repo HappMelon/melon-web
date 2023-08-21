@@ -1,6 +1,6 @@
+import Item from "@/components/thread";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
-import Item from "@/components/thread";
 import Link from "next/link";
 
 export default async function ProfilePage({
@@ -43,7 +43,7 @@ export default async function ProfilePage({
         </button>
         <Link
           href={`/${params.id}/replies`}
-          className="w-full h-10 py-2 font-medium border-b border-neutral-900 duration-200 hover:border-neutral-700 hover:text-neutral-500 text-center text-neutral-600"
+          className="w-full h-10 py-2 font-medium border-b text-center text-neutral-600"
         >
           Replies
         </Link>

@@ -1,13 +1,10 @@
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-
-import { Prisma } from "@prisma/client";
 import Controls from "./controls";
 import MoreMenu from "./moreMenu";
-import Others from "./others";
-
-import loop from "@/assets/loop.svg";
 import NameLink from "./nameLink";
+import Others from "./others";
 
 export default function Item({
   data,
@@ -48,13 +45,13 @@ export default function Item({
     ? "px-3 pt-4 space-x-2 flex font-light"
     : comment
     ? `space-x-2 flex font-light ${noLink ? "pointer-events-none" : ""}`
-    : `px-3 py-4 space-x-2 flex border-b font-light w-[50vw] ${
+    : `px-3 py-4 space-x-2 flex border-b font-light w-[auto] ${
         noLink ? "pointer-events-none" : ""
       }`;
 
   return (
     <>
-      <Link href={`/t/${data.id}`} className={mainClass}>
+      <div className={mainClass}>
         <div className="flex flex-col items-center justify-between">
           <div className="w-8 h-8 mt-1 rounded-full bg-neutral-600 overflow-hidden">
             <Image
@@ -64,19 +61,6 @@ export default function Item({
               className=""
               alt={data.author.name + "'s profile image"}
             />
-          </div>
-          <div>
-            {parent ? (
-              <div className="-bottom-7 absolute right-0 w-4 h-8">
-                <Image
-                  alt=""
-                  src={loop}
-                  width={16}
-                  height={32}
-                  className="w-full h-full"
-                />
-              </div>
-            ) : null}
           </div>
           {comment || parent ? null : <Others others={data.children} />}
         </div>
@@ -94,15 +78,17 @@ export default function Item({
               </div>
             )}
           </div>
-          <div
-            className={
-              comment
-                ? "text-base/relaxed pb-3 text-left"
-                : "text-base/relaxed text-left"
-            }
-          >
-            <div dangerouslySetInnerHTML={{ __html: data.text }} />
-          </div>
+          <Link href={`/t/${data.id}`}>
+            <div
+              className={
+                comment
+                  ? "text-base/relaxed pb-3 text-left"
+                  : "text-base/relaxed text-left"
+              }
+            >
+              <div dangerouslySetInnerHTML={{ __html: data.text }} />
+            </div>
+          </Link>
           {comment ? null : (
             <>
               <Controls numPosts={posts ? posts.length : -1} data={data} />
@@ -126,7 +112,7 @@ export default function Item({
             </>
           )}
         </div>
-      </Link>
+      </div>
     </>
   );
 }
