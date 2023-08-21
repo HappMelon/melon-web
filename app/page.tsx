@@ -72,14 +72,6 @@ export default async function Page() {
 
   return (
     <>
-      {/* <Nav
-        create={{
-          id: getUser.id,
-          name: getUser.name,
-          image: getUser.image,
-        }}
-        username={getUser.username}
-      /> */}
       <div className="flex items-center justify-center w-full py-5">
         <div className="h-9 w-9 bg-cover">
           <Image
