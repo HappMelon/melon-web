@@ -29,7 +29,7 @@ export function SearchUser({
           alt={user.name + "'s profile image"}
         />
       </div>
-      <div className="grow flex items-start justify-between pb-4 pr-3 border-b border-neutral-900">
+      <div className="grow flex items-start justify-between pb-4 pr-3 border-b">
         <div>
           <div className="font-semibold">{user.username}</div>
           <div className="text-neutral-600 -mt-1 font-medium">{user.name}</div>
