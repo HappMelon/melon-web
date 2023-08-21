@@ -51,7 +51,7 @@ export default async function ProfilePageLayout({
             <Image
               src={logo}
               alt="Threads logo"
-              className="min-h-full invert min-w-full object-cover"
+              className="min-h-full min-w-full object-cover"
             />
           </div>
         </div>
