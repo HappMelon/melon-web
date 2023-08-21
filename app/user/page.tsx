@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import Nav from "@/components/ui/nav";
 import { Bar } from "@/components/search/bar";
 import { SearchUser } from "@/components/search/user";
+import Index from "@/components/layouts/AppLayout";
 
 export const revalidate = 0;
 
@@ -76,16 +77,7 @@ export default async function SearchPage({
       });
 
   return (
-    <>
-      <Nav
-        create={{
-          id: getUser.id,
-          name: getUser.name,
-          image: getUser.image,
-        }}
-        username={getUser.username}
-      />
-
+    <Index>
       <div className="px-3 mb-1">
         <div className="text-2xl font-semibold pt-8 pb-5">Search</div>
         <Bar />
@@ -98,7 +90,7 @@ export default async function SearchPage({
         <>
           {users.map((user) => {
             const isFollowing = user.followedBy.some(
-              (follow) => follow.id === getUser.id
+              (follow) => follow.id === getUser.id,
             );
             return (
               <SearchUser
@@ -111,6 +103,6 @@ export default async function SearchPage({
           })}
         </>
       )}
-    </>
+    </Index>
   );
 }

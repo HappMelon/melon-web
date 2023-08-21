@@ -52,7 +52,7 @@ export default function Like({
       }}
       className={`w-5 duration-200 h-5 ${liked ? "text-red-600" : ""}`}
     >
-      <Heart fill={liked ? "#dc2626" : "#0a0a0a"} className="w-5 h-5" />
+      <Heart fill={liked ? "#f87171" : "#fff"} className="w-5 h-5" />
     </button>
   );
 }

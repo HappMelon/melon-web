@@ -1,20 +1,17 @@
-import prisma from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs";
-import Image from "next/image";
-import { redirect } from "next/navigation";
-
-import Nav from "@/components/ui/nav";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Instagram } from "lucide-react";
-
-import logo from "@/assets/threads.svg";
-import { InfoModal } from "@/components/profile/info";
-import SelfShare from "@/components/profile/selfShare";
-import { nFormatter } from "@/lib/utils";
-import SignOut from "@/components/profile/signOut";
+import logo from "@/assets/logo.png";
+import Index from "@/components/layouts/AppLayout";
 import { EditModal } from "@/components/profile/edit";
 import FollowButton from "@/components/profile/follow";
+import { InfoModal } from "@/components/profile/info";
+import SelfShare from "@/components/profile/selfShare";
+import SignOut from "@/components/profile/signOut";
+import { Badge } from "@/components/ui/badge";
+import prisma from "@/lib/prisma";
+import { nFormatter } from "@/lib/utils";
+import { currentUser } from "@clerk/nextjs";
+import { Twitter } from "lucide-react";
+import Image from "next/image";
+import { redirect } from "next/navigation";
 
 export default async function ProfilePageLayout({
   children,
@@ -49,14 +46,6 @@ export default async function ProfilePageLayout({
   if (!getUser) {
     return (
       <>
-        <Nav
-          create={{
-            id: "",
-            name: "",
-            image: "",
-          }}
-          username={null}
-        />
         <div className="flex items-center justify-center w-full py-5">
           <div className="h-9 w-9 bg-cover">
             <Image
@@ -84,20 +73,15 @@ export default async function ProfilePageLayout({
     : getUser.followedBy.some((follow) => follow.id === getSelf.id);
 
   return (
-    <>
-      <Nav
-        create={{
-          id: getSelf.id,
-          name: getSelf.name,
-          image: getSelf.image,
-        }}
-        username={getSelf.username}
-      />
+    <Index>
       <div className="px-3 relative flex w-full items-center justify-end mt-8 mb-6">
-        {/* <Globe className="w-5 h-5" /> */}
         <div className="flex items-center space-x-3">
-          <a href="https://www.instagram.com" target="_blank" rel="noreferrer">
-            <Instagram className="w-5 h-5" />
+          <a
+            href="https://twitter.com/flaredapp"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <Twitter className="w-5 h-5" />
           </a>
           <InfoModal />
           <SignOut />
@@ -109,7 +93,7 @@ export default async function ProfilePageLayout({
           <div className="flex items-center mt-1">
             {getUser.username}
             <Badge variant="secondary" className="text-xs ml-2">
-              threads.net
+              flare-dapp.io
             </Badge>
           </div>
           {getUser.bio ? (
@@ -146,8 +130,7 @@ export default async function ProfilePageLayout({
           />
         </div>
       )}
-
       {children}
-    </>
+    </Index>
   );
 }

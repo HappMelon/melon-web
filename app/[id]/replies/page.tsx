@@ -1,10 +1,10 @@
+import Item from "@/components/thread";
+import { Button } from "@/components/ui/button";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
-import Item from "@/components/thread";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { ArrowUp } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function RepliesPage({
   params,
@@ -61,7 +61,7 @@ export default async function RepliesPage({
       <div className="w-full mt-4 flex">
         <Link
           href={`/${params.id}`}
-          className="w-full h-10 py-2 font-medium border-b border-neutral-900 duration-200 hover:border-neutral-700 hover:text-neutral-500 text-center text-neutral-600"
+          className="w-full h-10 py-2 font-medium border-b duration-200 text-center text-neutral-600"
         >
           Threads
         </Link>

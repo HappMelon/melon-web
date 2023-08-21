@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Prisma } from "@prisma/client";
-
-import Item from ".";
-import { Button } from "../ui/button";
-import { useInView } from "react-intersection-observer";
 import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useInView } from "react-intersection-observer";
+import Item from ".";
 
 export default function HomePosts({
   posts,
@@ -69,26 +67,20 @@ export default function HomePosts({
           );
         return <Item key={item.id} posts={items} data={item} />;
       })}
-      <div className="">
+      <div className="w-full py-4 flex justify-center">
         {items.length === 0 ? (
           <div className="text-neutral-600 mt-4 text-center leading-loose">
             There are no threads... <br />
             Try making one!
           </div>
         ) : null}
-
-        {/* {noMore ? null : (
-          <Button
-            variant="outline"
-            onClick={() => {
-              loadMore();
-            }}
-          >
-            Load More
-          </Button>
-        )} */}
         {loading ? (
           <Loader2 className="h-4 w-4 animate-spin text-neutral-600" />
+        ) : null}
+        {noMore ? (
+          <div className="text-neutral-600 mt-4 text-center leading-loose">
+            No more threads...
+          </div>
         ) : null}
       </div>
     </>

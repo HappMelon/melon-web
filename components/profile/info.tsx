@@ -24,9 +24,10 @@ export function InfoModal() {
           </DialogHeader>
 
           <div className="text-neutral-600 leading-relaxed">
-            A threads clone made by{" "}
+            User-curated social platform, Your voice, your power Predict to Earn
+            by
             <a
-              href="https://twitter.com/ishaandey_"
+              href="https://twitter.com/flaredapp"
               target="_blank"
               rel="noreferrer"
             >
@@ -34,19 +35,19 @@ export function InfoModal() {
                 variant="link"
                 className="px-[3px] text-base w-auto py-0 h-auto"
               >
-                Ishaan
+                flaredapp
               </Button>
             </a>{" "}
-            with Next.js server components, Vercel Postgres, shadcn UI, Clerk,
-            and Prisma.
           </div>
           <div className="text-neutral-600 leading-relaxed">
-            It&apos;s mostly complete & working, with a few small bugs/missing
-            features (see GitHub issues for details).
+            Our goal is to create a trusted, free, and high-value social
+            network. Through mechanisms such as staking, predictions, and token
+            incentives, Flare provides you with the ability to express
+            themselves and prevents the spread of meaningless information.
           </div>
           <DialogFooter>
             <a
-              href="https://www.github.com/ishaan1013/threads"
+              href="https://www.github.com/FlareZone/flare-dapp.io"
               target="_blank"
               rel="noreferrer"
               className="w-full mt-2"

@@ -14,13 +14,11 @@ export function Bar() {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (search) {
-        console.log("pushing /search?q=" + search);
-        router.push("/search?q=" + search);
-        // searchSongs(search, accessToken, setSongResults)
-        // console.log("searching for: " + search);
+        console.log("pushing /user?q=" + search);
+        router.push("/user?q=" + search);
       } else {
-        console.log("pushing /search");
-        router.push("/search");
+        console.log("pushing /user");
+        router.push("/user");
       }
     }, 300);
 

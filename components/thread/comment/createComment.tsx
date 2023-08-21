@@ -62,7 +62,6 @@ export function Create({
               alt={user.fullName + "'s profile image"}
             />
           </div>
-          <div className="w-0.5 grow mt-2 rounded-full bg-neutral-800" />
         </div>
         <div className="w-full">
           <div className="font-semibold text-left">Me</div>
@@ -88,7 +87,7 @@ export function Create({
         className="w-full mt-4"
         onClick={() => {
           startTransition(() =>
-            replyToThread(comment, user.id, itemData.id, pathname)
+            replyToThread(comment, user.id, itemData.id, pathname),
           );
           setClicked(true);
         }}

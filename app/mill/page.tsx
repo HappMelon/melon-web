@@ -1,9 +1,5 @@
-import Index from "@/components/layouts/AppLayout";
+import ComingSoon from "@/components/common/comingSoon";
 
 export default function Page() {
-  return (
-    <Index>
-      <div>mill</div>
-    </Index>
-  );
+  return <ComingSoon modelname="Mill"></ComingSoon>;
 }
