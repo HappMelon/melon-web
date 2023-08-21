@@ -32,7 +32,9 @@ export default function RootLayout({
                 <Toaster />
               </>
             ) : (
-              <main>{children}</main>
+              <main className="flex items-center justify-center mt-[4rem]">
+                {children}
+              </main>
             )}
           </ThemeProvider>
         </body>

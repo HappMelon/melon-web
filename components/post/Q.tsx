@@ -3,10 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { createNotes } from "@/lib/actions";
 import { UploadFile } from "@/lib/upload-file";
+import { Loader2 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { toast } from "../ui/use-toast";
 
 export default function Q({
   create,
@@ -17,7 +19,18 @@ export default function Q({
   const [fileList, setFileList] = useState<string[]>([]);
   const [src, setSrc] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [clicked, setClicked] = useState(false);
   const pathname = usePathname();
+
+  useEffect(() => {
+    if (clicked && !isPending) {
+      setValue("");
+      setClicked(false);
+      toast({
+        title: "Note created",
+      });
+    }
+  }, [isPending]);
 
   function onChange(value: string) {
     setValue(value);
@@ -93,9 +106,14 @@ export default function Q({
           onClick={() => {
             // TODO 图片根据 ipfs 地址存储
             startTransition(() => createNotes(value, create.id, pathname));
+            setClicked(true);
           }}
         >
-          Publish
+          {isPending ? (
+            <Loader2 className="h-4 w-4 animate-spin text-neutral-600" />
+          ) : (
+            "Post"
+          )}
         </Button>
       </div>
       <ReactQuill

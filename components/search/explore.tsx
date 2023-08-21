@@ -1,26 +1,29 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function Explore() {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [search, setSearch] = useState("");
 
   //query after 0.3s of no input
   useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
+    if (pathname === "/explore") {
       if (search) {
-        router.push("/explore?q=" + search);
+        const delayDebounceFn = setTimeout(() => {
+          router.push("/explore?q=" + search);
+        }, 300);
+
+        return () => clearTimeout(delayDebounceFn);
       } else {
         router.push("/explore");
       }
-    }, 300);
-
-    return () => clearTimeout(delayDebounceFn);
-  }, [search]);
+    }
+  }, [search, router]);
 
   return (
     <Input

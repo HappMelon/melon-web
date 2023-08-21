@@ -182,10 +182,12 @@ export function Sidebar({ className, username }: SidebarProps) {
             </Button>
             <Button
               variant={
-                pathname === "/user" ? "secondary" : ("ghost" as unknown as any)
+                pathname === "/users"
+                  ? "secondary"
+                  : ("ghost" as unknown as any)
               }
               className="w-full justify-start"
-              onClick={() => SwitchRouter("/user")}
+              onClick={() => SwitchRouter("/users")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +202,7 @@ export function Sidebar({ className, username }: SidebarProps) {
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
-              Account
+              More User
             </Button>
           </div>
         </div>

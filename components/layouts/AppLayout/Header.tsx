@@ -1,10 +1,7 @@
 import { Explore } from "@/components/search/explore";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ModeToggle } from "@/components/ui/modeToggle";
 import { UserButton } from "@clerk/nextjs";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 export default function Header() {
   return (

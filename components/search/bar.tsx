@@ -14,9 +14,9 @@ export function Bar() {
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       if (search) {
-        router.push("/user?q=" + search);
+        router.push("/users?q=" + search);
       } else {
-        router.push("/user");
+        router.push("/users");
       }
     }, 300);
 

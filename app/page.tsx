@@ -1,11 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import Explore from "@/app/explore/page";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 
-import HomePosts from "@/components/thread/homePosts";
-import Nav from "@/components/ui/nav";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -17,27 +16,31 @@ export default async function Page() {
 
   if (!user)
     return (
-      <>
-        <div className="h-16 w-16 bg-cover">
-          <Image
-            src={logo}
-            alt="Threads logo"
-            className="min-h-full invert min-w-full object-cover"
-          />
-        </div>
-        <div className="gradient mt-4 mb-12 text-4xl font-bold">Threads</div>
+      <div className="w-screen h-screen flex flex-col justify-center items-center">
+        <div className="flex flex-col justify-center items-center w-[400px] h-auto mt-0 mr-auto mb-0 ml-auto border border-#000 p-4 rounded-[4px]">
+          <div className="h-16 w-16 bg-cover">
+            <Image
+              src={logo}
+              alt="Threads logo"
+              className="min-h-full min-w-full object-cover"
+            />
+          </div>
+          <div className="gradient mt-4 mb-12 text-4xl font-bold">
+            flare-dapp.io
+          </div>
 
-        <Link href="/sign-up" className="w-full px-6">
-          <Button className="w-full" variant="outline">
-            Create Your Account
-          </Button>
-        </Link>
-        <Link href="/sign-in" className="w-full px-6 mt-2">
-          <Button className="w-full" variant="ghost">
-            Sign In
-          </Button>
-        </Link>
-      </>
+          <Link href="/sign-up" className="w-full px-6">
+            <Button className="w-full" variant="outline">
+              Create Your Account
+            </Button>
+          </Link>
+          <Link href="/sign-in" className="w-full px-6 mt-2">
+            <Button className="w-full" variant="ghost">
+              Sign In
+            </Button>
+          </Link>
+        </div>
+      </div>
     );
 
   const getUser = await prisma.user.findUnique({
@@ -72,16 +75,7 @@ export default async function Page() {
 
   return (
     <>
-      <div className="flex items-center justify-center w-full py-5">
-        <div className="h-9 w-9 bg-cover">
-          <Image
-            src={logo}
-            alt="Threads logo"
-            className="min-h-full invert min-w-full object-cover"
-          />
-        </div>
-      </div>
-      <HomePosts posts={posts} />
+      <Explore searchParams={{}} />
     </>
   );
 }
