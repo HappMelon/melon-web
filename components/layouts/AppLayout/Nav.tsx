@@ -5,11 +5,9 @@ import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  username: string | null;
-}
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function Sidebar({ className, username }: SidebarProps) {
+export function Sidebar({ className }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
 
