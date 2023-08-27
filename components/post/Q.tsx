@@ -101,7 +101,6 @@ export default function Q({
   return (
     <div className="h-[50vh]">
       <div className="flex justify-end mb-1 gap-1">
-        <Button>Save as Draft</Button>
         <Button
           onClick={() => {
             // TODO 图片根据 ipfs 地址存储

@@ -1,8 +1,9 @@
+import Index from "@/components/layouts/AppLayout";
 import { ThemeProvider } from "@/components/ui/themeProvider";
 import { Toaster } from "@/components/ui/toaster";
+import "@/styles/index.css";
 import { ClerkProvider, auth } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
-import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,13 +29,15 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system">
             {userId ? (
               <>
-                <main>{children}</main>
+                <Index>{children}</Index>
                 <Toaster />
               </>
             ) : (
-              <main className="flex items-center justify-center mt-[4rem]">
-                {children}
-              </main>
+              <Index>
+                <main className="flex items-center justify-center mt-[4rem]">
+                  {children}
+                </main>
+              </Index>
             )}
           </ThemeProvider>
         </body>

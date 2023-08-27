@@ -6,7 +6,8 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        // TODO
+        // https://nextjs.org/docs/pages/api-reference/components/image#remotepatterns
+        protocol: "https",
         hostname: "img.clerk.com",
       },
     ],

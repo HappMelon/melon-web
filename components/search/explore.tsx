@@ -26,10 +26,14 @@ export function Explore() {
   }, [search, router]);
 
   return (
-    <Input
-      placeholder="Search topics, news"
-      value={search}
-      onChange={(e) => setSearch(e.target.value)}
-    />
+    <div className="w-full flex items-center p-1">
+      <img src="/Search.svg" alt="" className="mr-[-24px] z-10" />
+      <Input
+        placeholder="Search posts、users"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="flex-1 outline-none pl-[24px]"
+      />
+    </div>
   );
 }

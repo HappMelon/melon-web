@@ -1,1 +1,1 @@
-# flare-dapp.io
+# flare-dapp.co
