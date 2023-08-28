@@ -1,5 +1,6 @@
 "use client";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Prisma } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -57,21 +58,39 @@ export default function HomePosts({
   };
 
   return (
-    <>
-      {items.map((item, i) => {
-        if (i === items.length - 1)
-          return (
-            <div key={item.id} ref={ref}>
-              <Item posts={items} data={item} />
-            </div>
-          );
-        return <Item key={item.id} posts={items} data={item} />;
-      })}
+    <div className="ml-[2.5rem] bg-white rounded-[15px] mt-[37px] w-full">
+      <Tabs defaultValue="For You">
+        <TabsList className="flex gap-1.5rem justify-start">
+          <TabsTrigger value="For You">For You</TabsTrigger>
+          <TabsTrigger value="Following">Following</TabsTrigger>
+          <TabsTrigger value="Politics">Politics</TabsTrigger>
+        </TabsList>
+        <TabsContent value="For You">
+          <div className="grid grid-cols-3 gap-4">
+            {items.map((item, i) => {
+              if (i === items.length - 1)
+                return (
+                  <div key={item.id} ref={ref}>
+                    <Item posts={items} data={item} />
+                  </div>
+                );
+              return (
+                <div key={item.id}>
+                  <Item posts={items} data={item} />
+                </div>
+              );
+            })}
+          </div>
+        </TabsContent>
+        <TabsContent value="Following">Following</TabsContent>
+        <TabsContent value="Politics">Politics</TabsContent>
+      </Tabs>
+
       <div className="w-full py-4 flex justify-center">
         {items.length === 0 ? (
           <div className="text-neutral-600 mt-4 text-center leading-loose">
-            There are no threads... <br />
-            Try making one!
+            Looks like there isn’t any posts <br />
+            from your following users ~
           </div>
         ) : null}
         {loading ? (
@@ -82,7 +101,8 @@ export default function HomePosts({
             No more threads...
           </div>
         ) : null}
+        N T
       </div>
-    </>
+    </div>
   );
 }

@@ -99,7 +99,7 @@ export default function Q({
   };
 
   return (
-    <div className="h-[50vh]">
+    <div className="h-[50vh] ml-[2.5rem]">
       <div className="flex justify-end mb-1 gap-1">
         <Button
           onClick={() => {
