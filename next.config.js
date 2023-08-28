@@ -8,7 +8,7 @@ const nextConfig = {
       {
         // https://nextjs.org/docs/pages/api-reference/components/image#remotepatterns
         protocol: "https",
-        hostname: "img.clerk.com",
+        hostname: "**",
       },
     ],
   },

@@ -1,4 +1,3 @@
-import Index from "@/components/layouts/AppLayout";
 import HomePosts from "@/components/thread/homePosts";
 import prisma from "@/lib/prisma";
 
@@ -50,9 +49,5 @@ export default async function Page({
         },
       });
 
-  return (
-    <Index>
-      <HomePosts posts={posts} />
-    </Index>
-  );
+  return <HomePosts posts={posts} />;
 }

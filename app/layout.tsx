@@ -1,15 +1,16 @@
 import Index from "@/components/layouts/AppLayout";
 import { ThemeProvider } from "@/components/ui/themeProvider";
 import { Toaster } from "@/components/ui/toaster";
-import "@/styles/index.css";
-import { ClerkProvider, auth } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
+
+import "@/styles/index.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 // https://clerk.com/docs/nextjs/get-started-with-nextjs
 export const metadata = {
-  title: "flare",
+  title: "Flare Dapp",
   description:
     "User curated social platform, Your voice, your power | Predict to Earn.",
 };
@@ -19,26 +20,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = auth();
-
   return (
     <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
           {/* https://ui.shadcn.com/docs/dark-mode/next */}
           <ThemeProvider attribute="class" defaultTheme="system">
-            {userId ? (
-              <>
-                <Index>{children}</Index>
-                <Toaster />
-              </>
-            ) : (
-              <Index>
-                <main className="flex items-center justify-center mt-[4rem]">
-                  {children}
-                </main>
-              </Index>
-            )}
+            <Index>{children}</Index>
+            <Toaster />
           </ThemeProvider>
         </body>
       </html>
