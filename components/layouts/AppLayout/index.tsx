@@ -16,8 +16,8 @@ export default async function Index({
   // });
 
   return (
-    <div className="flex h-screen">
-      <Sidebar className="h-full w-auto" />
+    <div className="flex h-full">
+      <Sidebar className="h-full bg-white rounded-[15px] border-#eaeaea ml-[2.6875rem] mt-[2.5rem]" />
       <div className="flex flex-col w-full mr-[4.75rem]">
         <Header />
         <div> {children}</div>

@@ -1,5 +1,4 @@
 import Index from "@/components/layouts/AppLayout";
-import { ThemeProvider } from "@/components/ui/themeProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
@@ -25,10 +24,8 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           {/* https://ui.shadcn.com/docs/dark-mode/next */}
-          <ThemeProvider attribute="class" defaultTheme="system">
-            <Index>{children}</Index>
-            <Toaster />
-          </ThemeProvider>
+          <Index>{children}</Index>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

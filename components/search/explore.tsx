@@ -27,12 +27,12 @@ export function Explore() {
 
   return (
     <div className="w-full flex items-center p-1">
-      <img src="/Search.svg" alt="" className="mr-[-24px] z-10" />
+      <img src="/Search.svg" alt="" className="mr-[-2.25rem] z-10 pl-[22px]" />
       <Input
         placeholder="Search posts、users"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="flex-1 outline-none pl-[24px]"
+        className="flex-1 outline-none pl-[58px] pt-[10px] pb-[16px] rounded-full bg-[rgb(135,135,135,0.14)] color-[#9B9B9B]"
       />
     </div>
   );
