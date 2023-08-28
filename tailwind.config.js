@@ -7,27 +7,6 @@ module.exports = {
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
   ],
-  safelist: [
-    "font-light",
-    "text-3xl",
-    "rounded",
-    "p-1",
-    "bg-gray-200",
-    "dark:bg-gray-800/0",
-    "hover:dark:bg-gray-800/100",
-    "bg-opacity-0",
-    "hover:bg-opacity-100",
-    "transition-background",
-
-    "w-[1px]",
-    "h-8",
-    "-bottom-2",
-    "bg-gray-800/80",
-    "dark:bg-gray-200/80",
-    "group-hover:opacity-100",
-    "transition-opacity",
-    "group-hover:animation-blink",
-  ],
   theme: {
     container: {
       center: true,
