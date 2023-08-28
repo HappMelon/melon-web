@@ -1,4 +1,3 @@
-import Index from "@/components/layouts/AppLayout";
 import Q from "@/components/post/Q";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
@@ -15,14 +14,12 @@ export default async function Page() {
   });
 
   return (
-    <Index>
-      <Q
-        create={{
-          id: getUser!.id,
-          name: getUser!.name,
-          image: getUser!.image,
-        }}
-      />
-    </Index>
+    <Q
+      create={{
+        id: getUser!.id,
+        name: getUser!.name,
+        image: getUser!.image,
+      }}
+    />
   );
 }
