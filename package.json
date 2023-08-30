@@ -27,7 +27,7 @@
     ]
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.23.2",
+    "@clerk/nextjs": "^4.23.3",
     "@clerk/themes": "^1.7.5",
     "@prisma/client": "^4.16.2",
     "@radix-ui/react-dialog": "^1.0.4",
@@ -51,7 +51,7 @@
     "eslint-config-next": "13.4.8",
     "framer-motion": "^10.16.1",
     "lucide-react": "^0.258.0",
-    "next": "13.4.12",
+    "next": "13.4.19",
     "next-themes": "^0.2.1",
     "postcss": "8.4.25",
     "react": "18.2.0",
