@@ -45,7 +45,7 @@ export default function Item({
     ? "px-3 pt-4 space-x-2 flex font-light"
     : comment
     ? `space-x-2 flex font-light ${noLink ? "pointer-events-none" : ""}`
-    : `px-3 py-4 space-x-2 flex border-b font-light w-[auto] ${
+    : `px-3 py-4 space-x-2 flex border-b font-light w-[auto] bg-[#F8F8F8] rounded-[10px]  ${
         noLink ? "pointer-events-none" : ""
       }`;
 

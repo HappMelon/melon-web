@@ -99,8 +99,27 @@ export default function Q({
   };
 
   return (
-    <div className="h-[50vh] ml-[2.5rem]">
-      <div className="flex justify-end mb-1 gap-1">
+    <div className="h-auto ml-[2.5rem] bg-white mt-[2.25rem] border-#EAEAEA rounded-[1rem]">
+      <div className="h-[50vh]  p-[1.625rem]">
+        <ReactQuill
+          placeholder="Compose here..."
+          className="h-full p-[2.25rem]"
+          modules={modules}
+          value={value}
+          onChange={onChange}
+        ></ReactQuill>
+      </div>
+      <div className="flex justify-end gap-[13px] pb-[67px] pr-[52px]">
+        <Button
+          onClick={() => {
+            setValue("");
+            toast({
+              title: "cancel created",
+            });
+          }}
+        >
+          cancel
+        </Button>
         <Button
           onClick={() => {
             // TODO 图片根据 ipfs 地址存储
@@ -109,19 +128,12 @@ export default function Q({
           }}
         >
           {isPending ? (
-            <Loader2 className="h-4 w-4 animate-spin text-neutral-600" />
+            <Loader2 className="h-4 w-4 animate-spin text-neutral-600 mt-1rem" />
           ) : (
-            "Post"
+            "Publish"
           )}
         </Button>
       </div>
-      <ReactQuill
-        placeholder="Compose here..."
-        className="h-full"
-        modules={modules}
-        value={value}
-        onChange={onChange}
-      ></ReactQuill>
     </div>
   );
 }

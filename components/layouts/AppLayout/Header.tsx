@@ -4,9 +4,9 @@ import { SignInButton, UserButton, auth } from "@clerk/nextjs";
 export default function Header() {
   const { userId } = auth();
 
-  if (userId) {
-    return "";
-  }
+  // if (userId) {
+  //   return null
+  // }
 
   return (
     <main className="flex flex-row w-full justify-between items-center mt-[2.5rem] box-borde pt-[13px] pb-[17px] pl-[41px] bg-white rounded-[15px] border-#eaeaea ml-[2.5rem]">

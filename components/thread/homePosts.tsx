@@ -66,7 +66,7 @@ export default function HomePosts({
           <TabsTrigger value="Politics">Politics</TabsTrigger>
         </TabsList>
         <TabsContent value="For You">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px] py-[36px]">
             {items.map((item, i) => {
               if (i === items.length - 1)
                 return (
@@ -82,8 +82,26 @@ export default function HomePosts({
             })}
           </div>
         </TabsContent>
-        <TabsContent value="Following">Following</TabsContent>
-        <TabsContent value="Politics">Politics</TabsContent>
+        <TabsContent value="Following">
+          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px] py-[36px]">
+            {items.map((item, i) => {
+              if (i === items.length - 1)
+                return (
+                  <div key={item.id} ref={ref}>
+                    <Item posts={items} data={item} />
+                  </div>
+                );
+              return (
+                <div key={item.id}>
+                  <Item posts={items} data={item} />
+                </div>
+              );
+            })}
+          </div>
+        </TabsContent>
+        <TabsContent value="Politics" className="p-4">
+          Politics
+        </TabsContent>
       </Tabs>
 
       <div className="w-full py-4 flex justify-center">
@@ -101,7 +119,6 @@ export default function HomePosts({
             No more threads...
           </div>
         ) : null}
-        N T
       </div>
     </div>
   );
