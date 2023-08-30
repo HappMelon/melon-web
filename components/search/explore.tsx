@@ -23,7 +23,7 @@ export function Explore() {
         router.push("/explore");
       }
     }
-  }, [search, router]);
+  }, [search, router, pathname]);
 
   return (
     <div className="w-full flex items-center p-1">
