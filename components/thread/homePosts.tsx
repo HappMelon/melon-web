@@ -3,12 +3,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Prisma } from "@prisma/client";
 import { Loader2 } from "lucide-react";
+import SearchPage from "@/components/thread/users";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import Item from ".";
 
 export default function HomePosts({
   posts,
+  follows,
 }: {
   posts: Prisma.PostGetPayload<{
     include: {
@@ -22,8 +24,21 @@ export default function HomePosts({
       likes: true;
     };
   }>[];
+  follows: Prisma.PostGetPayload<{
+    include: {
+      author: true;
+      children: {
+        include: {
+          author: true;
+        };
+      };
+      parent: true;
+      likes: true;
+    };
+  }>[];
 }) {
   const [items, setItems] = useState(posts);
+  const [follow, setFollow] = useState(follows);
   const [noMore, setNoMore] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -66,7 +81,7 @@ export default function HomePosts({
           <TabsTrigger value="Politics">Politics</TabsTrigger>
         </TabsList>
         <TabsContent value="For You">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px] py-[36px]">
             {items.map((item, i) => {
               if (i === items.length - 1)
                 return (
@@ -82,8 +97,26 @@ export default function HomePosts({
             })}
           </div>
         </TabsContent>
-        <TabsContent value="Following">Following</TabsContent>
-        <TabsContent value="Politics">Politics</TabsContent>
+        <TabsContent value="Following">
+          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px] py-[36px]">
+            {follow.map((item, i) => {
+              if (i === items.length - 1)
+                return (
+                  <div key={item.id} ref={ref}>
+                    <Item posts={items} data={item} />
+                  </div>
+                );
+              return (
+                <div key={item.id}>
+                  <Item posts={items} data={item} />
+                </div>
+              );
+            })}
+          </div>
+        </TabsContent>
+        <TabsContent value="Politics" className="p-4">
+          Coming Soon!
+        </TabsContent>
       </Tabs>
 
       <div className="w-full py-4 flex justify-center">
@@ -101,7 +134,6 @@ export default function HomePosts({
             No more threads...
           </div>
         ) : null}
-        N T
       </div>
     </div>
   );

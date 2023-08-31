@@ -38,7 +38,7 @@ export default async function OnboardingLayout() {
   });
 
   return (
-    <div className="px-3 pt-8">
+    <div className="pl-[2.5rem]">
       {user ? (
         <Screens allUsernames={allUsernames} userData={userData} />
       ) : null}

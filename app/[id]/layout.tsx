@@ -73,7 +73,7 @@ export default async function ProfilePageLayout({
     : getUser.followedBy.some((follow) => follow.id === getSelf.id);
 
   return (
-    <Index>
+    <div className="ml-[40px]">
       <div className="px-3 relative flex w-full items-center justify-end mt-8 mb-6">
         <div className="flex items-center space-x-3">
           <a
@@ -131,6 +131,6 @@ export default async function ProfilePageLayout({
         </div>
       )}
       {children}
-    </Index>
+    </div>
   );
 }

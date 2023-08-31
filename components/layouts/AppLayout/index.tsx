@@ -7,14 +7,6 @@ export default async function Index({
 }: {
   children: React.ReactNode;
 }) {
-  // const user = await currentUser();
-
-  // const getUser = await prisma.user.findUnique({
-  //   where: {
-  //     id: user?.id,
-  //   },
-  // });
-
   return (
     <div className="flex h-full">
       <Sidebar className="h-full bg-white rounded-[15px] border-#eaeaea ml-[2.6875rem] mt-[2.5rem]" />
