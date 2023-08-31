@@ -1,8 +1,6 @@
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
-import Nav from "@/components/ui/nav";
-import { Bar } from "@/components/search/bar";
 import { SearchUser } from "@/components/search/user";
 
 export const revalidate = 0;
@@ -76,19 +74,9 @@ export default async function SearchPage({
       });
 
   return (
-    <>
-      <Nav
-        create={{
-          id: getUser.id,
-          name: getUser.name,
-          image: getUser.image,
-        }}
-        username={getUser.username}
-      />
-
+    <div className="bg-white ml-[2.5rem] rounded-[10px] mt-[1rem]">
       <div className="px-3 mb-1">
         <div className="text-2xl font-semibold pt-8 pb-5">Search</div>
-        <Bar />
       </div>
       {users.length === 0 ? (
         <div className="text-neutral-600 mt-4 text-center leading-loose">
@@ -111,6 +99,6 @@ export default async function SearchPage({
           })}
         </>
       )}
-    </>
+    </div>
   );
 }
