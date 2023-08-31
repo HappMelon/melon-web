@@ -1,6 +1,9 @@
+"use client";
+
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Controls from "./controls";
 import MoreMenu from "./moreMenu";
 import NameLink from "./nameLink";
@@ -49,11 +52,16 @@ export default function Item({
         noLink ? "pointer-events-none" : ""
       }`;
 
+  const router = useRouter();
+
   return (
     <>
       <div className={mainClass}>
         <div className="flex flex-col items-center justify-between">
-          <div className="w-8 h-8 mt-1 rounded-full bg-neutral-600 overflow-hidden">
+          <div
+            className="w-8 h-8 mt-1 rounded-full bg-neutral-600 overflow-hidden cursor-pointer"
+            onClick={() => router.push(`/${data.author.username}`)}
+          >
             <Image
               src={data.author.image}
               height={32}
