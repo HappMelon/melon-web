@@ -16,7 +16,8 @@ export default function Header() {
       <div className="flex gap-[1.25rem] items-center">
         {userId ? (
           <div className="mr-[24px]">
-            <UserButton />
+            {/* <UserButton /> */}
+            <div></div>
           </div>
         ) : (
           <SignInButton>
