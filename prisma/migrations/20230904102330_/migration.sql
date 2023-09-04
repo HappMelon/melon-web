@@ -1,12 +1,22 @@
 -- CreateTable
 CREATE TABLE "Post" (
     "id" TEXT NOT NULL,
-    "text" TEXT NOT NULL,
+    "title" VARCHAR(40) NOT NULL DEFAULT '',
+    "text" VARCHAR(800) NOT NULL,
+    "tags" TEXT[],
     "authorId" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "parentId" TEXT,
 
     CONSTRAINT "Post_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TagsFrequencies" (
+    "tag" TEXT NOT NULL,
+    "count" INTEGER NOT NULL,
+
+    CONSTRAINT "TagsFrequencies_pkey" PRIMARY KEY ("tag")
 );
 
 -- CreateTable

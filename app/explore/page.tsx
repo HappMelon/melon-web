@@ -113,12 +113,35 @@ export default async function Page({
         },
       });
 
+  const topics = await prisma.tagsFrequencies.groupBy({
+    by: ["tag"],
+    orderBy: {
+      _count: {
+        tag: "desc",
+      },
+    },
+    take: 10,
+  });
+
+  // 查询所有 user 中 follow 最多的 10 个
+  const foo = await prisma.user.findMany({
+    take: 10,
+    orderBy: {
+      followedBy: {
+        _count: "desc",
+      },
+    },
+    include: {
+      followedBy: true,
+    },
+  });
+
   return (
     <div className="flex">
       <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
       <div className="flex flex-col">
-        <HotTopics></HotTopics>
-        <PopularAuthors></PopularAuthors>
+        <HotTopics tags={topics as unknown as string[]}></HotTopics>
+        <PopularAuthors foo={foo}></PopularAuthors>
       </div>
     </div>
   );

@@ -54,6 +54,8 @@ export default function Item({
 
   const router = useRouter();
 
+  console.log("data:", data);
+
   return (
     <>
       <div className={mainClass}>
@@ -94,7 +96,22 @@ export default function Item({
                   : "text-base/relaxed text-left"
               }
             >
+              <div>{data.title}</div>
               <div dangerouslySetInnerHTML={{ __html: data.text }} />
+              {data.tags ? (
+                <div className="flex flex-wrap gap-1">
+                  {data.tags.map((tag) => (
+                    <div
+                      key={tag}
+                      className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
+                    >
+                      {tag}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </Link>
           {comment ? null : (
