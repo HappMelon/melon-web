@@ -44,6 +44,8 @@ export default function HomePosts({
 
   const { ref, inView } = useInView();
 
+  console.log("items", items);
+
   useEffect(() => {
     if (inView && !noMore) {
       setLoading(true);

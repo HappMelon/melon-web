@@ -13,7 +13,9 @@ datasource db {
 
 model Post {
   id        String   @id @default(cuid())
-  text      String
+  title     String   @db.VarChar(40) @default("")
+  text      String   @db.VarChar(800)
+  tags      String[]
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   repost    Repost?
@@ -23,6 +25,11 @@ model Post {
   parentId String?
   parent   Post?   @relation("ParentChildren", fields: [parentId], references: [id])
   children Post[]  @relation("ParentChildren")
+}
+
+model TagsFrequencies {
+  tag  String @id
+  count Int
 }
 
 model Repost {
