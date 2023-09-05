@@ -11,6 +11,8 @@ export default async function Page({
 }) {
   const user = await currentUser();
 
+  if (!user) return null;
+
   const defaultPosts = searchParams?.q
     ? await prisma.post.findMany({
         take: 20,
