@@ -27,7 +27,7 @@
     ]
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.8.2",
+    "@clerk/nextjs": "^4.21.14",
     "@clerk/themes": "^1.7.5",
     "@codemirror/lang-javascript": "^6.2.1",
     "@codemirror/lang-markdown": "^6.2.0",

@@ -66,11 +66,13 @@ export default function HomePosts({
       },
     ).then((res) => res.json());
 
-    if (morePosts.data.length === 0) {
+    if (morePosts?.data?.length === 0) {
       setNoMore(true);
     }
 
-    setItems([...items, ...morePosts.data]);
+    if (morePosts?.data?.length > 0) {
+      setItems([...items, ...morePosts.data]);
+    }
     setLoading(false);
   };
 

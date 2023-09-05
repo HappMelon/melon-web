@@ -55,14 +55,16 @@ export default async function Page({
       });
 
   // follows
-  const follows = await prisma.user.findUnique({
-    where: {
-      id: user?.id,
-    },
-    include: {
-      following: true,
-    },
-  });
+  const follows = user?.id
+    ? await prisma.user.findUnique({
+        where: {
+          id: user?.id,
+        },
+        include: {
+          following: true,
+        },
+      })
+    : null;
 
   const followPosts = searchParams?.q
     ? await prisma.post.findMany({
