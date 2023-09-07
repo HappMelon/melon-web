@@ -9,6 +9,7 @@ interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 export function Sidebar({ className }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  let blur = pathname === "/sign-up" || pathname === "/sign-in";
 
   const [value, setValue] = useState("");
 
@@ -19,8 +20,10 @@ export function Sidebar({ className }: SidebarProps) {
     setValue(pathname);
   }
 
+  let cs = `${blur ? "pointer-events-none filter blur-[4px]" : ""}`;
+
   return (
-    <div className={cn("", className)}>
+    <div className={cn(cs, className)}>
       <div className="flex flex-col text-[1.25rem] font-bold pt-[2.4375rem] pl-[2.9375rem]">
         <div className="flex">
           <img

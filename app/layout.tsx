@@ -7,7 +7,7 @@ import "@/styles/index.css";
 export const metadata = {
   title: "Flare Dapp",
   description:
-    "User curated social platform, Your voice, your power | Predict to Earn.",
+    "user curated social platform, your voice, your power | predict to earn.",
 };
 
 export default function RootLayout({

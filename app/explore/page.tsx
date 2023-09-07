@@ -1,5 +1,3 @@
-import HotTopics from "@/components/thread/comment/HotTopics";
-import PopularAuthors from "@/components/thread/comment/PopularAuthors";
 import HomePosts from "@/components/thread/homePosts";
 import NoLoginTrade from "@/components/thread/noLoginTrade";
 import prisma from "@/lib/prisma";
