@@ -5,8 +5,12 @@ export default function Header() {
   const { userId } = auth();
 
   return (
-    <main className="flex flex-row w-full justify-between items-center mt-[2.5rem] box-borde pt-[13px] pb-[17px] pl-[41px] bg-white rounded-[15px] border-#eaeaea ml-[2.5rem]">
-      <div className="flex gap-[1.5rem] items-center w-full mr-[10rem]">
+    <main className="flex w-full h-[4.875rem] bg-white px-[2.6875rem] fixed top-0 z-10 box-border">
+      <div className="flex w-full justify-start items-center">
+        <div className="flex justify-start items-center">
+          <img src="/logo.png" alt="Logo" />
+          <div className="font-bold text-2xl whitespace-nowrap">Flare Dapp</div>
+        </div>
         <Explore />
       </div>
       <div className="flex gap-[1.25rem] items-center">
@@ -16,8 +20,14 @@ export default function Header() {
           </div>
         ) : (
           <SignInButton>
-            <div className="cursor-pointer bg-gradient-to-r from-#F9D423-500 to-#F83600-500">
-              Sign In
+            <div
+              className="rounded-[2.5rem] px-[3.125rem] py-[.85rem] text-white cursor-pointer whitespace-nowrap"
+              style={{
+                background:
+                  "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+              }}
+            >
+              Log In
             </div>
           </SignInButton>
         )}

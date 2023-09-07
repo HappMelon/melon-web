@@ -3,7 +3,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Prisma } from "@prisma/client";
 import { Loader2 } from "lucide-react";
-import SearchPage from "@/components/thread/users";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import Item from ".";
