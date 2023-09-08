@@ -1,118 +1,102 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { createNotes } from "@/lib/actions";
-import { UploadFile } from "@/lib/upload-file";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { toast } from "@/components/ui/use-toast";
+import { createNotes, updateTagsCount } from "@/lib/actions";
 import { Loader2 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { toast } from "../ui/use-toast";
+import { TagsInput } from "react-tag-input-component";
+
+import dynamic from "next/dynamic";
+const MarkdownEditor = dynamic(
+  () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
+  { ssr: false },
+);
 
 export default function Q({
   create,
 }: {
   create: { id: string; name: string; image: string };
 }) {
+  const [title, setTitle] = useState("");
   const [value, setValue] = useState("");
-  const [fileList, setFileList] = useState<string[]>([]);
-  const [src, setSrc] = useState("");
   const [isPending, startTransition] = useTransition();
   const [clicked, setClicked] = useState(false);
   const pathname = usePathname();
+  const [Tags, setTags] = useState([]);
 
-  useEffect(() => {
-    if (clicked && !isPending) {
-      setValue("");
-      setClicked(false);
-      toast({
-        title: "Note created",
-      });
-    }
-  }, [isPending]);
-
-  function onChange(value: string) {
-    setValue(value);
-
-    const linktoipfs = (url: string) => {
-      const ipfs = url.split("//")[1];
-      return `https://ipfs.xlog.app/ipfs/${ipfs}`;
-    };
-
-    const handleFileUpload = (file: File) => {
-      return UploadFile(file)
-        .then((res) => {
-          return linktoipfs(res.key);
-        })
-        .catch((e) => console.error("Can't upload file", e));
-    };
-
-    const img = value.match(/<img.*?(?:>|\/>)/gi);
-
-    // upload the latest image in the queue
-    if (img && img.length > fileList.length) {
-      console.log("fileList", fileList);
-
-      const lastImg = img.slice(-1)[0];
-      const src = lastImg.match(/src=['"]?([^'"]*)['"]?/i)![1];
-
-      if (!fileList.includes(src)) {
-        const file = fetch(src)
-          .then((res) => res.blob())
-          .then((blob) => {
-            const file = new File([blob], `${lastImg}`, {
-              type: `image/${lastImg.match(/image\/(\w+)/i)![1]}`,
-            });
-            return handleFileUpload(file);
-          })
-          .then((newSrc) => {
-            setFileList([...fileList, src]);
-            const newValue = value.replace(
-              lastImg,
-              lastImg.replace(/src=['"]?([^'"]*)['"]?/i, `src="${newSrc}"`),
-            );
-            setValue(newValue);
-          })
-          .catch((e) => console.error("Can't upload file", e));
-      }
-    }
+  function clearState() {
+    setTitle("");
+    setValue("");
+    setTags([]);
   }
 
-  // https://juejin.cn/post/7195124289501134905
-  // TODO: React Quill like not support add Title Edit
-  const modules = {
-    toolbar: [
-      "bold",
-      "italic",
-      "underline",
-      { header: 1 },
-      { header: 2 },
-      "blockquote",
-      "code-block",
-      "code",
-      "link",
-      { list: "ordered" },
-      { list: "bullet" },
-      "image",
-    ],
-  };
+  useEffect(() => {
+    if (clicked) {
+      clearState();
+      toast({
+        title: "created",
+      });
+      setClicked(false);
+    }
+  }, [clicked]);
 
   return (
-    <div className="h-auto ml-[2.5rem] bg-white mt-[2.25rem] border-#EAEAEA rounded-[1rem]">
-      <div className="h-[50vh]  p-[1.625rem]">
-        <ReactQuill
-          placeholder="Compose here..."
-          className="h-full p-[2.25rem]"
-          modules={modules}
+    <div className="h-[auto] ml-[2.5rem] bg-white mt-[2.25rem] border-#EAEAEA rounded-[1rem] w-[calc(100vw-23rem)]">
+      <div className="pt-[1.875rem] pl-[1.875rem] text-[32px] font-[750]">
+        Create a post
+      </div>
+      <div className="h-[auto]  p-[1.625rem]">
+        <input
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          type="text"
+          placeholder="Type a title..."
+          className="bg-[#F8F8F8] color-[#9B9B9B] rounded-sm px-[16px] py-[12px] w-full outline-none"
+        ></input>
+        <MarkdownEditor
           value={value}
-          onChange={onChange}
-        ></ReactQuill>
+          onChange={setValue as unknown as (value: string) => void}
+          className="!bg-[#F8F8F8] color-[#9B9B9B] mt-1"
+          height="28rem"
+          visible
+          toolbars={["bold", "italic", "underline", "header", "olist", "ulist"]}
+          placeholder={"Compose here..."}
+        />
+      </div>
+      <div className="flex pl-[1.875rem] gap-[.6875rem]">
+        <Popover>
+          <PopoverTrigger>
+            <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
+              <img src="/Frame.svg" alt="" />
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-[21.25rem] h-[17.5rem] ml-[16.75rem] mb-[17px]">
+            <TagsInput
+              value={Tags}
+              onChange={(tags) => setTags(tags as never[])}
+              name="tags"
+            />
+          </PopoverContent>
+        </Popover>
+        <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
+          <img src="/🦆 icon _camera_.svg" alt="" />
+        </div>
+        <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
+          <img src="/🦆 icon _video_.svg" alt="" />
+        </div>
       </div>
       <div className="flex justify-end gap-[13px] pb-[67px] pr-[52px]">
         <Button
           onClick={() => {
-            setValue("");
+            clearState();
             toast({
               title: "cancel created",
             });
@@ -122,8 +106,11 @@ export default function Q({
         </Button>
         <Button
           onClick={() => {
-            // TODO 图片根据 ipfs 地址存储
-            startTransition(() => createNotes(value, create.id, pathname));
+            console.log(Tags);
+            startTransition(() =>
+              createNotes(title, value, Tags, create.id, pathname),
+            );
+            startTransition(() => updateTagsCount([...Tags]));
             setClicked(true);
           }}
         >

@@ -1,3 +1,4 @@
+import TopicsAndAuthors from "@/components/thread/TopicsAndAuthors";
 import HomePosts from "@/components/thread/homePosts";
 import NoLoginTrade from "@/components/thread/noLoginTrade";
 import prisma from "@/lib/prisma";
@@ -118,9 +119,15 @@ export default async function Page({
     <div className="flex w-full">
       {/* 根据用户是否登陆显示不一样的Trade页面 */}
       {user ? (
-        <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
+        <>
+          <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
+          <TopicsAndAuthors />
+        </>
       ) : (
-        <NoLoginTrade posts={defaultPosts}></NoLoginTrade>
+        <>
+          <NoLoginTrade posts={defaultPosts}></NoLoginTrade>
+          <TopicsAndAuthors />
+        </>
       )}
     </div>
   );
