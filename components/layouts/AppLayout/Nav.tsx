@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { cn } from "@/lib/utils";
@@ -25,7 +26,12 @@ export function Sidebar({ className }: SidebarProps) {
   return (
     <div className={cn(cs, className)}>
       <div className="flex flex-col text-[1.25rem] font-bold pt-[2.4375rem] pl-[2.9375rem]">
-        <div className="flex">
+        <div
+          className="flex cursor-pointer"
+          onClick={() => {
+            SwitchRouter("/explore");
+          }}
+        >
           <img
             src="/🦆 icon _fire_.svg"
             alt=""
@@ -33,7 +39,12 @@ export function Sidebar({ className }: SidebarProps) {
           />
           <div className="pl-[1.125rem]">Trending</div>
         </div>
-        <div className="flex pt-[2.625rem]">
+        <div
+          className="flex pt-[2.625rem] cursor-pointer"
+          onClick={() => {
+            SwitchRouter("/mill");
+          }}
+        >
           <img
             src="/🦆 icon _purchase tag_.svg"
             alt=""
@@ -41,7 +52,12 @@ export function Sidebar({ className }: SidebarProps) {
           />
           <div className="pl-[1.125rem]">Mill</div>
         </div>
-        <div className="flex pt-[2.625rem]">
+        <div
+          className="flex pt-[2.625rem] cursor-pointer"
+          onClick={() => {
+            SwitchRouter("/wallet");
+          }}
+        >
           <img
             src="/🦆 icon _Wallet_.svg"
             alt=""
@@ -51,10 +67,13 @@ export function Sidebar({ className }: SidebarProps) {
         </div>
       </div>
       <div
-        className="flex py-[.5rem] px-[1.375rem] mt-[2.25rem] ml-[36px] w-[8.875rem] rounded-[2.5rem]"
+        className="flex py-[.5rem] px-[1.375rem] mt-[2.25rem] ml-[36px] w-[8.875rem] rounded-[2.5rem] cursor-pointer"
         style={{
           background:
             "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+        }}
+        onClick={() => {
+          SwitchRouter("/post");
         }}
       >
         <img

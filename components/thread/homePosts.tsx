@@ -72,7 +72,7 @@ export default function HomePosts({
   };
 
   return (
-    <div className="ml-[2.5rem] bg-white rounded-[15px] mt-[37px] w-full">
+    <div className="ml-[2.5rem] bg-white rounded-[15px] w-full">
       <Tabs defaultValue="For You">
         <TabsList className="flex gap-1.5rem justify-start">
           <TabsTrigger value="For You">For You</TabsTrigger>

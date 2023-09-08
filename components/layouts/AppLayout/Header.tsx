@@ -9,7 +9,7 @@ export default function Header() {
 
   return (
     <main
-      className={`flex w-full h-[4.875rem] bg-white px-[2.6875rem] ${
+      className={`flex w-full h-[4.875rem] bg-white px-[2.6875rem] fixed top-0 z-10${
         blur ? "pointer-events-none filter blur-[4px]" : ""
       }`}
     >
