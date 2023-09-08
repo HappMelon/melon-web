@@ -1,23 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
-const usePathname = () => {
-  const [pathname, setPathname] = useState(window.location.pathname);
-
-  useEffect(() => {
-    const handleLocationChange = () => {
-      setPathname(window.location.pathname);
-    };
-
-    window.addEventListener("popstate", handleLocationChange);
-
-    return () => {
-      window.removeEventListener("popstate", handleLocationChange);
-    };
-  }, []);
-
-  return pathname;
+export const useGetPath = () => {
+  const pathname = usePathname();
+  return { pathname };
 };
-
-export default usePathname;

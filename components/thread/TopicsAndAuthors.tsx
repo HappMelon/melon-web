@@ -1,10 +1,12 @@
+"use client";
+
 import HotTopics from "@/components/thread/comment/HotTopics";
 import PopularAuthors from "@/components/thread/comment/PopularAuthors";
-import { usePathname } from "next/navigation";
+import { useGetPath } from "@/hook/useGetPath";
 
 export default function TopicsAndAuthors() {
-  const path = usePathname();
-  const blur = path === "/sign-in" || path === "/sign-up";
+  const { pathname } = useGetPath();
+  const blur = pathname === "/sign-in" || pathname === "/sign-up";
   return (
     <div
       className={`w-[21.875rem] fixed top-[6.75rem] right-[2.6875rem] ${
