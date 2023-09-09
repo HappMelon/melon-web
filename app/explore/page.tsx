@@ -1,4 +1,4 @@
-import TopicsAndAuthors from "@/components/thread/TopicsAndAuthors";
+import { TopicsAndAuthors } from "@/components/thread/comment/TopicsAndAuthors";
 import HomePosts from "@/components/thread/homePosts";
 import NoLoginTrade from "@/components/thread/noLoginTrade";
 import prisma from "@/lib/prisma";
@@ -121,14 +121,13 @@ export default async function Page({
       {user ? (
         <>
           <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
-          <TopicsAndAuthors />
         </>
       ) : (
         <>
           <NoLoginTrade posts={defaultPosts}></NoLoginTrade>
-          <TopicsAndAuthors />
         </>
       )}
+      <TopicsAndAuthors />
     </div>
   );
 }

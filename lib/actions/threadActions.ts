@@ -1,8 +1,8 @@
 "use server";
 
+import prisma from "@/lib/prisma";
+import { cleanup } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
-import prisma from "../prisma";
-import { cleanup } from "../utils";
 
 export async function createNotes(
   title: string,

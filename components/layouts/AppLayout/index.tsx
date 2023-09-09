@@ -1,4 +1,3 @@
-import TopicsAndAuthors from "@/components/thread/TopicsAndAuthors";
 import React from "react";
 import Header from "./Header";
 import { Sidebar } from "./Nav";
