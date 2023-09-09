@@ -1,17 +1,21 @@
 "use server";
 
+import prisma from "@/lib/prisma";
+import { cleanup } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
-import prisma from "../prisma";
-import { cleanup } from "../utils";
 
 export async function createNotes(
+  title: string,
   text: string,
+  tags: string[],
   authorId: string,
   path: string,
 ) {
   await prisma.post.create({
     data: {
+      title: title,
       text: cleanup(text),
+      tags: tags,
       author: {
         connect: {
           id: authorId,
@@ -21,6 +25,37 @@ export async function createNotes(
   });
 
   revalidatePath(path);
+}
+
+export async function updateTagsCount(tags: string[]) {
+  for (let tag in tags) {
+    // check exists
+    console.log(tags[tag]);
+    const tagExist = await prisma.tagsFrequencies.findUnique({
+      where: {
+        tag: tags[tag],
+      },
+    });
+    // update
+    console.log(tagExist);
+    if (tagExist) {
+      await prisma.tagsFrequencies.update({
+        where: {
+          tag: tags[tag],
+        },
+        data: {
+          count: tagExist.count + 1,
+        },
+      });
+    } else {
+      await prisma.tagsFrequencies.create({
+        data: {
+          tag: tags[tag],
+          count: 1,
+        },
+      });
+    }
+  }
 }
 
 export async function createThread(

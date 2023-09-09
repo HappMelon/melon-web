@@ -14,10 +14,6 @@ export default async function SearchPage({
 }) {
   const user = await currentUser();
 
-  if (!user) {
-    redirect("/sign-in");
-  }
-
   const getUser = await prisma.user.findUnique({
     where: {
       id: user?.id,
@@ -36,7 +32,7 @@ export default async function SearchPage({
         },
         where: {
           NOT: {
-            id: user.id,
+            id: user!.id,
           },
           OR: [
             {
@@ -65,7 +61,7 @@ export default async function SearchPage({
         },
         where: {
           NOT: {
-            id: user.id,
+            id: user!.id,
           },
         },
         orderBy: {

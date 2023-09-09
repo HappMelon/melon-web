@@ -26,7 +26,7 @@ export function Explore() {
   }, [search, router, pathname]);
 
   return (
-    <div className="w-full flex items-center p-1">
+    <div className="w-full flex items-center p-1 ml-[5.5rem] mr-[31.25rem]">
       <img src="/Search.svg" alt="" className="mr-[-2.25rem] z-10 pl-[22px]" />
       <Input
         placeholder="Search posts、users"

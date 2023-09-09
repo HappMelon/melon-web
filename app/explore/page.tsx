@@ -1,6 +1,6 @@
-import HotTopics from "@/components/thread/comment/HotTopics";
-import PopularAuthors from "@/components/thread/comment/PopularAuthors";
+import { TopicsAndAuthors } from "@/components/thread/comment/TopicsAndAuthors";
 import HomePosts from "@/components/thread/homePosts";
+import NoLoginTrade from "@/components/thread/noLoginTrade";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
 
@@ -54,15 +54,17 @@ export default async function Page({
         },
       });
 
-  // follows
-  const follows = await prisma.user.findUnique({
-    where: {
-      id: user?.id,
-    },
-    include: {
-      following: true,
-    },
-  });
+  // Following
+  const follows = user
+    ? await prisma.user.findUnique({
+        where: {
+          id: user?.id,
+        },
+        include: {
+          following: true,
+        },
+      })
+    : null;
 
   const followPosts = searchParams?.q
     ? await prisma.post.findMany({
@@ -114,12 +116,18 @@ export default async function Page({
       });
 
   return (
-    <div className="flex">
-      <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
-      <div className="flex flex-col">
-        <HotTopics></HotTopics>
-        <PopularAuthors></PopularAuthors>
-      </div>
+    <div className="flex w-full">
+      {/* 根据用户是否登陆显示不一样的Trade页面 */}
+      {user ? (
+        <>
+          <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
+        </>
+      ) : (
+        <>
+          <NoLoginTrade posts={defaultPosts}></NoLoginTrade>
+        </>
+      )}
+      <TopicsAndAuthors />
     </div>
   );
 }
