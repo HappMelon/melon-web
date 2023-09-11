@@ -21,7 +21,7 @@ export function Sidebar({ className }: SidebarProps) {
     setValue(pathname);
   }
 
-  let cs = `${blur ? "pointer-events-none filter blur-[4px]" : ""}`;
+  let cs = `${blur ? "pointer-events-none filter blur-[2px]" : ""}`;
 
   return (
     <div className={cn(cs, className)}>

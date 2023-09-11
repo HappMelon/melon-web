@@ -107,7 +107,6 @@ export default function MoreMenu({
               }}
               className="!text-red-500"
             >
-              {" "}
               <Flag className="w-4 h-4 mr-2" />
               Report
             </DropdownMenuItem>
