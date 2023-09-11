@@ -1,11 +1,10 @@
 "use client";
 
-import { useTransition } from "react";
-import { Button } from "../ui/button";
-import { useToast } from "../ui/use-toast";
 import { followUser, unfollowUser } from "@/lib/actions";
 import { Loader2 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useTransition } from "react";
+import { useToast } from "../ui/use-toast";
 
 export default function FollowButton({
   isFollowing,
@@ -23,7 +22,7 @@ export default function FollowButton({
   const pathname = usePathname();
 
   return (
-    <Button
+    <div
       onClick={(e) => {
         e.preventDefault();
         toast({
@@ -37,16 +36,21 @@ export default function FollowButton({
           }
         });
       }}
-      className="w-full"
-      variant="outline"
+      className="cursor-pointer flex rounded-[2.5rem] px-[.875rem] py-[.5rem] text-white"
+      style={{
+        background: "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+      }}
     >
-      {isPending ? (
-        <Loader2 className="animate-spin w-4 h-4" />
-      ) : isFollowing ? (
-        "Following"
-      ) : (
-        "Follow"
-      )}
-    </Button>
+      <img src="/🦆 icon _plus_.svg" alt="" className="pr-[.375rem]" />
+      <div>
+        {isPending ? (
+          <Loader2 className="animate-spin w-4 h-4" />
+        ) : isFollowing ? (
+          "Following"
+        ) : (
+          "Follow"
+        )}
+      </div>
+    </div>
   );
 }

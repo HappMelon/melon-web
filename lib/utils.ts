@@ -1,6 +1,6 @@
-import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import Filter from "bad-words";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -68,4 +68,23 @@ export const cleanup = (text: string) => {
   } catch {
     return text;
   }
+};
+
+export const Color = () => {
+  const colorArr = [
+    "text-slate-600",
+    "text-gray-600",
+    "text-zinc-600",
+    "text-stone-600",
+    "text-red-600",
+    "text-orange-600",
+    "text-amber-600",
+    "text-lime-600",
+    "text-green-600",
+    "text-cyan-600",
+    "text-blue-600",
+    "text-indigo-600",
+    "text-rose-600",
+  ];
+  return colorArr;
 };
