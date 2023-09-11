@@ -3,7 +3,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Prisma } from "@prisma/client";
 import { Loader2 } from "lucide-react";
-import SearchPage from "@/components/thread/users";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import Item from ".";
@@ -75,10 +74,16 @@ export default function HomePosts({
   return (
     <div className="ml-[2.5rem] bg-white rounded-[15px] mt-[37px] w-full">
       <Tabs defaultValue="For You">
-        <TabsList className="flex gap-1.5rem justify-start">
-          <TabsTrigger value="For You">For You</TabsTrigger>
-          <TabsTrigger value="Following">Following</TabsTrigger>
-          <TabsTrigger value="Politics">Politics</TabsTrigger>
+        <TabsList className="flex justify-start gap-[1.5rem] mb-[1.875rem] mt-[1.0625rem] ml-[1.9375rem] bg-white">
+          <TabsTrigger value="For You" className="!bg-[#F8F8F8]">
+            For You
+          </TabsTrigger>
+          <TabsTrigger value="Following" className="!bg-[#F8F8F8]">
+            Following
+          </TabsTrigger>
+          <TabsTrigger value="Politics" className="!bg-[#F8F8F8]">
+            Politics
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="For You">
           <div className="grid grid-cols-3 gap-[2.25rem] px-[25px] py-[36px]">

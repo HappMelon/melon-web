@@ -9,7 +9,7 @@ export default async function HotTopics() {
         tag: "desc",
       },
     },
-    take: 10,
+    take: 12,
   });
 
   const colors = Color();
@@ -23,11 +23,18 @@ export default async function HotTopics() {
       <div className="flex flex-wrap gap-4 max-w-full tex pt-[1.25rem] pl-[1.75rem] pb-[1.5625rem]">
         {topics && colors
           ? topics.map((tag, index) => {
-              const colorClass = `${colors[index]} bg-[#9B9B9B] px-[.625rem] py-[.25rem] rounded-[.3125rem] cursor-pointer`;
-              console.log(colorClass);
+              const color = colors[index];
+              const colorClass = `px-[.625rem] py-[.25rem] rounded-[.3125rem] cursor-pointer`;
               return (
                 colors[index] && (
-                  <div key={index} className={colorClass}>
+                  <div
+                    key={index}
+                    className={colorClass}
+                    style={{
+                      color: color,
+                      background: `${color}10`,
+                    }}
+                  >
                     #{Object.values(tag)}
                   </div>
                 )

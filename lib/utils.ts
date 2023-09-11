@@ -72,19 +72,18 @@ export const cleanup = (text: string) => {
 
 export const Color = () => {
   const colorArr = [
-    "text-slate-600",
-    "text-gray-600",
-    "text-zinc-600",
-    "text-stone-600",
-    "text-red-600",
-    "text-orange-600",
-    "text-amber-600",
-    "text-lime-600",
-    "text-green-600",
-    "text-cyan-600",
-    "text-blue-600",
-    "text-indigo-600",
-    "text-rose-600",
+    "#FF5925",
+    "#FF27A1",
+    "#006F92",
+    "#FF003D",
+    "#FF6B00",
+    "#4EA84C",
+    "#BD97FF",
+    "#F90",
+    "#0076FF",
+    "#17D5FF",
+    "#0085FF",
+    "#AC3EEF",
   ];
   return colorArr;
 };
