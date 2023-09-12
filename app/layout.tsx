@@ -1,6 +1,7 @@
 import Index from "@/components/layouts/AppLayout";
 import { ClerkProvider } from "@clerk/nextjs";
 
+import { Toaster } from "@/components/ui/toaster";
 import "@/styles/index.css";
 
 // https://clerk.com/docs/nextjs/get-started-with-nextjs
@@ -21,6 +22,7 @@ export default function RootLayout({
         <body>
           {/* https://ui.shadcn.com/docs/dark-mode/next */}
           <Index>{children}</Index>
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>

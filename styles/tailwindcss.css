@@ -5,3 +5,20 @@
 body {
 	background-color: #eaeaea;
 }
+
+.cm-editor,
+.cm-gutters,
+.cm-activeLine,
+.cm-activeLineGutter,
+.md-editor-preview,
+.wmde-markdown-color {
+	background-color: #f8f8f8 !important;
+}
+
+.overflow-ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}

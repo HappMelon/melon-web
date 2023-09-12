@@ -1,6 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -8,13 +10,14 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import { createNotes, updateTagsCount } from "@/lib/actions";
+import { UploadFile } from "@/lib/upload-file";
 import { Loader2 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 import "react-quill/dist/quill.snow.css";
 import { TagsInput } from "react-tag-input-component";
 
-import dynamic from "next/dynamic";
 const MarkdownEditor = dynamic(
   () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
   { ssr: false },
@@ -27,6 +30,7 @@ export default function Q({
 }) {
   const [title, setTitle] = useState("");
   const [value, setValue] = useState("");
+  const [uploadImg, setUploadImg] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
   const [clicked, setClicked] = useState(false);
   const pathname = usePathname();
@@ -42,11 +46,24 @@ export default function Q({
     if (clicked) {
       clearState();
       toast({
-        title: "created",
+        title: "Publish Post.",
       });
       setClicked(false);
     }
   }, [clicked]);
+
+  const linktoipfs = (url: string) => {
+    const ipfs = url.split("//")[1];
+    return `https://ipfs.xlog.app/ipfs/${ipfs}`;
+  };
+
+  const handleFileUpload = (file: File) => {
+    return UploadFile(file)
+      .then((res) => {
+        return linktoipfs(res.key);
+      })
+      .catch((e) => console.error("Can't upload file", e));
+  };
 
   return (
     <div className="h-[auto] ml-[2.5rem] bg-white mt-[2.25rem] border-#EAEAEA rounded-[1rem] w-[calc(100vw-23rem)]">
@@ -64,7 +81,7 @@ export default function Q({
         <MarkdownEditor
           value={value}
           onChange={setValue as unknown as (value: string) => void}
-          className="!bg-[#F8F8F8] color-[#9B9B9B] mt-1"
+          className="!bg-[#F8F8F8] color-[#9B9B9B] mt-0"
           height="28rem"
           visible
           toolbars={["bold", "italic", "underline", "header", "olist", "ulist"]}
@@ -87,28 +104,61 @@ export default function Q({
           </PopoverContent>
         </Popover>
         <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
-          <img src="/🦆 icon _camera_.svg" alt="" />
+          <Label htmlFor="picture" className="w-full h-full cursor-pointer">
+            <img src="/🦆 icon _camera_.svg" alt="" />
+          </Label>
+          <Input
+            onChange={(e) => {
+              console.log(e);
+              if (e.target.files) {
+                handleFileUpload(e.target.files[0]).then((res) => {
+                  console.log(res);
+                  setUploadImg([...uploadImg, res as string]);
+                  console.log(uploadImg);
+                });
+              }
+            }}
+            id="picture"
+            type="file"
+            placeholder=""
+            className="hidden"
+          ></Input>
         </div>
-        <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
-          <img src="/🦆 icon _video_.svg" alt="" />
+        <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem] cursor-pointer">
+          <img
+            className="w-full h-full"
+            src="/🦆 icon _video_.svg"
+            alt=""
+            onClick={() => {
+              toast({
+                title: "video upload coming soon!",
+              });
+            }}
+          />
         </div>
       </div>
       <div className="flex justify-end gap-[13px] pb-[67px] pr-[52px]">
         <Button
+          className="px-[1.375rem] py-[.5rem] rounded-[2.5rem] bg-[#F4F4F4] text-[#9B9B9B] font-medium text-[1.25rem] hover:bg-[#EAEAEA]"
           onClick={() => {
             clearState();
             toast({
-              title: "cancel created",
+              title: "Cancel Post.",
             });
           }}
         >
           cancel
         </Button>
         <Button
+          className="px-[1.375rem] py-[.5rem] rounded-[2.5rem] font-medium text-[1.25rem]"
+          style={{
+            background:
+              "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+          }}
           onClick={() => {
             console.log(Tags);
             startTransition(() =>
-              createNotes(title, value, Tags, create.id, pathname),
+              createNotes(title, value, Tags, uploadImg, create.id, pathname),
             );
             startTransition(() => updateTagsCount([...Tags]));
             setClicked(true);
@@ -120,6 +170,11 @@ export default function Q({
             "Publish"
           )}
         </Button>
+      </div>
+      <div className="flex gap-[1.25rem] ml-[1.875rem] pb-[16rem]">
+        {uploadImg.map((img, index) => (
+          <img key={index} src={img} alt="" className="w-[265px] h-[160px]" />
+        ))}
       </div>
     </div>
   );

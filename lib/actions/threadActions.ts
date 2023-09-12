@@ -8,6 +8,7 @@ export async function createNotes(
   title: string,
   text: string,
   tags: string[],
+  images: string[],
   authorId: string,
   path: string,
 ) {
@@ -16,6 +17,7 @@ export async function createNotes(
       title: title,
       text: cleanup(text),
       tags: tags,
+      images: images,
       author: {
         connect: {
           id: authorId,

@@ -40,9 +40,9 @@ export default function HomePosts({
   const [follow, setFollow] = useState(follows);
   const [noMore, setNoMore] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const { ref, inView } = useInView();
 
+  // loading more
   useEffect(() => {
     if (inView && !noMore) {
       setLoading(true);
@@ -55,6 +55,7 @@ export default function HomePosts({
     setItems(posts);
   }, [posts]);
 
+  // loadMore
   const loadMore = async () => {
     const morePosts = await fetch(
       `/api/loadMore?cursor=${items[items.length - 1].id}`,
@@ -72,7 +73,7 @@ export default function HomePosts({
   };
 
   return (
-    <div className="ml-[2.5rem] bg-white rounded-[15px] mt-[37px] w-full">
+    <div className="ml-[2.5rem] bg-white rounded-[15px] w-full">
       <Tabs defaultValue="For You">
         <TabsList className="flex justify-start gap-[1.5rem] mb-[1.875rem] mt-[1.0625rem] ml-[1.9375rem] bg-white">
           <TabsTrigger value="For You" className="!bg-[#F8F8F8]">
@@ -86,7 +87,7 @@ export default function HomePosts({
           </TabsTrigger>
         </TabsList>
         <TabsContent value="For You">
-          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px] py-[36px]">
+          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px]">
             {items.map((item, i) => {
               if (i === items.length - 1)
                 return (
