@@ -1,6 +1,7 @@
 "use client";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "@/components/ui/use-toast";
 import { Prisma } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -82,7 +83,15 @@ export default function HomePosts({
           <TabsTrigger value="Following" className="!bg-[#F8F8F8]">
             Following
           </TabsTrigger>
-          <TabsTrigger value="Politics" className="!bg-[#F8F8F8]">
+          <TabsTrigger
+            value="Politics"
+            className="!bg-[#F8F8F8]"
+            onClick={() => {
+              toast({
+                title: "Politics coming soon.",
+              });
+            }}
+          >
             Politics
           </TabsTrigger>
         </TabsList>
@@ -104,7 +113,7 @@ export default function HomePosts({
           </div>
         </TabsContent>
         <TabsContent value="Following">
-          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px] py-[36px]">
+          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px]">
             {follow.map((item, i) => {
               if (i === items.length - 1)
                 return (
@@ -120,8 +129,8 @@ export default function HomePosts({
             })}
           </div>
         </TabsContent>
-        <TabsContent value="Politics" className="p-4">
-          Coming Soon!
+        <TabsContent value="Politics" className="text-center">
+          Politics coming soon.
         </TabsContent>
       </Tabs>
 
@@ -137,7 +146,7 @@ export default function HomePosts({
         ) : null}
         {noMore ? (
           <div className="text-neutral-600 mt-4 text-center leading-loose">
-            No more threads...
+            Politics coming soon.
           </div>
         ) : null}
       </div>

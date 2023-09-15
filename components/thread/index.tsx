@@ -98,7 +98,7 @@ export default function Item({
             </ReactMarkdown>
             {/* Tags */}
             {data.tags ? (
-              <div className="flex flex-wrap gap-1 pt-[.625rem]">
+              <div className="flex flex-wrap gap-[.625rem] pt-[.625rem]">
                 {data.tags.map((tag, index) => (
                   <div
                     style={{
@@ -108,7 +108,7 @@ export default function Item({
                     key={tag}
                     className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
                   >
-                    {tag}
+                    #{tag}
                   </div>
                 ))}
               </div>

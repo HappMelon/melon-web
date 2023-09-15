@@ -4,16 +4,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { deleteThread } from "@/lib/actions";
 import { useUser } from "@clerk/nextjs";
 import { Flag, Loader2, MoreHorizontal, Trash, UserX2 } from "lucide-react";
-import { useToast } from "../ui/use-toast";
-import { useEffect, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { deleteThread } from "@/lib/actions";
+import { useEffect, useState, useTransition } from "react";
+import { useToast } from "../ui/use-toast";
 
 export default function MoreMenu({
   author,
@@ -58,7 +56,6 @@ export default function MoreMenu({
           setOpen((prev) => !prev);
         }}
       >
-        {" "}
         <MoreHorizontal className="w-5 h-5" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

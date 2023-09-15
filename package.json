@@ -27,7 +27,7 @@
     ]
   },
   "dependencies": {
-    "@clerk/nextjs": "^4.23.3",
+    "@clerk/nextjs": "4.24.0-snapshot.d446acb",
     "@clerk/themes": "^1.7.5",
     "@prisma/client": "^4.16.2",
     "@radix-ui/react-dialog": "^1.0.4",

@@ -16,12 +16,14 @@ model Post {
   title     String   @db.VarChar(40) @default("")
   text      String   @db.VarChar(800)
   tags      String[]
-  images     String[]
+  images    String[]
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
   repost    Repost?
   createdAt DateTime @default(now())
   likes     Likes[]
+  views     Int      @default(0)
+  reposts   Int      @default(0)
 
   parentId String?
   parent   Post?   @relation("ParentChildren", fields: [parentId], references: [id])
