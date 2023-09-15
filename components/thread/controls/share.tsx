@@ -4,12 +4,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
-import { Link, Send, Share } from "lucide-react";
+import { reposts } from "@/lib/actions";
 
 export default function ShareButton({
   post,
@@ -30,9 +28,13 @@ export default function ShareButton({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Send className="w-[18px] h-[18px]" />
+        <img src="/reposts.svg" alt="" onClick={() => reposts(post)} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start">
+      <DropdownMenuContent
+        align="start"
+        side="top"
+        className="px-[1.5625rem] py-[1.5625rem]"
+      >
         <DropdownMenuItem
           onClick={(e) => {
             e.preventDefault();
@@ -42,9 +44,10 @@ export default function ShareButton({
               title: "Copied to clipboard",
             });
           }}
+          className="cursor-pointer"
         >
-          <Link className="mr-2 h-4 w-4" />
-          Copy Link
+          <img src="/Vector.svg" alt="" />
+          <div className="ml-[1rem] font-bold text-[1.125rem]">Copy link</div>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={(e) => {
@@ -56,9 +59,12 @@ export default function ShareButton({
               }&text=${encodeURIComponent(shareData.text)}&via=flaredapp`,
             );
           }}
+          className="cursor-pointer"
         >
-          <Share className="mr-2 h-4 w-4" />
-          Share Twitter
+          <img src="/🦆 icon _Twitter_.svg" alt="" />
+          <div className="ml-[1rem] font-bold text-[1.125rem]">
+            Share to Twitter
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

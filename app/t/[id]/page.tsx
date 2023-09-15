@@ -1,3 +1,4 @@
+import Reply from "@/components/t/Reply";
 import Item from "@/components/thread";
 import MainItem from "@/components/thread/main";
 import { Button } from "@/components/ui/button";
@@ -71,8 +72,8 @@ export default async function ThreadPage({
               <Image
                 src={post.parent.parent.author.image}
                 alt={post.parent.parent.author.name + "'s avatar"}
-                width={16}
-                height={16}
+                width={42}
+                height={42}
               />
             </div>
             See earlier reply
@@ -83,9 +84,12 @@ export default async function ThreadPage({
         <Item key={post.parent.id} parent data={post.parent} />
       ) : null}
       <MainItem key={post.id} data={post} />
-      {post.children.map((child) => (
-        <Item key={child.id} data={child} />
-      ))}
+      {/* commit */}
+      <div className="pb-[23px]">
+        {post.children.map((child) => (
+          <Reply key={child.id} data={child} />
+        ))}
+      </div>
     </>
   );
 }

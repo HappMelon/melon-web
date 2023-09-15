@@ -2,6 +2,11 @@
 
 import { Explore } from "@/components/search/explore";
 import { useGetPath } from "@/hook/useGetPath";
+import React from "react";
+
+const AccountButton = React.lazy(
+  async () => await import("@/components/thread/AccountButton"),
+);
 
 export default function Header() {
   const { pathname } = useGetPath();
@@ -20,9 +25,8 @@ export default function Header() {
         </div>
         <Explore />
       </div>
-      <div className="flex gap-[1.25rem] items-center">
-        {/* FIXME */}
-        {/* <AccountButton /> */}
+      <div className="flex items-center">
+        <AccountButton />
       </div>
     </main>
   );

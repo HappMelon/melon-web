@@ -2,7 +2,6 @@
 
 import { likeThread, unlikeThread } from "@/lib/actions";
 import { useUser } from "@clerk/nextjs";
-import { Heart } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
 
@@ -50,9 +49,12 @@ export default function Like({
         e.stopPropagation();
         handleLike();
       }}
-      className={`w-5 duration-200 h-5 ${liked ? "text-red-600" : ""}`}
     >
-      <Heart fill={liked ? "#f87171" : "#fff"} className="w-5 h-5" />
+      <img
+        src={liked ? "/liked.svg" : "/like.svg"}
+        alt=""
+        className="w-[1.8125rem] h-[1.8125rem]"
+      />
     </button>
   );
 }

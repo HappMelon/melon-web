@@ -1,4 +1,3 @@
-import Index from "@/components/layouts/AppLayout";
 import BackButton from "@/components/thread/backButton";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
@@ -10,10 +9,6 @@ export default async function ThreadPageLayout({
   children: React.ReactNode;
 }) {
   const user = await currentUser();
-
-  if (!user) {
-    redirect("/sign-in");
-  }
 
   const getUser = await prisma.user.findUnique({
     where: {
@@ -27,13 +22,11 @@ export default async function ThreadPageLayout({
 
   return (
     <div className="bg-white w-auto h-auto ml-[2.5rem] rounded-[15px]">
-      <div className="px-3 relative mt-8 mb-6">
+      <div className="flex items-center pt-[2.125rem]">
         <BackButton />
-        <div className="text-2xl font-semibold absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
-          Thread
-        </div>
+        <div className="pl-[1.375rem] text-[1.75rem] font-[750]">Post</div>
       </div>
-      {children}
+      <div>{children}</div>
     </div>
   );
 }

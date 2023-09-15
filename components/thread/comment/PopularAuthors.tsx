@@ -48,7 +48,7 @@ export default async function PopularAuthors() {
                 {user.username}
               </h3>
             </div>
-            {u ? (
+            {u && getSelf ? (
               <FollowButton
                 id={getSelf!.id}
                 followingId={user!.id}

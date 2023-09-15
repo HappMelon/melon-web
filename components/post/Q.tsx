@@ -173,7 +173,21 @@ export default function Q({
       </div>
       <div className="flex gap-[1.25rem] ml-[1.875rem] pb-[16rem]">
         {uploadImg.map((img, index) => (
-          <img key={index} src={img} alt="" className="w-[265px] h-[160px]" />
+          <div key={index} className="relative">
+            <img src={img} alt="" className="w-[265px] h-[160px]" />
+            <div
+              className="absolute top-0 right-0 flex items-center justify-center rounded-full cursor-pointer rounded-[50%] mt-[.5625rem] mr-[.5rem] px-[.5rem] py-[.375rem]"
+              style={{
+                background: "rgba(217, 217, 217, 0.30)",
+              }}
+              onClick={() => {
+                const newImg = uploadImg.filter((item, i) => i !== index);
+                setUploadImg(newImg);
+              }}
+            >
+              <img src="/delete.svg" alt="" />
+            </div>
+          </div>
         ))}
       </div>
     </div>
