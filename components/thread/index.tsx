@@ -1,13 +1,13 @@
 "use client";
 
+import Like from "@/components/thread/controls/like";
+import NameLink from "@/components/thread/nameLink";
+import { Color, timeSince } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import Controls from "./controls";
-import MoreMenu from "./moreMenu";
-import NameLink from "./nameLink";
-import Others from "./others";
+import ReactMarkdown from "react-markdown";
 
 export default function Item({
   data,
@@ -44,100 +44,92 @@ export default function Item({
   noLink?: boolean;
   parent?: boolean;
 }) {
-  const mainClass = parent
-    ? "px-3 pt-4 space-x-2 flex font-light"
-    : comment
-    ? `space-x-2 flex font-light ${noLink ? "pointer-events-none" : ""}`
-    : `px-3 py-4 space-x-2 flex border-b font-light w-[auto] bg-[#F8F8F8] rounded-[10px]  ${
-        noLink ? "pointer-events-none" : ""
-      }`;
-
   const router = useRouter();
-
-  console.log("data:", data);
+  const likes = data.likes.map((like) => like.userId);
+  const colors = Color();
 
   return (
-    <>
-      <div className={mainClass}>
-        <div className="flex flex-col items-center justify-between">
-          <div
-            className="w-8 h-8 mt-1 rounded-full bg-neutral-600 overflow-hidden cursor-pointer"
-            onClick={() => router.push(`/${data.author.username}`)}
-          >
+    <div className="bg-[#F4F4F4] px-[1rem] py-[1.25rem] rounded-xl">
+      <div className="flex justify-between items-center">
+        <div className="flex justify-start items-center">
+          <div onClick={() => router.push(`/${data.author.username}`)}>
             <Image
+              width={30}
+              height={30}
               src={data.author.image}
-              height={32}
-              width={32}
-              className=""
+              className="rounded-[3.125rem]"
               alt={data.author.name + "'s profile image"}
             />
           </div>
-          {comment || parent ? null : <Others others={data.children} />}
+          <div className="pl-[.625rem]">
+            <NameLink username={data.author.name} name={data.author.username} />
+          </div>
+          <div className="pl-[.625rem] font-medium text-[.75rem] text-[#9B9B9B]">
+            · {timeSince(data.createdAt)} ago
+          </div>
         </div>
-        <div className="w-full space-y-1">
-          <div className="w-full flex items-center justify-between">
-            <NameLink username={data.author.username} name={data.author.name} />
-
-            {comment ? null : (
-              <div className="flex items-center space-x-2">
-                <MoreMenu
-                  name={data.author.name}
-                  id={data.id}
-                  author={data.author.id}
-                />
+        <div className="flex items-center">
+          <Like
+            likes={likes}
+            numPosts={posts ? posts.length : -1}
+            post={data.id}
+          />
+          {/* show likes count */}
+          <div className="pl-[.5rem] text-[#9B9B9B]">
+            {data.likes.length > 0 ? <div>{data.likes.length}</div> : 0}
+          </div>
+        </div>
+      </div>
+      <div className="w-full">
+        {/* link to post page */}
+        <Link href={`/t/${data.id}`}>
+          <div
+            className={
+              comment
+                ? "text-base/relaxed pb-3 text-left"
+                : "text-base/relaxed text-left"
+            }
+          >
+            {/* Title */}
+            <h1 className="text-lg font-[550]">{data.title}</h1>
+            {/* Content */}
+            <ReactMarkdown className="overflow-ellipsis">
+              {data.text}
+            </ReactMarkdown>
+            {/* Tags */}
+            {data.tags ? (
+              <div className="flex flex-wrap gap-1 pt-[.625rem]">
+                {data.tags.map((tag, index) => (
+                  <div
+                    style={{
+                      color: colors[index],
+                      background: `${colors[index]}10`,
+                    }}
+                    key={tag}
+                    className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
+                  >
+                    {tag}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              ""
+            )}
+            {/* show picture if not exists show the title like picture*/}
+            {data.images.length > 0 ? (
+              <img
+                src={data.images[0]}
+                alt=""
+                className="w-[20rem] h-[20rem] object-cover !rounded-[1rem] mt-[1.25rem]"
+              />
+            ) : (
+              <div className="w-[19rem] h-[19rem] object-cover !rounded-[1rem] mt-[1.25rem] border flex justify-center items-center text-xl font-semibold">
+                {data.title}
               </div>
             )}
           </div>
-          <Link href={`/t/${data.id}`}>
-            <div
-              className={
-                comment
-                  ? "text-base/relaxed pb-3 text-left"
-                  : "text-base/relaxed text-left"
-              }
-            >
-              <div>{data.title}</div>
-              <div dangerouslySetInnerHTML={{ __html: data.text }} />
-              {data.tags ? (
-                <div className="flex flex-wrap gap-1">
-                  {data.tags.map((tag) => (
-                    <div
-                      key={tag}
-                      className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
-                    >
-                      {tag}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </Link>
-          {comment ? null : (
-            <>
-              <Controls numPosts={posts ? posts.length : -1} data={data} />
-              <div className="flex text-neutral-600 items-center space-x-2">
-                {data.children.length > 0 ? (
-                  <div>
-                    {data.children.length}{" "}
-                    {data.children.length === 1 ? "reply" : "replies"}
-                  </div>
-                ) : null}
-                {data.children.length > 0 && data.likes.length > 0 ? (
-                  <div className="w-1 h-1 rounded-full bg-neutral-600" />
-                ) : null}
-                {data.likes.length > 0 ? (
-                  <div>
-                    {data.likes.length}{" "}
-                    {data.likes.length === 1 ? "like" : "likes"}
-                  </div>
-                ) : null}
-              </div>
-            </>
-          )}
-        </div>
+        </Link>
       </div>
-    </>
+    </div>
   );
 }
