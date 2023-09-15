@@ -1,4 +1,4 @@
-import { UserButton, currentUser } from "@clerk/nextjs";
+import { currentUser } from "@clerk/nextjs";
 
 export default async function AccountButton() {
   const user = await currentUser();

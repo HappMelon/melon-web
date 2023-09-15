@@ -7,7 +7,7 @@ export function Follow() {
       <div className="grow flex items-center justify-between pb-4 pr-3 border-b">
         <div>
           <div className="font-semibold">
-            username{" "}
+            username
             <span className="text-neutral-600 pl-1 font-medium">{24}m</span>
           </div>
           <div className="text-neutral-600 -mt-1 font-medium">Followed you</div>
