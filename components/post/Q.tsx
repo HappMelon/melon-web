@@ -32,7 +32,6 @@ export default function Q({
   const [value, setValue] = useState("");
   const [uploadImg, setUploadImg] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
-  const [clicked, setClicked] = useState(false);
   const pathname = usePathname();
   const [Tags, setTags] = useState([]);
 
@@ -41,16 +40,6 @@ export default function Q({
     setValue("");
     setTags([]);
   }
-
-  useEffect(() => {
-    if (clicked) {
-      clearState();
-      toast({
-        title: "Publish Post.",
-      });
-      setClicked(false);
-    }
-  }, [clicked]);
 
   const linktoipfs = (url: string) => {
     const ipfs = url.split("//")[1];
@@ -92,7 +81,7 @@ export default function Q({
         <Popover>
           <PopoverTrigger>
             <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
-              <img src="/Frame.svg" alt="" />
+              <img className="w-10 h-10" src="/icon_tag.png" alt="" />
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-[21.25rem] h-[17.5rem] ml-[16.75rem] mb-[17px]">
@@ -105,7 +94,7 @@ export default function Q({
         </Popover>
         <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
           <Label htmlFor="picture" className="w-full h-full cursor-pointer">
-            <img src="/🦆 icon _camera_.svg" alt="" />
+            <img className="w-10 h-10" src="/icon_camara.png" alt="" />
           </Label>
           <Input
             onChange={(e) => {
@@ -126,8 +115,8 @@ export default function Q({
         </div>
         <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem] cursor-pointer">
           <img
-            className="w-full h-full"
-            src="/🦆 icon _video_.svg"
+            className="w-10 h-10"
+            src="/icon_video.png"
             alt=""
             onClick={() => {
               toast({
@@ -156,12 +145,21 @@ export default function Q({
               "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
           }}
           onClick={() => {
-            console.log(Tags);
-            startTransition(() =>
-              createNotes(title, value, Tags, uploadImg, create.id, pathname),
-            );
+            startTransition(async () => {
+              await createNotes(
+                title,
+                value,
+                Tags,
+                uploadImg,
+                create.id,
+                pathname,
+              );
+              clearState();
+              toast({
+                title: "Publish Post.",
+              });
+            });
             startTransition(() => updateTagsCount([...Tags]));
-            setClicked(true);
           }}
         >
           {isPending ? (
@@ -174,7 +172,7 @@ export default function Q({
       <div className="flex gap-[1.25rem] ml-[1.875rem] pb-[16rem]">
         {uploadImg.map((img, index) => (
           <div key={index} className="relative">
-            <img src={img} alt="" className="w-[265px] h-[160px]" />
+            <img src={img} alt="" className="max-w-[265px] h-[160px]" />
             <div
               className="absolute top-0 right-0 flex items-center justify-center rounded-full cursor-pointer rounded-[50%] mt-[.5625rem] mr-[.5rem] px-[.5rem] py-[.375rem]"
               style={{

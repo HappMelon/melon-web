@@ -82,9 +82,10 @@ export default function Commit({
           }}
           onClick={() => {
             // TODO add commit
-            startTransition(() =>
-              replyToThread(comment, user!.id, data.id, pathname),
-            );
+            startTransition(async () => {
+              await replyToThread(comment, user!.id, data.id, pathname);
+              setComment("");
+            });
             setClicked(true);
           }}
         >
