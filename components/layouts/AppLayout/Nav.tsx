@@ -2,6 +2,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { log } from "console";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 

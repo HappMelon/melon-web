@@ -146,7 +146,7 @@ export default function HomePosts({
         ) : null}
         {noMore ? (
           <div className="text-neutral-600 mt-4 text-center leading-loose">
-            Politics coming soon.
+            {/* Politics coming soon. */}
           </div>
         ) : null}
       </div>

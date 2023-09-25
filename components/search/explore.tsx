@@ -32,7 +32,7 @@ export function Explore() {
         placeholder="Search posts、users"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="flex-1 outline-none pl-[58px] pt-[10px] pb-[16px] rounded-full bg-[rgb(135,135,135,0.14)] color-[#9B9B9B]"
+        className="flex-1 outline-none pl-10 rounded-full bg-[rgb(135,135,135,0.14)] color-[#9B9B9B]"
       />
     </div>
   );

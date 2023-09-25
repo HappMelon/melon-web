@@ -17,14 +17,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <body>
-          {/* https://ui.shadcn.com/docs/dark-mode/next */}
-          <Index>{children}</Index>
-          <Toaster />
-        </body>
-      </html>
-    </ClerkProvider>
+    <>
+      <link rel="icon" href="/favicon.ico" sizes="any" />
+      <ClerkProvider>
+        <html lang="en">
+          <body>
+            {/* https://ui.shadcn.com/docs/dark-mode/next */}
+            <Index>{children}</Index>
+            <Toaster />
+          </body>
+        </html>
+      </ClerkProvider>
+    </>
   );
 }

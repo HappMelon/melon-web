@@ -10,11 +10,16 @@ import {
 import { useGetPath } from "@/hook/useGetPath";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const { pathname } = useGetPath();
   const blur = pathname === "/sign-in" || pathname === "/sign-up";
   const { isLoaded, isSignedIn, user } = useUser();
+  const router = useRouter();
+  function goToHomepage() {
+    router.push("/");
+  }
 
   return (
     <main
@@ -23,7 +28,10 @@ export default function Header() {
       }`}
     >
       <div className="flex w-full justify-start items-center">
-        <div className="flex justify-start items-center">
+        <div
+          onClick={goToHomepage}
+          className="flex justify-start items-center cursor-pointer"
+        >
           <img src="/logo.png" alt="Logo" />
           <div className="font-bold text-2xl whitespace-nowrap">Flare Dapp</div>
         </div>
