@@ -26,8 +26,6 @@ export default async function PopularAuthors() {
       })
     : null;
 
-  const isSelf = getSelf?.id === u?.id;
-
   return (
     <div className="w-[21.875rem] h-auto mt-[1.875rem] pb-[1.75rem] bg-white rounded-[.625rem]">
       <div className="flex items-center pt-[2rem] pl-[1.75rem]">
@@ -52,7 +50,7 @@ export default async function PopularAuthors() {
             </div>
             {u && getSelf ? (
               <>
-                {!isSelf && (
+                {user.id !== getSelf.id && (
                   <FollowButton
                     id={getSelf!.id}
                     followingId={user!.id}
