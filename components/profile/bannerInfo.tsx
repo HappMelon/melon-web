@@ -32,7 +32,7 @@ export function BannerInfo({
       <div className="grow mx-[1.625rem]">
         <div className="my-[1.625rem]">
           <div className="text-2xl">{user?.name}</div>
-          <div className="text-base">{user?.username}</div>
+          <div className="text-base">{`@${user?.username}`}</div>
         </div>
         <div className="text-sm">{user?.bio}</div>
       </div>
