@@ -11,6 +11,7 @@ import { useGetPath } from "@/hook/useGetPath";
 import { SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Header() {
   const { pathname } = useGetPath();
@@ -20,6 +21,8 @@ export default function Header() {
   function goToHomepage() {
     router.push("/");
   }
+
+  console.log("=======header user", user);
 
   return (
     <main
@@ -54,9 +57,14 @@ export default function Header() {
               side="bottom"
               className="px-[1.75rem] pt-[23px] pb-[21px]"
             >
-              <DropdownMenuItem className="gap-[11px]">
-                <img src="/profile.svg" alt="" />
-                <div className="text-[1.125rem] font-bold">View profile</div>
+              <DropdownMenuItem>
+                <Link
+                  href={`/profile/${user.id}`}
+                  className="flex items-center gap-[11px]"
+                >
+                  <img src="/profile.svg" alt="" />
+                  <div className="text-[1.125rem] font-bold">View profile</div>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="gap-[14px]">
                 <img src="/reset.svg" alt="" />
