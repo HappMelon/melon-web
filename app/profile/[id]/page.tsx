@@ -80,12 +80,14 @@ export default async function ProfilePage({
       <div className="bg-white rounded-[.9375rem] p-[1.875rem]">
         {/* <ComingSoon /> */}
         <BackIcon />
-        <BannerInfo user={userProfile} isCurUser={isCurUser} />
+        {userProfile && <BannerInfo user={userProfile} isCurUser={isCurUser} />}
 
-        <div className="flex mt-[3.125rem]">
-          <Content posts={posts} likePosts={userLikePosts} />
-          <Relation />
-        </div>
+        {userProfile && (
+          <div className="flex mt-[3.125rem]">
+            <Content posts={posts} likePosts={userLikePosts} />
+            <Relation />
+          </div>
+        )}
       </div>
     </div>
   );
