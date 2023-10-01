@@ -12,6 +12,9 @@ export function BannerInfo({
 }: {
   user: Prisma.UserGetPayload<{
     include: {
+      posts: true;
+      likes: true;
+      following: true;
       followedBy: true;
     };
   }>;
