@@ -1,12 +1,10 @@
 import prisma from "@/lib/prisma";
-import ComingSoon from "@/components/common/comingSoon";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { BackIcon } from "@/components/profile/backIcon";
 import { BannerInfo } from "@/components/profile/bannerInfo";
 import { Content } from "@/components/profile/content";
 import { Relation } from "@/components/profile/relation";
-import { get } from "http";
 
 export default async function ProfilePage({
   params,
@@ -31,6 +29,21 @@ export default async function ProfilePage({
       followedBy: true,
     },
   });
+  let curUserProfile = userProfile;
+
+  if (!isCurUser) {
+    curUserProfile = await prisma.user.findUnique({
+      where: {
+        id: curUser?.id,
+      },
+      include: {
+        posts: true,
+        likes: true,
+        following: true,
+        followedBy: true,
+      },
+    });
+  }
 
   const userLikes = userProfile?.likes;
   const userFollowing = userProfile?.following;
@@ -78,14 +91,18 @@ export default async function ProfilePage({
   return (
     <div className="w-full box-border pl-[1.875rem]">
       <div className="bg-white rounded-[.9375rem] p-[1.875rem]">
-        {/* <ComingSoon /> */}
         <BackIcon />
         {userProfile && <BannerInfo user={userProfile} isCurUser={isCurUser} />}
 
         {userProfile && (
           <div className="flex mt-[3.125rem]">
             <Content posts={posts} likePosts={userLikePosts} />
-            <Relation />
+            {/* <Relation curUser={curUserProfile} following={userFollowing} /> */}
+            <Relation
+              curUser={curUserProfile}
+              following={userFollowing}
+              followedBy={userFollowedBy}
+            />
           </div>
         )}
       </div>
