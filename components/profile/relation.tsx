@@ -3,8 +3,6 @@
 import { Prisma } from "@prisma/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import FollowButton from "@/components/profile/follow";
-import prisma from "@/lib/prisma";
-import { currentUser } from "@clerk/nextjs";
 
 export async function Relation({
   curUser,
