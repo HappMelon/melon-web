@@ -12,15 +12,17 @@ export default async function ProfilePage({
   params: { id: string };
 }) {
   const curUser = await currentUser();
+  console.log("========curUser", curUser);
+
   if (!curUser) {
     redirect("/sign-up");
   }
 
   const isCurUser = curUser?.id === params.id;
 
-  const userProfile = await prisma.user.findUnique({
+  const curUserProfile = await prisma.user.findUnique({
     where: {
-      id: params.id,
+      id: curUser?.id,
     },
     include: {
       posts: true,
@@ -29,12 +31,17 @@ export default async function ProfilePage({
       followedBy: true,
     },
   });
-  let curUserProfile = userProfile;
+
+  let userProfile = curUserProfile;
+
+  if (!curUserProfile?.onboarded) {
+    redirect("/onboarding");
+  }
 
   if (!isCurUser) {
-    curUserProfile = await prisma.user.findUnique({
+    userProfile = await prisma.user.findUnique({
       where: {
-        id: curUser?.id,
+        id: params.id,
       },
       include: {
         posts: true,
@@ -87,6 +94,7 @@ export default async function ProfilePage({
     : [];
 
   console.log("========getUSER", userProfile);
+  console.log("========getcurUSER", curUserProfile);
 
   return (
     <div className="w-full box-border pl-[1.875rem]">

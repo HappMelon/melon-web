@@ -1,6 +1,13 @@
 "use client";
+import { useRouter } from "next/navigation";
 
 export function BackIcon() {
+  const router = useRouter();
+
+  function handleGoBack() {
+    router.back();
+  }
+
   return (
     <div className="flex items-center mt-[.25rem] mb-[1.5625rem]">
       <svg
@@ -10,6 +17,7 @@ export function BackIcon() {
         height="12"
         viewBox="0 0 17 12"
         fill="none"
+        onClick={handleGoBack}
       >
         <path
           d="M0.00053402 5.97842C0.000534043 5.53001 0.342066 5.23108 0.854366 5.23108L15.8952 5.23108C16.4075 5.23108 16.749 5.53001 16.749 5.97842C16.749 6.42682 16.4075 6.72575 15.8952 6.72575L0.854366 6.72575C0.342066 6.72575 0.000533998 6.42682 0.00053402 5.97842Z"

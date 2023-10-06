@@ -52,7 +52,7 @@ export default function Item({
     <div className="bg-[#F4F4F4] px-[1rem] py-[1.25rem] rounded-xl">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
-          <div onClick={() => router.push(`/${data.author.username}`)}>
+          <div onClick={() => router.push(`/profile/${data.author.id}`)}>
             <Image
               width={30}
               height={30}

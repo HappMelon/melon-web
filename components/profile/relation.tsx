@@ -51,7 +51,7 @@ export async function Relation({
         </TabsList>
 
         <TabsContent value="Following">
-          {!!following ? (
+          {!!following && following.length > 0 ? (
             <div>
               {following.map((user) => (
                 <div
@@ -86,7 +86,7 @@ export async function Relation({
         </TabsContent>
 
         <TabsContent value="Subscribers">
-          {!!followedBy ? (
+          {!!followedBy && followedBy.length > 0 ? (
             <div>
               {followedBy.map((user) => (
                 <div
