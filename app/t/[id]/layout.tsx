@@ -21,8 +21,8 @@ export default async function ThreadPageLayout({
   }
 
   return (
-    <div className="bg-white w-auto h-auto ml-[2.5rem] rounded-[15px]">
-      <div className="flex items-center pt-[2.125rem]">
+    <div className="bg-white w-auto h-auto ml-[1.875rem] rounded-[15px]">
+      <div className="flex items-center pt-[2.125rem] pb-[1.4375rem]">
         <BackButton />
         <div className="pl-[1.375rem] text-[1.75rem] font-[750]">Post</div>
       </div>
