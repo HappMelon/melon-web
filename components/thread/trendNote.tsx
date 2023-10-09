@@ -24,7 +24,7 @@ export default function TrendNote({
   const [items, setItems] = useState(posts);
   const { ref, inView } = useInView();
   return (
-    <div className="bg-white rounded-[15px] w-full">
+    <div className="bg-white rounded-[15px] w-full h-full overflow-auto">
       <div className="grid grid-cols-3 gap-[2.25rem] px-[25px] py-[36px] w-full">
         {items.map((item, i) => {
           if (i === items.length - 1)
