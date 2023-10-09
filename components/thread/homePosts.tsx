@@ -74,7 +74,7 @@ export default function HomePosts({
   };
 
   return (
-    <div className="bg-white rounded-[15px] w-full">
+    <div className="ml-[2.5rem] bg-white rounded-[15px] w-full">
       <Tabs defaultValue="For You">
         <TabsList className="flex justify-start gap-[1.5rem] mb-[1.875rem] mt-[1.0625rem] ml-[1.9375rem] bg-white">
           <TabsTrigger value="For You" className="!bg-[#F8F8F8]">
