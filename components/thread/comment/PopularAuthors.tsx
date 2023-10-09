@@ -1,6 +1,7 @@
 import FollowButton from "@/components/profile/follow";
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
+import Link from "next/link";
 import NotSigninFollowButton from "../FollowButton";
 
 export default async function PopularAuthors() {
@@ -39,11 +40,13 @@ export default async function PopularAuthors() {
             className="flex items-center justify-between mt-[1.5rem]"
           >
             <div className="flex">
-              <img
-                src={user.image}
-                alt={user.username}
-                className="w-[1.75rem] h-[1.75rem] rounded-full"
-              />
+              <Link href={`/profile/${user.id}`}>
+                <img
+                  src={user.image}
+                  alt={user.username}
+                  className="w-[1.75rem] h-[1.75rem] rounded-full cursor-pointer"
+                />
+              </Link>
               <h3 className="text-base font-bold pl-[.625rem]">
                 {user.username}
               </h3>

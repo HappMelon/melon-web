@@ -116,7 +116,7 @@ export default async function Page({
       });
 
   return (
-    <div className="flex w-full">
+    <div className="flex w-full box-border pl-[1.875rem]">
       {/* 根据用户是否登陆显示不一样的Trade页面 */}
       {user ? (
         <>
