@@ -52,7 +52,7 @@ export default function Item({
     <div className="bg-[#F4F4F4] px-[1rem] py-[1.25rem] rounded-xl">
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
-          <div onClick={() => router.push(`/profile/${data.author.id}`)}>
+          <div onClick={() => router.push(`/${data.author.username}`)}>
             <Image
               width={30}
               height={30}
@@ -123,7 +123,7 @@ export default function Item({
                 className="w-[20rem] h-[20rem] object-cover !rounded-[1rem] mt-[1.25rem]"
               />
             ) : (
-              <div className="max-w-[19rem] h-[19rem] object-cover !rounded-[1rem] mt-[1.25rem] border flex justify-center items-center text-xl font-semibold">
+              <div className="w-[19rem] h-[19rem] object-cover !rounded-[1rem] mt-[1.25rem] border flex justify-center items-center text-xl font-semibold">
                 {data.title}
               </div>
             )}
