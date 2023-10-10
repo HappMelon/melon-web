@@ -136,7 +136,7 @@ export default function Q({
             });
           }}
         >
-          cancel
+          Cancel
         </Button>
         <Button
           className="px-[1.375rem] py-[.5rem] rounded-[2.5rem] font-medium text-[1.25rem]"
