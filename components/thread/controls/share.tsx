@@ -31,7 +31,7 @@ export default function ShareButton({
         <img src="/reposts.svg" alt="" onClick={() => reposts(post)} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        align="start"
+        align="end"
         side="top"
         className="px-[1.5625rem] py-[1.5625rem]"
       >
