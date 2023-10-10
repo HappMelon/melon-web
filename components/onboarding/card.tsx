@@ -23,6 +23,7 @@ export function OnboardingProfileCard({
     name: string;
     bio: string;
     image: string;
+    emailPrefix: string;
   };
   next: () => void;
   allUsernames: string[];
@@ -31,8 +32,8 @@ export function OnboardingProfileCard({
 
   const filter = new Filter();
 
-  const [username, setUsername] = useState(userData.username);
-  const [name, setName] = useState(userData.name);
+  const [username, setUsername] = useState(userData.emailPrefix);
+  const [name, setName] = useState(userData.emailPrefix);
   const [bio, setBio] = useState(userData.bio);
 
   const { toast } = useToast();
@@ -123,7 +124,7 @@ export function OnboardingProfileCard({
       <Button
         onClick={() => {
           startTransition(() =>
-            onboardData(username, name, bio, userData.image, userData.id)
+            onboardData(username, name, bio, userData.image, userData.id),
           );
           toast({
             title: "Updated user data",

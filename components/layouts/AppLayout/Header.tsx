@@ -66,7 +66,7 @@ export default function Header() {
                   <div className="text-[1.125rem] font-bold">View profile</div>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="gap-[15px]">
+              <DropdownMenuItem className="gap-[15px] cursor-pointer">
                 <img src="/logout.svg" alt="" />
                 <div className="text-[1.125rem] font-bold">
                   <SignOutButton>Log out</SignOutButton>
