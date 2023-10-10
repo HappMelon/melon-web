@@ -36,7 +36,6 @@ export default function Commit({
   const [comment, setComment] = useState("");
   const { isSignedIn, isLoaded, user } = useUser();
   const pathname = usePathname();
-
   return (
     <div className="mb-[1.4375rem]">
       <div className="flex justify-end mt-[15.5px] mb-[14.5px]">
@@ -53,7 +52,7 @@ export default function Commit({
           </div>
           <div className="flex items-center gap-[6px] cursor-pointer">
             <img src="/commit.svg" alt="" />
-            <div>0</div>
+            <div>{data.children.length}</div>
           </div>
           <Reposts data={data} />
         </div>
@@ -81,7 +80,9 @@ export default function Commit({
               "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
           }}
           onClick={() => {
-            // TODO add commit
+            if (!comment.trim()) {
+              return;
+            }
             startTransition(async () => {
               await replyToThread(comment, user!.id, data.id, pathname);
               setComment("");
