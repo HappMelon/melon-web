@@ -16,6 +16,7 @@ export function Screens({
     name: string;
     bio: string;
     image: string;
+    emailPrefix: string;
   };
   allUsernames: {
     username: string;

@@ -23,7 +23,7 @@ export default async function OnboardingLayout() {
     redirect("/");
   }
 
-  let emailPrefix;
+  let emailPrefix = "";
   try {
     const emailAddr = user.emailAddresses.length
       ? user.emailAddresses[0].emailAddress
