@@ -45,19 +45,19 @@ export function BannerInfo({
           <div>
             <span className="mr-[.5rem]">Posts</span>
             <span className="text-[1.75rem] font-bold">
-              {user.posts ? user.posts.length : 0}
+              {user.posts?.length ?? 0}
             </span>
           </div>
           <div className="ml-[2.25rem]">
             <span className="mr-[.5rem]">Subscribers</span>
             <span className="text-[1.75rem] font-bold">
-              {user.followedBy ? user.followedBy.length : 0}
+              {user.followedBy?.length ?? 0}
             </span>
           </div>
           <div className="ml-[2.25rem]">
             <span className="mr-[.5rem]">Following</span>
             <span className="text-[1.75rem] font-bold">
-              {user.following ? user.following.length : 0}
+              {user.following?.length ?? 0}
             </span>
           </div>
         </div>
