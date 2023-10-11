@@ -22,8 +22,6 @@ export default function Header() {
     router.push("/");
   }
 
-  console.log("=======header user", user);
-
   return (
     <main
       className={`flex w-full h-[4.875rem] bg-white px-[2.6875rem] fixed top-0 z-10${

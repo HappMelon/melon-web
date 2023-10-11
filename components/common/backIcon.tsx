@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 
-export function BackIcon() {
+export function BackIcon({ title }: { title: string }) {
   const router = useRouter();
 
   function handleGoBack() {
@@ -29,7 +29,7 @@ export function BackIcon() {
         />
       </svg>
 
-      <span className="mx-[1.328rem] text-xl font-[750]">Profile</span>
+      <span className="mx-[1.328rem] text-xl font-[750]">{title}</span>
     </div>
   );
 }
