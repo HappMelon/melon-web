@@ -2,7 +2,6 @@
 
 import ProposalCard from "@/components/thread/ProposalCard";
 import ProposalResult from "@/components/thread/ProposalResult";
-import MakeProposal from "@/components/thread/MakeProposal";
 
 export default function Proposal({ proposalId }: { proposalId: string }) {
   return (
@@ -24,8 +23,6 @@ export default function Proposal({ proposalId }: { proposalId: string }) {
         title="Non-compliance staking"
         content="Your staked validation has been found non-compliant by the platform; corresponding staked tokens have been deducted. Please check your wallet for details."
       />
-
-      <MakeProposal />
 
       <ProposalCard status="Unstarted" totalPrice={110} />
       <ProposalCard status="Ongoing" totalPrice={120} inputPrice={30} />
