@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 import { useEffect, useState } from "react";
-import { useClerk } from "@clerk/clerk-react";
 import { redirect } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 import { connectWallet, getContract, addProposal } from "@/web3/action";
 
@@ -50,7 +50,7 @@ export default function MakeProposal({
     initConnectWallet();
   }, []);
 
-  const { signOut } = useClerk();
+  const { signOut } = useAuth();
 
   const onConfirm = async () => {
     console.log("======onConfirm======");
