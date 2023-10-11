@@ -6,10 +6,12 @@ import prisma from "@/lib/prisma";
 import { ArrowUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { currentUser } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
 
 import UserCard from "@/components/thread/UserCard";
-import BetCard from "@/components/thread/BetCard";
-import BetResult from "@/components/thread/BetResult";
+import Proposal from "@/components/thread/Proposal";
+import MakeProposal from "@/components/thread/MakeProposal";
 
 export const revalidate = 0;
 
@@ -19,6 +21,19 @@ export default async function ThreadPage({
   params: { id: string };
 }) {
   const { id } = params;
+  const user = await currentUser();
+
+  const getUser = await prisma.user.findUnique({
+    where: {
+      id: user?.id,
+    },
+  });
+
+  if (!getUser?.onboarded) {
+    redirect("/onboarding");
+  }
+
+  const isWeb3User = !!user?.primaryWeb3WalletId;
 
   const post = await prisma.post.findUnique({
     where: {
@@ -55,12 +70,15 @@ export default async function ThreadPage({
         },
       },
       likes: true,
+      proposals: true,
     },
   });
 
   if (!post) {
     return <div className="text-center text-neutral-600">Post not found.</div>;
   }
+
+  const isCurUserPost = post?.author.id === user?.id;
 
   return (
     <>
@@ -100,35 +118,13 @@ export default async function ThreadPage({
 
         <div className="shrink-0 w-[22.9375rem] box-content px-[1.875rem] pb-[1.875rem] border-l border-[#e6e6e6] space-y-[1.875rem]">
           <UserCard user={post.author} />
-
-          <BetResult
-            type="good"
-            title="High-quality content"
-            content="The content you betted  Prediction has been assessed by the platform as compliant and of high quality; you will receive a 5% FLR reward. Please check your wallet for details."
-          />
-
-          <BetResult
-            type="bad"
-            title="Low-quality content"
-            content="The content you betted prediction has been assessed by the platform as compliant and of average quality;  staked tokens have been fully refunded. Please check your wallet for details."
-          />
-
-          <BetResult
-            type="bad"
-            title="Non-compliance betting"
-            content="Your betted prediction has been found non-compliant by the platform; corresponding staked tokens have been deducted. Please check your wallet for details."
-          />
-
-          <BetCard content="other no bet" />
-          <BetCard content="other bet pending" />
-          <BetCard content="other bet ends" />
-
-          <BetCard content="self no bet Make a betting" />
-
-          <BetCard content="self bet pending" />
-
-          <div>betting-user-list</div>
-          <div>share-with-friend</div>
+          {post?.proposals?.length > 0 ? (
+            <Proposal proposalId={post.proposals[0].id} />
+          ) : isCurUserPost ? (
+            <MakeProposal isWeb3User={isWeb3User} postId={post.id} />
+          ) : (
+            <></>
+          )}
         </div>
       </div>
     </>

@@ -1,6 +1,6 @@
 "use client";
 
-export default function BetResult({
+export default function ProposalResult({
   type,
   title,
   content,

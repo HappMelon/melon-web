@@ -5,15 +5,15 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL") // uses connection pooling
   // directUrl         = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
   // shadowDatabaseUrl = env("POSTGRES_URL_NON_POOLING") // used for migrations
 }
 
 model Post {
   id        String   @id @default(cuid())
-  title     String   @db.VarChar(40) @default("")
+  title     String   @default("") @db.VarChar(40)
   text      String   @db.VarChar(800)
   tags      String[]
   images    String[]
@@ -25,13 +25,14 @@ model Post {
   views     Int      @default(0)
   reposts   Int      @default(0)
 
-  parentId String?
-  parent   Post?   @relation("ParentChildren", fields: [parentId], references: [id])
-  children Post[]  @relation("ParentChildren")
+  parentId  String?
+  parent    Post?      @relation("ParentChildren", fields: [parentId], references: [id])
+  children  Post[]     @relation("ParentChildren")
+  proposals Proposal[]
 }
 
 model TagsFrequencies {
-  tag  String @id
+  tag   String @id
   count Int
 }
 
@@ -66,4 +67,11 @@ model Likes {
   createdAt DateTime @default(now())
 
   @@id([postId, userId])
+}
+
+model Proposal {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String   @unique
 }

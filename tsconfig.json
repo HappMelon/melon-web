@@ -35,7 +35,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "lib/prisma.schema"
+    "lib/prisma.schema",
+    "web3/action.js"
   ],
   "exclude": [
     "node_modules"
