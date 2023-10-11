@@ -27,6 +27,7 @@
     ]
   },
   "dependencies": {
+    "@clerk/clerk-react": "4.26.3",
     "@clerk/nextjs": "4.24.0-snapshot.d446acb",
     "@clerk/themes": "^1.7.5",
     "@prisma/client": "^4.16.2",
@@ -51,6 +52,7 @@
     "clsx": "^1.2.1",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.8",
+    "ethers": "5.7.2",
     "framer-motion": "^10.16.1",
     "jotai": "^2.4.0",
     "lucide-react": "^0.258.0",
