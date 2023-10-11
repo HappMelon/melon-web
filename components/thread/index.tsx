@@ -100,7 +100,8 @@ export default function Item({
             {data.tags ? (
               <div className="flex flex-wrap gap-[.625rem] pt-[.625rem]">
                 {data.tags.map((tag, index) => (
-                  <div
+                  <Link
+                    href={`/tag/${tag}`}
                     style={{
                       color: colors[index],
                       background: `${colors[index]}10`,
@@ -109,7 +110,7 @@ export default function Item({
                     className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
                   >
                     #{tag}
-                  </div>
+                  </Link>
                 ))}
               </div>
             ) : (

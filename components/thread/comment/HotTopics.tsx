@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { Color } from "@/lib/utils";
+import Link from "next/link";
 
 export default async function HotTopics() {
   const topics = await prisma.tagsFrequencies.groupBy({
@@ -27,7 +28,8 @@ export default async function HotTopics() {
               const colorClass = `px-[.625rem] py-[.25rem] rounded-[.3125rem] cursor-pointer`;
               return (
                 colors[index] && (
-                  <div
+                  <Link
+                    href={`/tag/${Object.values(tag)}`}
                     key={index}
                     className={colorClass}
                     style={{
@@ -36,7 +38,7 @@ export default async function HotTopics() {
                     }}
                   >
                     #{Object.values(tag)}
-                  </div>
+                  </Link>
                 )
               );
             })

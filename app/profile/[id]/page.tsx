@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { BackIcon } from "@/components/profile/backIcon";
+import { BackIcon } from "@/components/common/backIcon";
 import { BannerInfo } from "@/components/profile/bannerInfo";
 import { Content } from "@/components/profile/content";
 import { Relation } from "@/components/profile/relation";
@@ -99,7 +99,7 @@ export default async function ProfilePage({
   return (
     <div className="w-full box-border pl-[1.875rem]">
       <div className="bg-white rounded-[.9375rem] p-[1.875rem]">
-        <BackIcon />
+        <BackIcon title="Profile" />
         {userProfile && <BannerInfo user={userProfile} isCurUser={isCurUser} />}
 
         {userProfile && (
