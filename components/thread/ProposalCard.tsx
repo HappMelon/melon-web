@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import Countdown from "@/components/thread/Countdown";
 
 export default function ProposalCard({
   status,
@@ -56,42 +57,19 @@ export default function ProposalCard({
             </div>
 
             <div className="flex items-center mb-[.3125rem]">
-              <span className="flex items-center justify-center w-[1.875rem] h-[1.875rem] rounded-[5px] bg-[#f7f7f7] text-sm font-bold">
-                29
-              </span>
-              <span className="mx-[.5rem] text-[#9b9b9b] text-sm font-medium">
-                Days
-              </span>
-              <span className="flex items-center justify-center w-[1.875rem] h-[1.875rem] rounded-[5px] bg-[#f7f7f7] text-sm font-bold">
-                11
-              </span>
-              <span className="mx-[.5rem] text-[#9b9b9b] text-sm font-medium">
-                Hours
-              </span>
-              <span className="flex items-center justify-center w-[1.875rem] h-[1.875rem] rounded-[5px] bg-[#f7f7f7] text-sm font-bold">
-                13
-              </span>
-              <span className="mx-[.5rem] text-[#9b9b9b] text-sm font-medium">
-                Mins
-              </span>
-              <span className="flex items-center justify-center w-[1.875rem] h-[1.875rem] rounded-[5px] bg-[#f7f7f7] text-sm font-bold">
-                56
-              </span>
-              <span className="mx-[.5rem] text-[#9b9b9b] text-sm font-medium">
-                secs
-              </span>
+              <Countdown targetDate={new Date("2023-10-31T00:00:00")} />
             </div>
           </div>
         ) : (
           <div>
             <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-medium">
-              Ends in April 24, 2022 at 16:40 PM
+              Ends in October 12, 2022 at 16:40 PM
             </div>
           </div>
         )}
       </div>
 
-      {!!inputPrice && (
+      {!!inputPrice && status === "Ongoing" && (
         <div className="my-[1.25rem] text-center py-[.9375rem] border rounded-[15px] border-[#f9d423]">
           <div>
             <span

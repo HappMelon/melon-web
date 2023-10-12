@@ -1,7 +1,7 @@
 export const PERMITTOKENCONTRACT_ADDRESS =
-  process.env.PERMITTOKENCONTRACT_ADDRESS || ""; // address of token
+  process.env.NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS || ""; // address of token
 export const SPENDERCONTRACT_ADDRESS =
-  process.env.SPENDERCONTRACT_ADDRESS || ""; // 质押投票的合约地址
+  process.env.NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS || ""; // 质押投票的合约地址
 
 export const permitTokenContractAbi = [
   "function name() view returns (string)",
@@ -30,6 +30,7 @@ export const spenderContractAbi = [
   "function setVotingDuration(uint256 _proposalId, uint256 _durationInSeconds)", // 设置投票的时间, 输入秒
   "function votingEndTimes(uint256) view returns (uint256)", //  返回的是block时间
   "function reclaimVotingRights(uint256 _proposalId, uint256 correctOptionId) public", // 重置投票， 以后可能会改成投票奖励余惩罚机制
+  "event ProposalAdded(uint256 indexed proposalId, string name)",
   "function proposalId() view returns (uint256)", // 一共设置了多少个提案
   // 在这里添加其它必要的ABI项
 ];

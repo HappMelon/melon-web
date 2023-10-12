@@ -12,6 +12,7 @@ import { redirect } from "next/navigation";
 import UserCard from "@/components/thread/UserCard";
 import Proposal from "@/components/thread/Proposal";
 import MakeProposal from "@/components/thread/MakeProposal";
+import DemoProposal from "@/components/thread/DemoProposal";
 
 export const revalidate = 0;
 
@@ -70,7 +71,7 @@ export default async function ThreadPage({
         },
       },
       likes: true,
-      proposals: true,
+      // proposals: true,
     },
   });
 
@@ -118,13 +119,16 @@ export default async function ThreadPage({
 
         <div className="shrink-0 w-[22.9375rem] box-content px-[1.875rem] pb-[1.875rem] border-l border-[#e6e6e6] space-y-[1.875rem]">
           <UserCard user={post.author} />
-          {post?.proposals?.length > 0 ? (
+          {/* {post?.proposals?.length > 0 ? (
             <Proposal proposalId={post.proposals[0].id} />
           ) : isCurUserPost ? (
             <MakeProposal isWeb3User={isWeb3User} postId={post.id} />
           ) : (
             <></>
-          )}
+          )} */}
+
+          {/* TODO: hardcode for demo */}
+          {isWeb3User && <DemoProposal proposalId={"1"} />}
         </div>
       </div>
     </>

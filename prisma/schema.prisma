@@ -25,10 +25,10 @@ model Post {
   views     Int      @default(0)
   reposts   Int      @default(0)
 
-  parentId  String?
-  parent    Post?      @relation("ParentChildren", fields: [parentId], references: [id])
-  children  Post[]     @relation("ParentChildren")
-  proposals Proposal[]
+  parentId String?
+  parent   Post?   @relation("ParentChildren", fields: [parentId], references: [id])
+  children Post[]  @relation("ParentChildren")
+  // proposals Proposal[]
 }
 
 model TagsFrequencies {
@@ -69,9 +69,11 @@ model Likes {
   @@id([postId, userId])
 }
 
-model Proposal {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  post      Post     @relation(fields: [postId], references: [id])
-  postId    String   @unique
-}
+// model Proposal {
+//   id             String   @id @default(cuid())
+//   createdAt      DateTime @default(now())
+//   post           Post     @relation(fields: [postId], references: [id])
+//   postId         String   @unique
+//   web3ProposalId String   @unique
+//   duration       Int      @default(3600)
+// }

@@ -64,8 +64,13 @@ export default function MakeProposal({
     }
 
     await addProposal(signer, postId)
-      .then((res) => {
-        console.log("======res======", res);
+      .then((proposal) => {
+        console.log("======proposal.id======", proposal.id);
+        console.log("======proposal.name======", proposal.name);
+
+        toast({
+          title: "Stake Success",
+        });
       })
       .catch((err) => {
         console.log("======err======", err);
