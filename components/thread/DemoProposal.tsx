@@ -14,7 +14,7 @@ import {
 import ProposalCard from "@/components/thread/ProposalCard";
 import ProposalResult from "@/components/thread/ProposalResult";
 
-import { connectWallet, getContract, addProposal } from "@/web3/action";
+import { connectWallet, getContract, addProposal, vote } from "@/web3/action";
 
 import { useToast } from "@/components/ui/use-toast";
 
@@ -28,7 +28,9 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
   const [proposalStatus, setProposalStatus] = useState<
     "Unstarted" | "Ongoing" | "Finished"
   >("Unstarted");
-  const [inputPrice, setInputPrice] = useState("");
+  const [inputPrice, setInputPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(120);
+  const [showVoteDialog, setShowVoteDialog] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -47,9 +49,113 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
     });
   };
 
+  const onVote = async () => {
+    console.log("======onVote======");
+
+    if (!provider || !signer) {
+      await initConnectWallet();
+    }
+
+    // await vote(sign)
+  };
+
   return (
     <div>
-      <ProposalCard status={proposalStatus} totalPrice={120} inputPrice={30} />
+      <ProposalCard
+        status={proposalStatus}
+        totalPrice={totalPrice}
+        inputPrice={inputPrice}
+        onBtnClick={() => {
+          setShowVoteDialog(true);
+        }}
+      />
+
+      <Dialog open={showVoteDialog} onOpenChange={setShowVoteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="mb-[1rem] text-[2rem] font-bold text-center">
+              Make A Validation Stake
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="px-[1.625rem] mb-[1rem] font-semibold text-xl leading-normal">
+            <div className="mb-[1.25rem]">
+              <div className="flex items-center px-[1.5rem] rounded-[50px] bg-[#f8f8f8]">
+                <Input
+                  placeholder="Price"
+                  value={inputPrice}
+                  type="number"
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setInputPrice(value);
+                  }}
+                  className="flex-1 text-lg  shadow-none border-0 outline-none border-none bg-transparent focus-visible:ring-0"
+                />
+                <div
+                  className="shrink-0 pl-[1.25rem] py-[.5625rem] border-l border-[#e6e6e6] bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                  }}
+                >
+                  FLR
+                </div>
+              </div>
+
+              <div className="flex items-center mt-[1rem]">
+                <div className="flex-1 flex items-center">
+                  <div className="text-xs text-[#9b9b9b] font-medium">
+                    Balance:
+                  </div>
+                  <div className="ml-[.5rem] mr-[.3125rem] text-lg font-bold">
+                    40
+                  </div>
+                  <div
+                    className="bg-clip-text text-transparent text-lg font-bold"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                    }}
+                  >
+                    FLR
+                  </div>
+                </div>
+
+                <div className="shrink-0 flex items-center font-bold text-xs">
+                  <span>1</span>
+                  <span
+                    className="mx-[.3125rem] bg-clip-text text-transparent text-lg font-bold"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                    }}
+                  >
+                    FLR
+                  </span>
+                  <span>=</span>
+                  <span className="mx-[.3125rem]">0.1</span>
+                  <span>USD</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="px-[1.625rem] mb-[1rem]">
+            <Button
+              className="w-full rounded-[40px] text-lg"
+              style={{
+                background:
+                  "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+              }}
+              onClick={() => {
+                onVote();
+              }}
+            >
+              Confirm
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* <ProposalCard status="Finished" totalPrice={130} inputPrice={20} /> */}
     </div>

@@ -7,10 +7,12 @@ export default function ProposalCard({
   status,
   totalPrice = 0,
   inputPrice = 0,
+  onBtnClick = () => {},
 }: {
   status: "Unstarted" | "Ongoing" | "Finished";
   totalPrice: number;
   inputPrice?: number;
+  onBtnClick?: () => void;
 }) {
   return (
     <div className="w-full box-border px-[1.75rem] py-[1.5rem] bg-white border border-[#e6e6e6] rounded-[10px] shadow-[0_0_4px_0_rgba(0,0,0,0.15)]">
@@ -102,6 +104,9 @@ export default function ProposalCard({
           style={{
             background:
               "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+          }}
+          onClick={() => {
+            onBtnClick();
           }}
         >
           Stake
