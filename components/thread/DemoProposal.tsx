@@ -20,6 +20,11 @@ import { useToast } from "@/components/ui/use-toast";
 
 import { useEffect, useState } from "react";
 
+import {
+  NEXT_PUBLIC_PROPOSAL_ID,
+  NEXT_PUBLIC_PROPOSAL_OPTION_ID,
+} from "@/web3/abi";
+
 export default function DemoProposal({ proposalId }: { proposalId: string }) {
   const [provider, setProvider] = useState();
   const [account, setAccount] = useState();
@@ -56,13 +61,19 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
       await initConnectWallet();
     }
 
-    // TODO: proposalId - 12, proposalOptionId - 1
-    await vote(signer, account, "12", "1", inputPrice.toString())
+    // TODO: proposalId - 13, proposalOptionId - 1
+    await vote(
+      signer,
+      account,
+      NEXT_PUBLIC_PROPOSAL_ID,
+      NEXT_PUBLIC_PROPOSAL_OPTION_ID,
+      inputPrice.toString(),
+    )
       .then((res) => {
         console.log("======vote res", res);
 
         // @ts-ignore
-        if (res?.status !== "Success") {
+        if (res?.status !== "success") {
           toast({
             title: res?.message || "Stake failed",
           });
@@ -73,6 +84,8 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
           title: "Stake Success",
         });
         setProposalStatus("Ongoing");
+        setShowVoteDialog(false);
+        setTotalPrice(totalPrice + inputPrice);
       })
       .catch((err) => {
         console.log("======err======", err);

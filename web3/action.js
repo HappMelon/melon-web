@@ -163,6 +163,10 @@ export const vote = async (
   const used_vote = await contract.usedVotingRights(account);
   const balance = await contract.balances(account); // fetch once to avoid multiple calls
 
+  console.log("=======voteAmountInt", voteAmountInt);
+  console.log("=======used_vote", used_vote);
+  console.log("=======balance", balance);
+
   if (balance.sub(used_vote).lte(voteAmountInt)) {
     console.log("you dont have enough values to vote");
     // alert("you dont have enough values to vote");
@@ -191,6 +195,14 @@ export const vote = async (
       "这个选项现在有多少票: ",
       ethers.utils.formatEther(updatedOption.voteCount),
     ); // Convert BigNumber object to string，
+
+    return {
+      status: "success",
+      message: "Stake Success",
+      data: {
+        updatedOption,
+      },
+    };
   } catch (error) {
     console.error("投票失败：", error);
     // alert("投票失败");
@@ -201,21 +213,12 @@ export const vote = async (
   }
 
   // Optionally, list all options for the given proposal with updated vote counts
-  const optionCount = await contract.optionId(proposalIDInt);
-  for (let i = 1; i <= optionCount; i++) {
-    const option = await contract.options(proposalIDInt, i);
-    console.log(
-      `选项ID: ${option.id.toString()}, 选项名称: ${
-        option.name
-      }, 投票数: ${ethers.utils.formatEther(option.voteCount)}`,
-    );
-  }
-
-  return {
-    status: "success",
-    message: "Stake Success",
-    data: {
-      updatedOption,
-    },
-  };
+  // const optionCount = await contract.optionId(proposalIDInt);
+  // for (let i = 1; i <= optionCount; i++) {
+  //   const option = await contract.options(proposalIDInt, i);
+  //   console.log(
+  //     `选项ID: ${option.id.toString()}, 选项名称: ${option.name
+  //     }, 投票数: ${ethers.utils.formatEther(option.voteCount)}`,
+  //   );
+  // }
 };

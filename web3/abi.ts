@@ -3,6 +3,12 @@ export const PERMITTOKENCONTRACT_ADDRESS =
 export const SPENDERCONTRACT_ADDRESS =
   process.env.NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS || ""; // 质押投票的合约地址
 
+export const NEXT_PUBLIC_PROPOSAL_ID =
+  process.env.NEXT_PUBLIC_PROPOSAL_ID || "13";
+
+export const NEXT_PUBLIC_PROPOSAL_OPTION_ID =
+  process.env.NEXT_PUBLIC_PROPOSAL_OPTION_ID || "1";
+
 export const permitTokenContractAbi = [
   "function name() view returns (string)",
   "function nonces(address owner) view returns (uint256)",
