@@ -4,7 +4,7 @@ import Like from "@/components/thread/controls/like";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { replyToThread } from "@/lib/actions";
-import { useUser } from "@clerk/nextjs";
+import { currentUser, useUser } from "@clerk/nextjs";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -13,7 +13,9 @@ import Reposts from "./Reposts";
 
 export default function Commit({
   data,
+  avatar,
 }: {
+  avatar?: string;
   data: Prisma.PostGetPayload<{
     include: {
       author: true;
@@ -59,7 +61,7 @@ export default function Commit({
       </div>
       <div className="flex items-center relative">
         <Image
-          src={data.author.image}
+          src={avatar || ""}
           height={50}
           width={50}
           className="rounded-full"
