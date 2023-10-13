@@ -113,7 +113,7 @@ export default function ProposalCard({
         </Button>
       )}
 
-      {status === "Ongoing" && (
+      {/* {status === "Ongoing" && (
         <Button
           className="w-full rounded-[40px] text-lg"
           style={{
@@ -123,7 +123,7 @@ export default function ProposalCard({
         >
           Cancel
         </Button>
-      )}
+      )} */}
     </div>
   );
 }

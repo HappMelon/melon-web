@@ -140,6 +140,7 @@ export const addOption = async (signer, proposalID, optionText) => {
 
 export const vote = async (
   signer,
+  account,
   voteProposalID,
   voteOptionID,
   voteAmount,
@@ -164,8 +165,11 @@ export const vote = async (
 
   if (balance.sub(used_vote).lte(voteAmountInt)) {
     console.log("you dont have enough values to vote");
-    alert("you dont have enough values to vote");
-    return;
+    // alert("you dont have enough values to vote");
+    return {
+      status: "fail",
+      message: "you dont have enough values to vote",
+    };
   }
 
   try {
@@ -177,7 +181,7 @@ export const vote = async (
     const tx = await contract.vote(proposalIDInt, optionIDInt, voteAmountInt);
     await tx.wait(); // Wait for transaction to be mined
 
-    alert("投票成功");
+    // alert("投票成功");
 
     // Fetch the updated option details and log it
     const updatedOption = await contract.options(proposalIDInt, optionIDInt);
@@ -189,7 +193,11 @@ export const vote = async (
     ); // Convert BigNumber object to string，
   } catch (error) {
     console.error("投票失败：", error);
-    alert("投票失败");
+    // alert("投票失败");
+    return {
+      status: "fail",
+      message: error.message,
+    };
   }
 
   // Optionally, list all options for the given proposal with updated vote counts
@@ -202,4 +210,12 @@ export const vote = async (
       }, 投票数: ${ethers.utils.formatEther(option.voteCount)}`,
     );
   }
+
+  return {
+    status: "success",
+    message: "Stake Success",
+    data: {
+      updatedOption,
+    },
+  };
 };

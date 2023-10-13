@@ -56,7 +56,30 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
       await initConnectWallet();
     }
 
-    // await vote(sign)
+    // TODO: proposalId - 12, proposalOptionId - 1
+    await vote(signer, account, "12", "1", inputPrice.toString())
+      .then((res) => {
+        console.log("======vote res", res);
+
+        // @ts-ignore
+        if (res?.status !== "Success") {
+          toast({
+            title: res?.message || "Stake failed",
+          });
+          return;
+        }
+
+        toast({
+          title: "Stake Success",
+        });
+        setProposalStatus("Ongoing");
+      })
+      .catch((err) => {
+        console.log("======err======", err);
+        toast({
+          title: "Stake failed",
+        });
+      });
   };
 
   return (
@@ -150,6 +173,7 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
               onClick={() => {
                 onVote();
               }}
+              disabled={!inputPrice}
             >
               Confirm
             </Button>
