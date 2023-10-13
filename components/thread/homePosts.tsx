@@ -76,27 +76,6 @@ export default function HomePosts({
   return (
     <div className="bg-white rounded-[15px] w-full h-full pb-10 overflow-auto">
       <Tabs defaultValue="For You">
-        <div className="sticky top-0 bg-white">
-          <TabsList className="flex justify-start gap-[1.5rem] mb-[1.875rem] mt-[1.0625rem] ml-[1.9375rem] bg-white">
-            <TabsTrigger value="For You" className="!bg-[#F8F8F8]">
-              For You
-            </TabsTrigger>
-            <TabsTrigger value="Following" className="!bg-[#F8F8F8]">
-              Following
-            </TabsTrigger>
-            <TabsTrigger
-              value="Politics"
-              className="!bg-[#F8F8F8]"
-              onClick={() => {
-                toast({
-                  title: "Politics coming soon.",
-                });
-              }}
-            >
-              Politics
-            </TabsTrigger>
-          </TabsList>
-        </div>
         <TabsContent value="For You">
           <div className="grid grid-cols-3 gap-[2.25rem] px-[25px]">
             {items.map((item, i) => {
