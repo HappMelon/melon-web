@@ -6,6 +6,7 @@ import prisma from "@/lib/prisma";
 import { ArrowUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { currentUser } from "@clerk/nextjs";
 
 export const revalidate = 0;
 
@@ -15,7 +16,7 @@ export default async function ThreadPage({
   params: { id: string };
 }) {
   const { id } = params;
-
+  const user = await currentUser();
   const post = await prisma.post.findUnique({
     where: {
       id,
@@ -83,7 +84,7 @@ export default async function ThreadPage({
       {post.parent ? (
         <Item key={post.parent.id} parent data={post.parent} />
       ) : null}
-      <MainItem key={post.id} data={post} />
+      <MainItem avatar={user?.imageUrl} key={post.id} data={post} />
       {/* commit */}
       <div className="pb-[23px]">
         {post.children.map((child) => (

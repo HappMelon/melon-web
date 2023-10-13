@@ -13,7 +13,9 @@ export default function MainItem({
   data,
   comment = false,
   posts,
+  avatar,
 }: {
+  avatar?: string;
   data: Prisma.PostGetPayload<{
     include: {
       author: true;
@@ -113,7 +115,7 @@ export default function MainItem({
           {data?.children ? "" : <NoCommit />}
         </div>
         {data?.children ? "" : <Separator />}
-        <Commit data={data} />
+        <Commit avatar={avatar} data={data} />
       </div>
     </div>
   );

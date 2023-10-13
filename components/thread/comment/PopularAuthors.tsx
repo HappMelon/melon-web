@@ -58,10 +58,9 @@ export default async function PopularAuthors() {
                     id={getSelf!.id}
                     followingId={user!.id}
                     name={user!.username}
-                    isFollowing={
-                      user!.followedBy.filter((user) => user.id === getSelf!.id)
-                        .length > 0
-                    }
+                    isFollowing={user.followedBy.some(
+                      (user) => user.id === getSelf!.id,
+                    )}
                   />
                 )}
               </>

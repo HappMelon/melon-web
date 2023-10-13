@@ -14,7 +14,7 @@ import { UploadFile } from "@/lib/upload-file";
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import "react-quill/dist/quill.snow.css";
 import { TagsInput } from "react-tag-input-component";
 
