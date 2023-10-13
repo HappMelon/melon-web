@@ -80,6 +80,8 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
           title: "Stake failed",
         });
       });
+
+    console.log("======Vote Done======");
   };
 
   return (
