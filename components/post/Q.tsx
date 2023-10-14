@@ -14,7 +14,7 @@ import { UploadFile } from "@/lib/upload-file";
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import "react-quill/dist/quill.snow.css";
 import { TagsInput } from "react-tag-input-component";
 
@@ -136,7 +136,7 @@ export default function Q({
             });
           }}
         >
-          cancel
+          Cancel
         </Button>
         <Button
           className="px-[1.375rem] py-[.5rem] rounded-[2.5rem] font-medium text-[1.25rem]"

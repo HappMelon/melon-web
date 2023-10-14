@@ -7,12 +7,15 @@ import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import MoreMenu from "./moreMenu";
 import NameLink from "./nameLink";
+import Link from "next/link";
 
 export default function MainItem({
   data,
   comment = false,
   posts,
+  avatar,
 }: {
+  avatar?: string;
   data: Prisma.PostGetPayload<{
     include: {
       author: true;
@@ -90,7 +93,8 @@ export default function MainItem({
         {data.tags ? (
           <div className="flex flex-wrap gap-[.625rem] pt-[.625rem]">
             {data.tags.map((tag, index) => (
-              <div
+              <Link
+                href={`/tag/${tag}`}
                 style={{
                   color: colors[index],
                   background: `${colors[index]}10`,
@@ -99,7 +103,7 @@ export default function MainItem({
                 className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
               >
                 #{tag}
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
@@ -111,7 +115,7 @@ export default function MainItem({
           {data?.children ? "" : <NoCommit />}
         </div>
         {data?.children ? "" : <Separator />}
-        <Commit data={data} />
+        <Commit avatar={avatar} data={data} />
       </div>
     </div>
   );

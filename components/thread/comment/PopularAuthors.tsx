@@ -52,15 +52,18 @@ export default async function PopularAuthors() {
               </h3>
             </div>
             {u && getSelf ? (
-              <FollowButton
-                id={getSelf!.id}
-                followingId={user!.id}
-                name={user!.username}
-                isFollowing={
-                  user!.followedBy.filter((user) => user.id === getSelf!.id)
-                    .length > 0
-                }
-              />
+              <>
+                {user.id !== getSelf.id && (
+                  <FollowButton
+                    id={getSelf!.id}
+                    followingId={user!.id}
+                    name={user!.username}
+                    isFollowing={user.followedBy.some(
+                      (user) => user.id === getSelf!.id,
+                    )}
+                  />
+                )}
+              </>
             ) : (
               <NotSigninFollowButton />
             )}

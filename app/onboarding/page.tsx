@@ -23,12 +23,21 @@ export default async function OnboardingLayout() {
     redirect("/");
   }
 
+  let emailPrefix = "";
+  try {
+    const emailAddr = user.emailAddresses.length
+      ? user.emailAddresses[0].emailAddress
+      : "";
+    emailPrefix = emailAddr.split("@")[0];
+  } catch {}
+
   const userData = {
     id: user.id,
     username: getUser ? getUser.username : user.id.slice(5),
     name: getUser ? getUser.name : user.firstName ?? "",
     bio: getUser ? getUser.bio : "",
     image: getUser ? getUser.image : user.imageUrl,
+    emailPrefix,
   };
 
   const allUsernames = await prisma.user.findMany({

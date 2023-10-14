@@ -22,8 +22,6 @@ export default function Header() {
     router.push("/");
   }
 
-  console.log("=======header user", user);
-
   return (
     <main
       className={`flex w-full h-[4.875rem] bg-white px-[2.6875rem] fixed top-0 z-10${
@@ -66,11 +64,7 @@ export default function Header() {
                   <div className="text-[1.125rem] font-bold">View profile</div>
                 </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem className="gap-[14px]">
-                <img src="/reset.svg" alt="" />
-                <div className="text-[1.125rem] font-bold">Reset password</div>
-              </DropdownMenuItem>
-              <DropdownMenuItem className="gap-[15px]">
+              <DropdownMenuItem className="gap-[15px] cursor-pointer">
                 <img src="/logout.svg" alt="" />
                 <div className="text-[1.125rem] font-bold">
                   <SignOutButton>Log out</SignOutButton>

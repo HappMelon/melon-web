@@ -6,10 +6,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const timeSince = (date: Date) => {
+export const timeSince = (date: Date | string) => {
   const d = new Date();
-  const seconds = Math.floor((d.getTime() - date.getTime()) / 1000);
-  var interval = seconds / 31536000;
+  const getTimeNumber =
+    typeof date === "string" ? new Date(date).getTime() : date.getTime();
+  const seconds = Math.floor((d.getTime() - getTimeNumber) / 1000);
+  let interval = seconds / 31536000;
 
   if (interval > 1) {
     return Math.floor(interval) + "y";
