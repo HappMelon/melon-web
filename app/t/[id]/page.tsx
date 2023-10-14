@@ -126,7 +126,6 @@ export default async function ThreadPage({
           ) : (
             <></>
           )} */}
-
           {/* TODO: hardcode for demo */}
           {isWeb3User && <DemoProposal proposalId={"1"} />}
         </div>
