@@ -31,10 +31,10 @@ export default function Header() {
       <div className="flex w-full justify-start items-center">
         <div
           onClick={goToHomepage}
-          className="flex justify-start items-center cursor-pointer"
+          className="shrink-0 w-[12rem] flex justify-start items-center cursor-pointer"
         >
-          <img src="/logo.png" alt="Logo" />
-          <div className="font-bold text-2xl whitespace-nowrap">Flare Dapp</div>
+          <img className="w-full" src="/logo.png" alt="Logo" />
+          {/* <div className="font-bold text-2xl whitespace-nowrap"></div> */}
         </div>
         <Explore />
       </div>

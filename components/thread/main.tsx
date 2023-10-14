@@ -47,7 +47,7 @@ export default function MainItem({
   updateViews(data.id);
 
   return (
-    <div className="pt-[2.375rem] flex flex-col px-[1.875rem]">
+    <div className="pt-[0.9375rem] flex flex-col px-[1.875rem]">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div className="w-8 h-8 rounded-full bg-neutral-600 overflow-hidden">

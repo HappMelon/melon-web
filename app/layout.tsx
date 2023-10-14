@@ -6,7 +6,7 @@ import "@/styles/index.css";
 
 // https://clerk.com/docs/nextjs/get-started-with-nextjs
 export const metadata = {
-  title: "Flare Dapp",
+  title: "Melon",
   description:
     "user curated social platform, your voice, your power | predict to earn.",
 };
@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <link rel="icon" href="/favicon.ico" sizes="any" />
+      <link rel="icon" href="/favicon.png" sizes="any" />
       <ClerkProvider>
         <html lang="en">
           <body>
