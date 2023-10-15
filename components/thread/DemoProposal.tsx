@@ -34,8 +34,9 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
     "Unstarted" | "Ongoing" | "Finished"
   >("Unstarted");
   const [inputPrice, setInputPrice] = useState(0);
-  const [totalPrice, setTotalPrice] = useState(120);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [showVoteDialog, setShowVoteDialog] = useState(false);
+  const [votePending, setVotePending] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
 
   const onVote = async () => {
     console.log("======onVote======");
+    setVotePending(true);
 
     if (!provider || !signer) {
       await initConnectWallet();
@@ -92,6 +94,9 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
         toast({
           title: "Stake failed",
         });
+      })
+      .finally(() => {
+        setVotePending(false);
       });
 
     console.log("======Vote Done======");
@@ -188,9 +193,9 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
               onClick={() => {
                 onVote();
               }}
-              disabled={!inputPrice}
+              disabled={!inputPrice || votePending}
             >
-              Confirm
+              {votePending ? "Voting" : "Confirm"}
             </Button>
           </div>
         </DialogContent>
