@@ -90,13 +90,10 @@ export default function Item({
                 : "text-base/relaxed text-left"
             }
           >
-            {/* Title */}
-            <h1 className="text-lg font-[550]">{data.title}</h1>
-            {/* Content */}
-            <ReactMarkdown className="overflow-ellipsis">
+            <h1 className="text-lg font-[550] my-2">{data.title}</h1>
+            <ReactMarkdown className="overflow-ellipsis text-[#9B9B9B]">
               {data.text}
             </ReactMarkdown>
-            {/* Tags */}
             {data.tags ? (
               <div className="flex flex-wrap gap-[.625rem] pt-[.625rem]">
                 {data.tags.map((tag, index) => (
@@ -124,8 +121,13 @@ export default function Item({
                 className="w-[20rem] h-[20rem] object-cover !rounded-[1rem] mt-[1.25rem]"
               />
             ) : (
-              <div className="max-w-[19rem] h-[19rem] object-cover !rounded-[1rem] mt-[1.25rem] border flex justify-center items-center text-xl font-semibold">
-                {data.title}
+              <div className="relative max-w-[19rem] mx-auto h-[19rem] object-cover !rounded-[1rem] mt-[1.25rem] border flex justify-center items-center text-xl font-semibold">
+                <div className="z-10 text-white p-3">{data.title}</div>
+                <img
+                  src="/item-bg.png"
+                  className="w-full absolute top-0 left-0 z-0"
+                  alt=""
+                />
               </div>
             )}
           </div>
