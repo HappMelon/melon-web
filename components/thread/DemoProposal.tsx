@@ -57,6 +57,7 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
 
   const onVote = async () => {
     console.log("======onVote======");
+
     setVotePending(true);
 
     if (!provider || !signer) {
