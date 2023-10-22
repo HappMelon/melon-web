@@ -45,8 +45,8 @@ export default function Header() {
               <Image
                 src={user.imageUrl}
                 alt=""
-                width={61}
-                height={61}
+                width={50}
+                height={50}
                 className="rounded-[3.125rem]"
               />
             </DropdownMenuTrigger>

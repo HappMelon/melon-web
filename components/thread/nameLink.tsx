@@ -3,24 +3,24 @@
 import { useRouter } from "next/navigation";
 
 export default function NameLink({
-  name,
   username,
+  id,
 }: {
-  name: string;
+  id: string;
   username: string;
 }) {
   const router = useRouter();
 
   return (
     <div
-      className="font-semibold"
+      className="font-semibold cursor-pointer"
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        router.push(`/${username}`);
+        router.push(`/profile/${id}`);
       }}
     >
-      {name}
+      {username}
     </div>
   );
 }

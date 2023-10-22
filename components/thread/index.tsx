@@ -62,7 +62,7 @@ export default function Item({
             />
           </div>
           <div className="pl-[.625rem]">
-            <NameLink username={data.author.name} name={data.author.username} />
+            <NameLink username={data.author.name} name={data.author.name} />
           </div>
           <div className="pl-[.625rem] font-medium text-[.75rem] text-[#9B9B9B]">
             · {timeSince(data.createdAt)} ago

@@ -34,41 +34,43 @@ export default async function PopularAuthors() {
         <img src="/🦆 icon _arrow back_.svg" alt="" className="pl-[.375rem]" />
       </div>
       <div className="ml-[1.75rem] mr-[1.75rem]">
-        {foo.map((user) => (
-          <div
-            key={user.id}
-            className="flex items-center justify-between mt-[1.5rem]"
-          >
-            <div className="flex">
-              <Link href={`/profile/${user.id}`}>
-                <img
-                  src={user.image}
-                  alt={user.username}
-                  className="w-[1.75rem] h-[1.75rem] rounded-full cursor-pointer"
-                />
-              </Link>
-              <h3 className="text-base font-bold pl-[.625rem]">
-                {user.username}
-              </h3>
-            </div>
-            {u && getSelf ? (
-              <>
-                {user.id !== getSelf.id && (
-                  <FollowButton
-                    id={getSelf!.id}
-                    followingId={user!.id}
-                    name={user!.username}
-                    isFollowing={user.followedBy.some(
-                      (user) => user.id === getSelf!.id,
-                    )}
+        {foo.map((user) => {
+          if (getSelf?.id === user.id) return null;
+
+          return (
+            <div
+              key={user.id}
+              className="flex items-center justify-between mt-[1.5rem]"
+            >
+              <div className="flex">
+                <Link href={`/profile/${user.id}`}>
+                  <img
+                    src={user.image}
+                    alt={user.username}
+                    className="w-[1.75rem] h-[1.75rem] rounded-full cursor-pointer"
                   />
-                )}
-              </>
-            ) : (
-              <NotSigninFollowButton />
-            )}
-          </div>
-        ))}
+                </Link>
+                <h3 className="text-base font-bold pl-[.625rem]">
+                  {user.username.length > 10
+                    ? user.username.slice(0, 10) + "..."
+                    : user.username}
+                </h3>
+              </div>
+              {u && getSelf ? (
+                <FollowButton
+                  id={getSelf!.id}
+                  followingId={user!.id}
+                  name={user!.username}
+                  isFollowing={user.followedBy.some(
+                    (user) => user.id === getSelf!.id,
+                  )}
+                />
+              ) : (
+                <NotSigninFollowButton />
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

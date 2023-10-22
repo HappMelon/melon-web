@@ -47,17 +47,20 @@ export default function Reply({
   return (
     <div className="pt-[.625rem] px-[1.875rem] flex">
       <Image
+        onClick={(e) => {
+          router.push(`/profile/${data.author.id}`);
+        }}
         src={data.author.image}
         height={50}
         width={50}
-        className="rounded-full"
+        className="rounded-full cursor-pointer"
         alt={data.author.name + "'s profile image"}
       />
       <div className="flex flex-col pl-[15px]">
         <div className="flex">
           <div className="flex">
             <div>@</div>
-            <NameLink username={data.author.name} name={data.author.username} />
+            <NameLink id={data.author.id} username={data.author.name} />
           </div>
           <div className="pl-[.5rem] font-medium text-[.75rem] text-[#9B9B9B]">
             · {timeSince(data.createdAt)} ago
