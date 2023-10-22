@@ -91,6 +91,7 @@ export default function MainItem({
         <div className="text-[1.75rem] font-bold">{data.title}</div>
         {!!data.images.length && (
           <ImageGallery
+            showPlayButton={false}
             items={data.images.map((i) => ({ original: i, thumbnail: i }))}
           />
         )}

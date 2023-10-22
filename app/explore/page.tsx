@@ -28,9 +28,14 @@ export default async function Page({
           likes: true,
         },
         where: {
-          text: {
-            contains: searchParams.q as string,
-            mode: "insensitive",
+          OR: {
+            title: {
+              contains: searchParams.q as string,
+            },
+            text: {
+              contains: searchParams.q as string,
+              mode: "insensitive",
+            },
           },
         },
       })

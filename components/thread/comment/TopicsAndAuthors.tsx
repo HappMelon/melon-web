@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export async function TopicsAndAuthors({ className }: SidebarProps) {
-  let cl = `w-[21.875rem] ml-[1.875rem]`;
+  let cl = `w-[15rem] 2xl:w-[30rem] ml-[0.5rem] 2xl:ml-[1.875rem]`;
   return (
     <div className={cn(className, cl)}>
       <HotTopics></HotTopics>

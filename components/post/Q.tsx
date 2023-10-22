@@ -16,7 +16,8 @@ import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import "react-quill/dist/quill.snow.css";
-import { TagsInput } from "react-tag-input-component";
+import { Listbox } from "@headlessui/react";
+import TagSelect from "./tags-select";
 
 const MarkdownEditor = dynamic(
   () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
@@ -33,7 +34,7 @@ export default function Q({
   const [uploadImg, setUploadImg] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
   const pathname = usePathname();
-  const [Tags, setTags] = useState([]);
+  const [tags, setTags] = useState<{ name: string }[]>();
 
   function clearState() {
     setTitle("");
@@ -82,11 +83,7 @@ export default function Q({
             </div>
           </PopoverTrigger>
           <PopoverContent className="w-[21.25rem] h-[17.5rem] ml-[16.75rem] mb-[17px]">
-            <TagsInput
-              value={Tags}
-              onChange={(tags) => setTags(tags as never[])}
-              name="tags"
-            />
+            <TagSelect selected={tags || []} onChange={setTags}></TagSelect>
           </PopoverContent>
         </Popover>
         <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
@@ -143,7 +140,7 @@ export default function Q({
               await createNotes(
                 title,
                 value,
-                Tags,
+                tags?.map((i) => i.name) ?? [],
                 uploadImg,
                 create.id,
                 pathname,
@@ -158,7 +155,9 @@ export default function Q({
               });
               router.push("/");
             });
-            startTransition(() => updateTagsCount([...Tags]));
+            startTransition(() =>
+              updateTagsCount(tags?.map((i) => i.name) ?? []),
+            );
           }}
         >
           {isPending ? (
