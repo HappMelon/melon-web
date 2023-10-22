@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import { Avatar } from "@/components/avatar/avatar";
 
 export default function Item({
   data,
@@ -53,16 +54,13 @@ export default function Item({
       <div className="flex justify-between items-center">
         <div className="flex justify-start items-center">
           <div onClick={() => router.push(`/profile/${data.author.id}`)}>
-            <Image
-              width={30}
-              height={30}
+            <Avatar
               src={data.author.image}
-              className="rounded-[3.125rem]"
               alt={data.author.name + "'s profile image"}
-            />
+            ></Avatar>
           </div>
           <div className="pl-[.625rem]">
-            <NameLink username={data.author.name} name={data.author.username} />
+            <NameLink id={data.author.id} username={data.author.name} />
           </div>
           <div className="pl-[.625rem] font-medium text-[.75rem] text-[#9B9B9B]">
             · {timeSince(data.createdAt)} ago

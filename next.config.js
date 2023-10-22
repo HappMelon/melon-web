@@ -4,13 +4,14 @@ const nextConfig = {
     serverActions: true,
   },
   images: {
-    remotePatterns: [
-      {
-        // https://nextjs.org/docs/pages/api-reference/components/image#remotepatterns
-        protocol: "https",
-        hostname: "**",
-      },
-    ],
+    domains: ["img.clerk.com", "ipfs.xlog.app"],
+    // remotePatterns: [
+    //   {
+    //     // https://nextjs.org/docs/pages/api-reference/components/image#remotepatterns
+    //     protocol: "https",
+    //     hostname: "**",
+    //   }
+    // ],
   },
 };
 

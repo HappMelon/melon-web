@@ -23,13 +23,18 @@ export function BannerInfo({
   return (
     <div className="w-full box-border overflow-visible flex p-[1.875rem] h-[13.5rem] text-white bg-gradient-to-r from-gray-900 from-10% via-indigo-900 via-85% to-indigo-800 to-100%">
       {user && (
-        <Image
+        <img
           src={user.image}
+          className="object-cover shrink-0 border-2 border-white/20 rounded-[1.25rem] w-[12.875rem] h-[12.875rem]"
           alt=""
-          width={206}
-          height={206}
-          className="shrink-0 border-2 border-white/20 rounded-[1.25rem] w-[12.875rem] h-[12.875rem]"
         />
+        // <Image
+        //   src={user.image}
+        //   alt=""
+        //   width={206}
+        //   height={206}
+        //   className="shrink-0 border-2 border-white/20 rounded-[1.25rem] w-[12.875rem] h-[12.875rem]"
+        // />
       )}
 
       <div className="grow mx-[1.625rem]">

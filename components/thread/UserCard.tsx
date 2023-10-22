@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import Image from "next/image";
 
 import FollowButton from "@/components/profile/follow";
+import { Avatar } from "@/components/avatar/avatar";
 
 export default function UserCard({
   user,
@@ -21,13 +22,12 @@ export default function UserCard({
     <div className="w-full box-border px-[1.75rem] py-[1.5rem] bg-white border border-[#e6e6e6] rounded-[10px] shadow-[0_0_4px_0_rgba(0,0,0,0.15)]">
       <div className="flex">
         <div className="shrink-0 w-fit">
-          <Image
-            src={user.image}
-            alt=""
-            width={42}
-            height={42}
+          <Avatar
+            size={42}
+            src={user.image || ""}
             className="border-2 border-white/80 rounded-[1.25rem]"
-          />
+            alt={user.name + "'s profile image"}
+          ></Avatar>
         </div>
 
         <div className="flex-1 px-[.75rem] text-left">

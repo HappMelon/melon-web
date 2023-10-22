@@ -5,6 +5,7 @@ import { currentUser } from "@clerk/nextjs";
 import { ArrowUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Avatar } from "@/components/avatar/avatar";
 
 export default async function RepliesPage({
   params,
@@ -85,11 +86,10 @@ export default async function RepliesPage({
                 >
                   <ArrowUp className="w-4 h-4 mr-2" />
                   <div className="overflow-hidden rounded-full h-4 w-4 mr-2 bg-neutral-600">
-                    <Image
+                    <Avatar
+                      size={16}
                       src={post.parent.parent.author.image}
                       alt={post.parent.parent.author.name + "'s avatar"}
-                      width={16}
-                      height={16}
                     />
                   </div>
                   See earlier reply
