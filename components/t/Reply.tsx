@@ -5,6 +5,7 @@ import { timeSince } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Avatar } from "@/components/avatar/avatar";
 
 export default function Reply({
   data,
@@ -46,22 +47,18 @@ export default function Reply({
 
   return (
     <div className="pt-[.625rem] px-[1.875rem] flex">
-      <Image
+      <Avatar
         onClick={(e) => {
           router.push(`/profile/${data.author.id}`);
         }}
+        size={50}
+        className="cursor-pointer"
         src={data.author.image}
-        height={50}
-        width={50}
-        className="rounded-full cursor-pointer"
         alt={data.author.name + "'s profile image"}
-      />
+      ></Avatar>
       <div className="flex flex-col pl-[15px]">
         <div className="flex">
-          <div className="flex">
-            <div>@</div>
-            <NameLink id={data.author.id} username={data.author.name} />
-          </div>
+          <NameLink id={data.author.id} username={data.author.name} />
           <div className="pl-[.5rem] font-medium text-[.75rem] text-[#9B9B9B]">
             · {timeSince(data.createdAt)} ago
           </div>

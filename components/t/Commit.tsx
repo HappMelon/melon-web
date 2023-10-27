@@ -10,6 +10,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useTransition } from "react";
 import Reposts from "./Reposts";
+import { Avatar } from "@/components/avatar/avatar";
 
 export default function Commit({
   data,
@@ -60,13 +61,11 @@ export default function Commit({
         </div>
       </div>
       <div className="flex items-center relative">
-        <Image
+        <Avatar
+          size={50}
           src={avatar || ""}
-          height={50}
-          width={50}
-          className="rounded-full"
           alt={data.author.name + "'s profile image"}
-        />
+        ></Avatar>
         <Input
           value={comment}
           onChange={(e) => {

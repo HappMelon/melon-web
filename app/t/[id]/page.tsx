@@ -108,7 +108,7 @@ export default async function ThreadPage({
       ) : null}
       <div className="flex">
         <div className="flex-1">
-          <MainItem avatar={user?.imageUrl} key={post.id} data={post} />
+          <MainItem avatar={getUser.image} key={post.id} data={post} />
           {/* commit */}
           <div className="pb-[23px]">
             {post.children.map((child) => (

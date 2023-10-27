@@ -10,3 +10,8 @@ export const UploadFile = async (blob: Blob) => {
     key: (await response.json()).url,
   };
 };
+
+export const linktoipfs = (url: string) => {
+  const ipfs = url.split("//")[1];
+  return `https://ipfs.xlog.app/ipfs/${ipfs}`;
+};

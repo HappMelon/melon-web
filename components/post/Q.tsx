@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import { createNotes, updateTagsCount } from "@/lib/actions";
-import { UploadFile } from "@/lib/upload-file";
+import { linktoipfs, UploadFile } from "@/lib/upload-file";
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import "react-quill/dist/quill.snow.css";
 import { TagsInput } from "react-tag-input-component";
@@ -41,10 +41,7 @@ export default function Q({
     setTags([]);
   }
 
-  const linktoipfs = (url: string) => {
-    const ipfs = url.split("//")[1];
-    return `https://ipfs.xlog.app/ipfs/${ipfs}`;
-  };
+  const router = useRouter();
 
   const handleFileUpload = (file: File) => {
     return UploadFile(file)
@@ -94,7 +91,7 @@ export default function Q({
         </Popover>
         <div className="px-[1.125rem] py-[1.3125rem] bg-[#F5F5F5] rounded-[.3125rem]">
           <Label htmlFor="picture" className="w-full h-full cursor-pointer">
-            <img className="w-10 h-10" src="/icon_camara.png" alt="" />
+            <img className="w-10 h-10" src="/icon_camera.png" alt="" />
           </Label>
           <Input
             onChange={(e) => {
@@ -153,11 +150,16 @@ export default function Q({
                 uploadImg,
                 create.id,
                 pathname,
-              );
+              ).catch(() => {
+                toast({
+                  title: "Failed publish Post.",
+                });
+              });
               clearState();
               toast({
-                title: "Publish Post.",
+                title: "Published Post.",
               });
+              router.push("/");
             });
             startTransition(() => updateTagsCount([...Tags]));
           }}

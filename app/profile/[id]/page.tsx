@@ -93,9 +93,6 @@ export default async function ProfilePage({
       })
     : [];
 
-  console.log("========getUSER", userProfile);
-  console.log("========getcurUSER", curUserProfile);
-
   return (
     <div className="w-full box-border pl-[1.875rem]">
       <div className="bg-white rounded-[.9375rem] p-[1.875rem]">

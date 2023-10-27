@@ -12,8 +12,9 @@ import { SignOutButton, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Avatar } from "@/components/avatar/avatar";
 
-export default function Header() {
+export default function Header({ image }: { image?: string }) {
   const { pathname } = useGetPath();
   const blur = pathname === "/sign-in" || pathname === "/sign-up";
   const { isLoaded, isSignedIn, user } = useUser();
@@ -39,14 +40,13 @@ export default function Header() {
         <Explore />
       </div>
       <div className="flex items-center">
-        {user ? (
+        {user && image ? (
           <DropdownMenu>
             <DropdownMenuTrigger>
-              <Image
-                src={user.imageUrl}
+              <Avatar
+                size={50}
+                src={image || ""}
                 alt=""
-                width={50}
-                height={50}
                 className="rounded-[3.125rem]"
               />
             </DropdownMenuTrigger>

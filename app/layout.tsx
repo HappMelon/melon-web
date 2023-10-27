@@ -1,5 +1,5 @@
 import Index from "@/components/layouts/AppLayout";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, currentUser } from "@clerk/nextjs";
 
 import { Toaster } from "@/components/ui/toaster";
 import "@/styles/index.css";
@@ -11,11 +11,20 @@ export const metadata = {
     "user curated social platform, your voice, your power | predict to earn.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const user = await currentUser();
+  const getUser = user?.id
+    ? await prisma?.user.findUnique({
+        where: {
+          id: user?.id,
+        },
+      })
+    : null;
+
   return (
     <>
       <link rel="icon" href="/favicon.png" sizes="any" />
@@ -23,7 +32,7 @@ export default function RootLayout({
         <html lang="en">
           <body>
             {/* https://ui.shadcn.com/docs/dark-mode/next */}
-            <Index>{children}</Index>
+            <Index image={getUser?.image}>{children}</Index>
             <Toaster />
           </body>
         </html>
