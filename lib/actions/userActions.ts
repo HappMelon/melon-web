@@ -3,11 +3,12 @@
 import { revalidatePath } from "next/cache";
 import prisma from "../prisma";
 import { cleanup } from "../utils";
+import { clerkClient } from "@clerk/nextjs/server";
 
 export async function changeUsername(
   username: string,
   userId: string,
-  path: string
+  path: string,
 ) {
   await prisma.user.update({
     where: {
@@ -25,16 +26,22 @@ export async function editProfile(
   name: string,
   bio: string,
   userId: string,
-  path: string
+  path: string,
+  avatarUrl?: string,
 ) {
+  const userData = {
+    name: cleanup(name),
+    bio: cleanup(bio),
+    image: avatarUrl,
+  };
+  if (!avatarUrl) {
+    delete userData.image;
+  }
   await prisma.user.update({
     where: {
       id: userId,
     },
-    data: {
-      name: cleanup(name),
-      bio: cleanup(bio),
-    },
+    data: userData,
   });
 
   revalidatePath(path);
@@ -47,7 +54,7 @@ export async function onboardData(
   name: string,
   bio: string,
   image: string,
-  userId: string
+  userId: string,
 ) {
   await prisma.user.create({
     data: {
@@ -64,7 +71,7 @@ export async function onboardData(
 export async function followUser(
   userId: string,
   followingId: string,
-  path: string
+  path: string,
 ) {
   await prisma.user.update({
     where: {
@@ -85,7 +92,7 @@ export async function followUser(
 export async function unfollowUser(
   userId: string,
   followingId: string,
-  path: string
+  path: string,
 ) {
   await prisma.user.update({
     where: {

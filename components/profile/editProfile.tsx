@@ -16,6 +16,8 @@ import { AlertCircle, Loader2 } from "lucide-react";
 import { editProfile } from "@/lib/actions";
 import { usePathname } from "next/navigation";
 import { useToast } from "../ui/use-toast";
+import Image from "next/image";
+import { linktoipfs, UploadFile } from "@/lib/upload-file";
 
 export function EditProfileModal({
   data,
@@ -28,8 +30,9 @@ export function EditProfileModal({
 }) {
   const [open, setOpen] = useState(false);
 
-  const [username, setUsername] = useState(data.username);
   const [name, setName] = useState(data.name);
+  const [avatar, setAvatar] = useState(data.image);
+  const [isAvatarLoading, setAvatarLoading] = useState(false);
   const [bio, setBio] = useState(data.bio);
 
   const [clicked, setClicked] = useState(false);
@@ -48,6 +51,14 @@ export function EditProfileModal({
     }
   }, [isPending]);
 
+  const handleFileUpload = (file: File) => {
+    return UploadFile(file)
+      .then((res) => {
+        return linktoipfs(res.key);
+      })
+      .catch((e) => console.error("Can't upload file", e));
+  };
+
   return (
     <>
       <div
@@ -57,22 +68,59 @@ export function EditProfileModal({
         Edit Profile
       </div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="p-10 rounded-full">
           <DialogHeader>
-            <DialogTitle>Edit Profile</DialogTitle>
+            <DialogTitle className="text-center">
+              <div className="text-[32px] pb-[10px]">Edit Profile</div>
+            </DialogTitle>
           </DialogHeader>
 
           <form>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="username">Username</Label>
-                <Input
-                  value={username}
-                  disabled
-                  id="username"
-                  placeholder="Your unique username"
-                />
+                <div className="relative inline-flex mx-auto">
+                  <div className="relative inline-flex">
+                    {isAvatarLoading && (
+                      <Loader2 className="h-4 w-4 animate-spin text-neutral-600 mt-1rem absolute top-0 left-0" />
+                    )}
+
+                    <img
+                      className="rounded-full w-[114px] h-[114px] object-cover"
+                      alt="avatar1"
+                      src={avatar}
+                    />
+
+                    <div className="flex items-center justify-center w-10 absolute right-0 bottom-0">
+                      <label htmlFor="dropzone-file">
+                        <Image
+                          className="cursor-pointer"
+                          alt="avatar"
+                          src="/upload-camera.png"
+                          width={35}
+                          height={35}
+                        ></Image>
+                        <input
+                          onChange={(e) => {
+                            if (e.target.files) {
+                              setAvatarLoading(true);
+                              handleFileUpload(e.target.files[0]).then(
+                                (res) => {
+                                  res && setAvatar(res);
+                                  setAvatarLoading(false);
+                                },
+                              );
+                            }
+                          }}
+                          id="dropzone-file"
+                          type="file"
+                          className="hidden"
+                        />
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
+
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Name</Label>
                 <Input
@@ -80,6 +128,9 @@ export function EditProfileModal({
                   onChange={(e) => setName(e.target.value)}
                   id="name"
                   placeholder="Name displayed on your profile"
+                  className={
+                    "bg-[#F8F8F8] border-1-[#BCBCBC] rounded-xl text-[#BCBCBC] transition-all"
+                  }
                 />
                 {name.length === 0 ? (
                   <div className="text-red-500 text-sm flex items-center">
@@ -100,6 +151,9 @@ export function EditProfileModal({
                   onChange={(e) => setBio(e.target.value)}
                   id="bio"
                   placeholder="+ Write bio"
+                  className={
+                    "bg-[#F8F8F8] border-1-[#BCBCBC] rounded-xl text-[#BCBCBC] transition-all"
+                  }
                 />
                 {name.length > 100 ? (
                   <div className="text-red-500 text-sm flex items-center">
@@ -110,21 +164,44 @@ export function EditProfileModal({
               </div>
             </div>
           </form>
-          <Button
-            onClick={() => {
-              startTransition(() => editProfile(name, bio, data.id, pathname));
-              setClicked(true);
-            }}
-            variant="secondary"
-            className="w-full mt-6"
-            disabled={name.length === 0 || name.length > 16 || bio.length > 100}
-          >
-            {isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin text-neutral-600" />
-            ) : (
-              "Update"
-            )}
-          </Button>
+          <div className="flex gap-4 my-6">
+            <Button
+              onClick={() => {
+                setBio(data.bio);
+                setName(data.name);
+                setAvatar(data.image);
+                setOpen(false);
+              }}
+              variant="secondary"
+              className="w-full rounded-full bg-[#f4f4f4] font-semibold text-[#9B9B9B] text-[18px]"
+              disabled={
+                name.length === 0 || name.length > 16 || bio.length > 100
+              }
+            >
+              Cancel
+            </Button>
+
+            <Button
+              onClick={() => {
+                if (isPending || isAvatarLoading) return;
+                startTransition(() =>
+                  editProfile(name, bio, data.id, pathname, avatar),
+                );
+                setClicked(true);
+              }}
+              variant="secondary"
+              className="w-full rounded-full text-[18px] bg-gradient-to-r from-[#F9D423] to-[#F83600] text-white"
+              disabled={
+                name.length === 0 || name.length > 16 || bio.length > 100
+              }
+            >
+              {isPending || isAvatarLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin text-neutral-600" />
+              ) : (
+                "Save"
+              )}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>
