@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useGetPath } from "@/hook/useGetPath";
 import { SignOutButton, useUser } from "@clerk/nextjs";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Avatar } from "@/components/avatar/avatar";

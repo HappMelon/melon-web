@@ -121,18 +121,19 @@ export default async function Page({
       });
 
   return (
-    <div className="flex w-full box-border pl-[1.875rem] h-[100%]">
-      {/* 根据用户是否登陆显示不一样的Trade页面 */}
-      {user ? (
-        <>
+    <div className="flex box-border pl-[1.875rem] relative ">
+      <div className="flex-1">
+        {user ? (
           <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
-        </>
-      ) : (
-        <>
+        ) : (
           <NoLoginTrade posts={defaultPosts}></NoLoginTrade>
-        </>
-      )}
-      <TopicsAndAuthors />
+        )}
+      </div>
+      <div className="relative pl-2 w-[15rem] 2xl:w-[25rem] text-center flex justify-center">
+        <div className="fixed">
+          <TopicsAndAuthors />
+        </div>
+      </div>
     </div>
   );
 }
