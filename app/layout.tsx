@@ -16,23 +16,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await currentUser();
-  const getUser = user?.id
-    ? await prisma?.user.findUnique({
-        where: {
-          id: user?.id,
-        },
-      })
-    : null;
-
   return (
     <>
       <link rel="icon" href="/favicon.png" sizes="any" />
       <ClerkProvider>
         <html lang="en">
           <body>
-            {/* https://ui.shadcn.com/docs/dark-mode/next */}
-            <Index image={getUser?.image}>{children}</Index>
+            <Index image={""}>{children}</Index>
             <Toaster />
           </body>
         </html>
