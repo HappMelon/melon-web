@@ -95,12 +95,9 @@ export default function Q({
           </Label>
           <Input
             onChange={(e) => {
-              console.log(e);
               if (e.target.files) {
                 handleFileUpload(e.target.files[0]).then((res) => {
-                  console.log(res);
                   setUploadImg([...uploadImg, res as string]);
-                  console.log(uploadImg);
                 });
               }
             }}
