@@ -121,7 +121,7 @@ export default async function Page({
       });
 
   return (
-    <div className="flex box-border pl-[1.875rem] relative ">
+    <div className="flex gap-1 2xl:gap-2 box-border pl-[1.875rem] relative ">
       <div className="flex-1">
         {user ? (
           <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
@@ -129,7 +129,7 @@ export default async function Page({
           <NoLoginTrade posts={defaultPosts}></NoLoginTrade>
         )}
       </div>
-      <div className="relative pl-2 w-[15rem] 2xl:w-[25rem] text-center flex justify-center">
+      <div className="relative pl-2 w-[14rem] 2xl:w-[25rem] text-center flex justify-center">
         <div className="fixed">
           <TopicsAndAuthors />
         </div>
