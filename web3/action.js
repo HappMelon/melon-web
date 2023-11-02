@@ -1,6 +1,11 @@
 import { ethers } from "ethers";
 
-import { SPENDERCONTRACT_ADDRESS, spenderContractAbi } from "./abi";
+import {
+  SPENDERCONTRACT_ADDRESS,
+  PERMITTOKENCONTRACT_ADDRESS,
+  spenderContractAbi,
+  permitTokenContractAbi,
+} from "./abi";
 
 export const connectWallet = async (onAccountChange) => {
   if (!window.ethereum) return;
@@ -26,6 +31,100 @@ export const getContract = async (signer) => {
     spenderContractAbi,
     signer,
   );
+};
+
+export const fetchContractBalance = async (signer, account) => {
+  const contract = new ethers.Contract(
+    SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  const balance = await contract.balances(account);
+
+  console.log("fetchContractBalance", balance);
+
+  return ethers.utils.formatEther(balance);
+};
+
+export const fetchContractAllowance = async (signer, account) => {
+  if (!signer) return;
+
+  const permitTokenContract = new ethers.Contract(
+    PERMITTOKENCONTRACT_ADDRESS,
+    permitTokenContractAbi,
+    signer,
+  );
+  const allowance = await permitTokenContract.allowance(
+    account,
+    SPENDERCONTRACT_ADDRESS,
+  );
+
+  console.log("fetchContractAllowance", allowance);
+  return ethers.utils.formatEther(allowance);
+};
+
+// 授权， 质押代币的时候必须先授权， 才可以发送或者质押代币
+export const approveAndSubmit = async (signer, account) => {
+  if (!signer) return;
+
+  console.log("正在授权");
+  const permitTokenContract = new ethers.Contract(
+    PERMITTOKENCONTRACT_ADDRESS,
+    permitTokenContractAbi,
+    signer,
+  );
+
+  // TODO: default min_amount = 100
+  const _amount = ethers.utils.parseEther("100");
+  const approvalTransaction = await permitTokenContract.approve(
+    SPENDERCONTRACT_ADDRESS,
+    _amount,
+  );
+
+  await approvalTransaction.wait();
+
+  const allowance = await permitTokenContract.allowance(
+    account,
+    SPENDERCONTRACT_ADDRESS,
+  );
+  if (!ethers.utils.formatEther(allowance)) {
+    return;
+  }
+
+  console.log("授权成功， 开始质押");
+
+  return ethers.utils.formatEther(allowance);
+};
+
+export const handleDeposit = async (signer, account, depositAmount) => {
+  if (!signer) return;
+
+  console.log("正在存款： ", depositAmount);
+
+  const permitTokenContract = new ethers.Contract(
+    PERMITTOKENCONTRACT_ADDRESS,
+    permitTokenContractAbi,
+    signer,
+  );
+
+  const allowance_valued = await permitTokenContract.allowance(
+    account,
+    SPENDERCONTRACT_ADDRESS,
+  );
+  if (allowance_valued.lt(depositAmount)) {
+    console.log("allowance_valued 不足");
+    throw new Error("allowance is not enough");
+  }
+
+  const contract = new ethers.Contract(
+    SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  const tx = await contract.deposit(ethers.utils.parseEther(depositAmount));
+
+  await tx.wait();
+  console.log("存款成功！");
 };
 
 export const addProposal = async (signer, proposalText) => {
