@@ -18,6 +18,7 @@ import { usePathname } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import Image from "next/image";
 import { linktoipfs, UploadFile } from "@/lib/upload-file";
+import { useClerk } from "@clerk/nextjs";
 
 export function EditProfileModal({
   data,
@@ -28,11 +29,12 @@ export function EditProfileModal({
     };
   }>;
 }) {
+  const clerk = useClerk();
   const [open, setOpen] = useState(false);
-
   const [name, setName] = useState(data.name);
   const [avatar, setAvatar] = useState(data.image);
   const [isAvatarLoading, setAvatarLoading] = useState(false);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [bio, setBio] = useState(data.bio);
 
   const [clicked, setClicked] = useState(false);
@@ -58,6 +60,16 @@ export function EditProfileModal({
       })
       .catch((e) => console.error("Can't upload file", e));
   };
+
+  async function updateInfo() {
+    if (avatarFile) {
+      await clerk.user?.setProfileImage({ file: avatarFile }).catch((e) => {
+        console.log(e, "error");
+      });
+    }
+
+    await editProfile(name, bio, data.id, pathname, avatar);
+  }
 
   return (
     <>
@@ -102,6 +114,7 @@ export function EditProfileModal({
                         <input
                           onChange={(e) => {
                             if (e.target.files) {
+                              setAvatarFile(e.target.files[0]);
                               setAvatarLoading(true);
                               handleFileUpload(e.target.files[0]).then(
                                 (res) => {
@@ -184,9 +197,7 @@ export function EditProfileModal({
             <Button
               onClick={() => {
                 if (isPending || isAvatarLoading) return;
-                startTransition(() =>
-                  editProfile(name, bio, data.id, pathname, avatar),
-                );
+                startTransition(() => updateInfo());
                 setClicked(true);
               }}
               variant="secondary"

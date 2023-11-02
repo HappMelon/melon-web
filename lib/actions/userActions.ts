@@ -3,7 +3,6 @@
 import { revalidatePath } from "next/cache";
 import prisma from "../prisma";
 import { cleanup } from "../utils";
-import { clerkClient } from "@clerk/nextjs/server";
 
 export async function changeUsername(
   username: string,
@@ -28,6 +27,7 @@ export async function editProfile(
   userId: string,
   path: string,
   avatarUrl?: string,
+  avatarFile?: File,
 ) {
   const userData = {
     name: cleanup(name),
@@ -37,6 +37,7 @@ export async function editProfile(
   if (!avatarUrl) {
     delete userData.image;
   }
+
   await prisma.user.update({
     where: {
       id: userId,

@@ -22,7 +22,7 @@ export default async function RootLayout({
       <ClerkProvider>
         <html lang="en">
           <body>
-            <Index image={""}>{children}</Index>
+            <Index>{children}</Index>
             <Toaster />
           </body>
         </html>

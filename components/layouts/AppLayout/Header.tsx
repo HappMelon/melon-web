@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Avatar } from "@/components/avatar/avatar";
 
-export default function Header({ image }: { image?: string }) {
+export default function Header() {
   const { pathname } = useGetPath();
   const blur = pathname === "/sign-in" || pathname === "/sign-up";
   const { isLoaded, isSignedIn, user } = useUser();
@@ -40,12 +40,12 @@ export default function Header({ image }: { image?: string }) {
         <Explore />
       </div>
       <div className="flex items-center">
-        {user && image ? (
+        {user ? (
           <DropdownMenu>
             <DropdownMenuTrigger>
               <Avatar
                 size={50}
-                src={image || ""}
+                src={user.imageUrl || ""}
                 alt=""
                 className="rounded-[3.125rem]"
               />
