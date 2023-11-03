@@ -54,8 +54,8 @@ export default async function PopularAuthors() {
                   />
                 </Link>
                 <h3 className="text-base font-bold">
-                  {user.username.length > 10
-                    ? user.username.slice(0, 10) + "..."
+                  {user.username.length > 9
+                    ? user.username.substring(0, 6) + "..."
                     : user.username}
                 </h3>
               </div>
