@@ -47,7 +47,7 @@ export default async function OnboardingLayout() {
   });
 
   return (
-    <div className="pl-[2.5rem]">
+    <div className="bg-white pb-20 ml-10 2xl:ml-6 px-10 rounded-[.9375rem]">
       {user ? (
         <Screens allUsernames={allUsernames} userData={userData} />
       ) : null}

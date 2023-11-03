@@ -4,7 +4,6 @@ import Like from "@/components/thread/controls/like";
 import NameLink from "@/components/thread/nameLink";
 import { Color, timeSince } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -91,31 +90,9 @@ export default function Item({
             <h1 className="text-lg font-[550] my-2 line-clamp-1">
               {data.title}
             </h1>
-            <ReactMarkdown className="overflow-ellipsis text-[#9B9B9B]">
+            <ReactMarkdown className="line-clamp-1 text-[#9B9B9B]">
               {data.text}
             </ReactMarkdown>
-            <div className="h-[2.8rem] overflow-hidden">
-              {data.tags ? (
-                <div className="flex flex-wrap gap-[.625rem] pt-[.625rem]">
-                  {data.tags.map((tag, index) => (
-                    <Link
-                      href={`/tag/${tag}`}
-                      style={{
-                        color: colors[index],
-                        background: `${colors[index]}10`,
-                      }}
-                      key={tag}
-                      className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
-                    >
-                      #{tag}
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-            {/* show picture if not exists show the title like picture*/}
             {data.images.length > 0 ? (
               <img
                 src={data.images[0]}
