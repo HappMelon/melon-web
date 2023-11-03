@@ -12,8 +12,10 @@ export default function HomePosts({
   posts,
   follows,
   column = 3,
+  searchQuery = "",
 }: {
   column?: number;
+  searchQuery?: string;
   posts: Prisma.PostGetPayload<{
     include: {
       author: true;
@@ -40,40 +42,41 @@ export default function HomePosts({
   }>[];
 }) {
   const [items, setItems] = useState(posts);
-  const [follow, setFollow] = useState(follows);
   const [noMore, setNoMore] = useState(false);
   const [loading, setLoading] = useState(false);
   const { ref, inView } = useInView();
 
+  useEffect(() => {
+    setNoMore(false);
+    setItems(posts);
+  }, [posts]);
+
   // loading more
   useEffect(() => {
-    if (inView && !noMore) {
+    const loadMore = async () => {
+      const morePosts = await fetch(
+        `/api/loadMore?cursor=${items[items.length - 1].id}&q=${searchQuery}`,
+        {
+          method: "GET",
+        },
+      ).then((res) => res.json());
+      setNoMore(!morePosts.hasMore);
+      setItems([...items, ...morePosts.data]);
+      setLoading(false);
+    };
+
+    if (inView && !noMore && !loading) {
       setLoading(true);
       loadMore();
       console.log("LOADING MORE");
     }
-  }, [inView, noMore]);
+  }, [inView, items, loading, noMore, searchQuery]);
 
   useEffect(() => {
     setItems(posts);
   }, [posts]);
 
   // loadMore
-  const loadMore = async () => {
-    const morePosts = await fetch(
-      `/api/loadMore?cursor=${items[items.length - 1].id}`,
-      {
-        method: "GET",
-      },
-    ).then((res) => res.json());
-
-    if (morePosts.data.length === 0) {
-      setNoMore(true);
-    }
-
-    setItems([...items, ...morePosts.data]);
-    setLoading(false);
-  };
 
   return (
     <div className="rounded-[15px] w-full">

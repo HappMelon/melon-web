@@ -29,7 +29,7 @@ export default async function PopularAuthors() {
 
   return (
     <div className="w-full h-auto mt-[1.875rem] pb-[1.75rem] bg-white rounded-[.625rem] px-2 2xl:px-6">
-      <div className="flex items-center justify-center pt-[2rem]">
+      <div className="flex items-center justify-start pt-[2rem]">
         <div className="text-lg font-bold">Popular Authors</div>
         <img src="/🦆 icon _arrow back_.svg" alt="" className="pl-[.375rem]" />
       </div>
