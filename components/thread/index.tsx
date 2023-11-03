@@ -94,7 +94,7 @@ export default function Item({
             <ReactMarkdown className="overflow-ellipsis text-[#9B9B9B]">
               {data.text}
             </ReactMarkdown>
-            <div className="h-20">
+            <div className="h-[2.8rem] overflow-hidden">
               {data.tags ? (
                 <div className="flex flex-wrap gap-[.625rem] pt-[.625rem]">
                   {data.tags.map((tag, index) => (

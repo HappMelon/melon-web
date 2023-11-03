@@ -61,6 +61,7 @@ export default async function PopularAuthors() {
               </div>
               {u && getSelf ? (
                 <FollowButton
+                  enableScaleSize
                   id={getSelf!.id}
                   followingId={user!.id}
                   name={user!.username}
