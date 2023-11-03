@@ -11,7 +11,9 @@ import Item from ".";
 export default function HomePosts({
   posts,
   follows,
+  column = 3,
 }: {
+  column?: number;
   posts: Prisma.PostGetPayload<{
     include: {
       author: true;
@@ -74,62 +76,23 @@ export default function HomePosts({
   };
 
   return (
-    <div className="bg-white rounded-[15px] w-full h-full pb-10 overflow-auto">
-      <Tabs defaultValue="For You">
-        <TabsContent value="For You">
-          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px]">
-            {items.map((item, i) => {
-              if (i === items.length - 1)
-                return (
-                  <div key={item.id} ref={ref}>
-                    <Item posts={items} data={item} />
-                  </div>
-                );
-              return (
-                <div key={item.id}>
-                  <Item posts={items} data={item} />
-                </div>
-              );
-            })}
-          </div>
-        </TabsContent>
-        <TabsContent value="Following">
-          <div className="grid grid-cols-3 gap-[2.25rem] px-[25px]">
-            {follow.map((item, i) => {
-              if (i === items.length - 1)
-                return (
-                  <div key={item.id} ref={ref}>
-                    <Item posts={items} data={item} />
-                  </div>
-                );
-              return (
-                <div key={item.id}>
-                  <Item posts={items} data={item} />
-                </div>
-              );
-            })}
-          </div>
-        </TabsContent>
-        <TabsContent value="Politics" className="text-center">
-          Politics coming soon.
-        </TabsContent>
-      </Tabs>
-
-      <div className="w-full py-4 flex justify-center">
-        {items.length === 0 ? (
-          <div className="text-neutral-600 mt-4 text-center leading-loose">
-            Looks like there isn’t any posts <br />
-            from your following users ~
-          </div>
-        ) : null}
-        {loading ? (
-          <Loader2 className="h-4 w-4 animate-spin text-neutral-600" />
-        ) : null}
-        {noMore ? (
-          <div className="text-neutral-600 mt-4 text-center leading-loose">
-            {/* Politics coming soon. */}
-          </div>
-        ) : null}
+    <div className="rounded-[15px] w-full">
+      <div
+        className={`grid grid-cols-${column} gap-[2.25rem] rounded-[15px] pt-10 px-[25px] bg-white`}
+      >
+        {items.map((item, i) => {
+          if (i === items.length - 1)
+            return (
+              <div key={item.id} ref={ref}>
+                <Item posts={items} data={item} />
+              </div>
+            );
+          return (
+            <div key={item.id}>
+              <Item posts={items} data={item} />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

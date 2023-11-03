@@ -50,9 +50,9 @@ export default function Item({
   const colors = Color();
 
   return (
-    <div className="bg-[#F4F4F4] px-[1rem] py-[1.25rem] rounded-xl">
+    <div className="bg-[#F4F4F4] px-[1rem] py-[1.25rem] rounded-xl min-w-[13rem]">
       <div className="flex justify-between items-center">
-        <div className="flex justify-start items-center">
+        <div className="flex justify-start items-center flex-wrap">
           <div onClick={() => router.push(`/profile/${data.author.id}`)}>
             <Avatar
               src={data.author.image}
@@ -88,39 +88,45 @@ export default function Item({
                 : "text-base/relaxed text-left"
             }
           >
-            <h1 className="text-lg font-[550] my-2">{data.title}</h1>
+            <h1 className="text-lg font-[550] my-2 line-clamp-1">
+              {data.title}
+            </h1>
             <ReactMarkdown className="overflow-ellipsis text-[#9B9B9B]">
               {data.text}
             </ReactMarkdown>
-            {data.tags ? (
-              <div className="flex flex-wrap gap-[.625rem] pt-[.625rem]">
-                {data.tags.map((tag, index) => (
-                  <Link
-                    href={`/tag/${tag}`}
-                    style={{
-                      color: colors[index],
-                      background: `${colors[index]}10`,
-                    }}
-                    key={tag}
-                    className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
-                  >
-                    #{tag}
-                  </Link>
-                ))}
-              </div>
-            ) : (
-              ""
-            )}
+            <div className="h-[2.8rem] overflow-hidden">
+              {data.tags ? (
+                <div className="flex flex-wrap gap-[.625rem] pt-[.625rem]">
+                  {data.tags.map((tag, index) => (
+                    <Link
+                      href={`/tag/${tag}`}
+                      style={{
+                        color: colors[index],
+                        background: `${colors[index]}10`,
+                      }}
+                      key={tag}
+                      className="bg-[#EAEAEA] rounded-[10px] px-2 py-1 text-sm"
+                    >
+                      #{tag}
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
             {/* show picture if not exists show the title like picture*/}
             {data.images.length > 0 ? (
               <img
                 src={data.images[0]}
                 alt=""
-                className="w-[20rem] h-[20rem] object-cover !rounded-[1rem] mt-[1.25rem]"
+                className="w-[20rem] aspect-square max-h-[20rem] object-cover !rounded-[1rem] mt-[1.25rem]"
               />
             ) : (
-              <div className="relative max-w-[19rem] mx-auto h-[19rem] object-cover !rounded-[1rem] mt-[1.25rem] border flex justify-center items-center text-xl font-semibold">
-                <div className="z-10 text-white p-3">{data.title}</div>
+              <div className="relative w-full mx-auto max-h-[20rem]  object-cover !rounded-[1rem] mt-[1.25rem] border flex justify-center items-center text-xl font-semibold">
+                <div className="z-10 text-white flex line-clamp-2 h-full justify-center items-center p-3 w-full aspect-square">
+                  {data.title}
+                </div>
                 <img
                   src="/item-bg.png"
                   className="w-full absolute top-0 left-0 z-0"

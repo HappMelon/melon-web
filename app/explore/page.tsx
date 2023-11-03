@@ -28,9 +28,14 @@ export default async function Page({
           likes: true,
         },
         where: {
-          text: {
-            contains: searchParams.q as string,
-            mode: "insensitive",
+          OR: {
+            title: {
+              contains: searchParams.q as string,
+            },
+            text: {
+              contains: searchParams.q as string,
+              mode: "insensitive",
+            },
           },
         },
       })
@@ -116,18 +121,19 @@ export default async function Page({
       });
 
   return (
-    <div className="flex w-full box-border pl-[1.875rem] h-[100%]">
-      {/* 根据用户是否登陆显示不一样的Trade页面 */}
-      {user ? (
-        <>
+    <div className="flex gap-1 2xl:gap-2 box-border pl-[1.875rem] ">
+      <div className="flex-1">
+        {user ? (
           <HomePosts posts={defaultPosts} follows={followPosts}></HomePosts>
-        </>
-      ) : (
-        <>
+        ) : (
           <NoLoginTrade posts={defaultPosts}></NoLoginTrade>
-        </>
-      )}
-      <TopicsAndAuthors />
+        )}
+      </div>
+      <div className="relative pl-2 w-[16rem] pb-4 2xl:w-[25rem] text-center flex flex-col">
+        <div className=" top-[5rem]">
+          <TopicsAndAuthors />
+        </div>
+      </div>
     </div>
   );
 }
