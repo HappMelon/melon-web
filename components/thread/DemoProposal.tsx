@@ -45,7 +45,6 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
 
   const initConnectWallet = async () => {
     await connectWallet().then((res) => {
-      console.log("======res======", res);
       // @ts-ignore
       setProvider(res.provider);
       // @ts-ignore

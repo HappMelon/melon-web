@@ -3,6 +3,15 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/explore",
+        permanent: false,
+      },
+    ];
+  },
   images: {
     domains: ["img.clerk.com", "ipfs.xlog.app"],
     // remotePatterns: [

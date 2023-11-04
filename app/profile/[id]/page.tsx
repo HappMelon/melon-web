@@ -12,7 +12,6 @@ export default async function ProfilePage({
   params: { id: string };
 }) {
   const curUser = await currentUser();
-  console.log("========curUser", curUser);
 
   if (!curUser) {
     redirect("/sign-up");
