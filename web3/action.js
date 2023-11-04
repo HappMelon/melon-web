@@ -127,6 +127,51 @@ export const handleDeposit = async (signer, account, depositAmount) => {
   console.log("存款成功！");
 };
 
+export const fetchProposalDetails = async (signer, queryProposalID) => {
+  if (!signer) {
+    return;
+  }
+  console.log("正在查询提案ID: ", queryProposalID);
+
+  const contract = new ethers.Contract(
+    SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  // 获取选项的数量
+  const proposalId = await contract.proposalId(); // fetch once to avoid multiple calls
+
+  if (queryProposalID > proposalId.toNumber()) {
+    console.log("当前提案长度", proposalId.toNumber());
+    console.log("没有当前提案");
+    return;
+  }
+
+  const endTime = await contract.votingEndTimes(proposalId);
+
+  const optionsCountBigNumber = await contract.optionId(queryProposalID);
+  const optionsCount = optionsCountBigNumber.toNumber(); // 将 BigNumber 转换为数字
+
+  console.log("guigui: ", optionsCount);
+
+  let options = [];
+
+  for (let i = 1; i <= optionsCount; i++) {
+    const option = await contract.options(queryProposalID, i); // 使用 queryProposalID
+    options.push({
+      id: option.id.toString(),
+      name: option.name,
+      voteCount: ethers.utils.formatEther(option.voteCount),
+    });
+  }
+
+  return {
+    id: queryProposalID,
+    endTime: endTime.toString(),
+    options,
+  };
+};
+
 export const addProposal = async (signer, proposalText) => {
   if (!signer) return;
   console.log("正在增加提案： ", proposalText);

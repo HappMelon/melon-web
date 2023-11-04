@@ -1,22 +1,162 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import Countdown from "@/components/thread/Countdown";
 
+import {
+  connectWallet,
+  fetchProposalDetails,
+  vote,
+  fetchContractBalance,
+} from "@/web3/action";
+import { useToast } from "@/components/ui/use-toast";
+
+import { useEffect, useState } from "react";
+
+import {
+  NEXT_PUBLIC_PROPOSAL_ID,
+  NEXT_PUBLIC_PROPOSAL_OPTION_ID,
+} from "@/web3/abi";
+
 export default function ProposalCard({
-  status,
-  totalPrice = 0,
-  inputPrice = 0,
-  onBtnClick = () => {},
+  proposalId,
+  web3ProposalId,
 }: {
-  status: "Unstarted" | "Ongoing" | "Finished";
-  totalPrice: number;
-  inputPrice?: number;
-  onBtnClick?: () => void;
+  proposalId: string;
+  web3ProposalId: string;
 }) {
+  const [provider, setProvider] = useState();
+  const [account, setAccount] = useState();
+  const [signer, setSigner] = useState();
+  const [balance, setBalance] = useState("0");
+
+  const [proposalStatus, setProposalStatus] = useState<
+    "Unstarted" | "Ongoing" | "Finished"
+  >("Unstarted");
+
+  const [inputPrice, setInputPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [showVoteDialog, setShowVoteDialog] = useState(false);
+  const [votePending, setVotePending] = useState(false);
+  const [endTime, setEndTime] = useState(0);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    initConnectWallet();
+  }, []);
+
+  useEffect(() => {
+    getProposalDetails();
+    getBalance(signer, account);
+  }, [signer]);
+
+  const initConnectWallet = async () => {
+    await connectWallet().then((res) => {
+      console.log("======res======", res);
+      // @ts-ignore
+      setProvider(res.provider);
+      // @ts-ignore
+      setAccount(res.account);
+      // @ts-ignore
+      setSigner(res.signer);
+    });
+  };
+
+  const getProposalDetails = async () => {
+    if (!web3ProposalId) return;
+
+    const proposalDetails = await fetchProposalDetails(
+      signer,
+      web3ProposalId,
+    ).catch((err) => {
+      console.log("======err======", err);
+    });
+
+    if (!!proposalDetails) {
+      let totalPrice = 0;
+      proposalDetails.options.map((option) => {
+        totalPrice += Number(option.voteCount);
+      });
+      setTotalPrice(totalPrice);
+      setEndTime(proposalDetails.endTime * 1000);
+    }
+
+    console.log("======proposalDetails======", proposalDetails);
+  };
+
+  // get balance
+  // @ts-ignore
+  const getBalance = (signer, account) => {
+    fetchContractBalance(signer, account).then((balance) => {
+      console.log("======balance======", balance);
+
+      const formattedBalance = parseFloat(balance || "0").toString();
+
+      // @ts-ignore
+      setBalance(formattedBalance);
+    });
+  };
+
+  const onVote = async () => {
+    console.log("======onVote======");
+
+    setVotePending(true);
+
+    if (!provider || !signer) {
+      await initConnectWallet();
+    }
+
+    await vote(
+      signer,
+      account,
+      web3ProposalId,
+      NEXT_PUBLIC_PROPOSAL_OPTION_ID,
+      inputPrice.toString(),
+    )
+      .then((res) => {
+        console.log("======vote res", res);
+
+        // @ts-ignore
+        if (res?.status !== "success") {
+          toast({
+            title: res?.message || "Stake failed",
+          });
+          return;
+        }
+
+        toast({
+          title: "Stake Success",
+        });
+        setProposalStatus("Ongoing");
+        setShowVoteDialog(false);
+        setTotalPrice(totalPrice + inputPrice);
+      })
+      .catch((err) => {
+        console.log("======err======", err);
+        toast({
+          title: "Stake failed",
+        });
+      })
+      .finally(() => {
+        setVotePending(false);
+      });
+
+    console.log("======Vote Done======");
+  };
+
   return (
     <div className="w-full box-border px-[1.75rem] py-[1.5rem] bg-white border border-[#e6e6e6] rounded-[10px] shadow-[0_0_4px_0_rgba(0,0,0,0.15)]">
-      {status === "Unstarted" && (
+      {proposalStatus === "Unstarted" && (
         <div
           className="mb-[1.875rem] px-[1.25rem] py-[1rem] rounded-[10px] border border-[#e6e6e6] shadow-[0_0_4px_0_rgba(0,0,0,0.15)] text-white text-sm font-bold leading-normal "
           style={{
@@ -30,7 +170,7 @@ export default function ProposalCard({
       )}
 
       <div className="text-lg text-black font-bold mb-[1.25rem]">
-        Exposure Staking
+        Validation Staking
       </div>
 
       <div className="mb-[1.25rem]">
@@ -52,26 +192,26 @@ export default function ProposalCard({
           </div>
         </div>
 
-        {status !== "Finished" ? (
+        {proposalStatus !== "Finished" ? (
           <div>
             <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-medium">
               Ends in
             </div>
 
             <div className="flex items-center mb-[.3125rem]">
-              <Countdown targetDate={new Date("2023-10-31T00:00:00")} />
+              <Countdown targetDate={new Date(endTime)} />
             </div>
           </div>
         ) : (
           <div>
             <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-medium">
-              Ends in October 12, 2022 at 16:40 PM
+              {`Ends in ${new Date(endTime)}`}
             </div>
           </div>
         )}
       </div>
 
-      {!!inputPrice && status === "Ongoing" && (
+      {!!inputPrice && proposalStatus === "Ongoing" && (
         <div className="my-[1.25rem] text-center py-[.9375rem] border rounded-[15px] border-[#f9d423]">
           <div>
             <span
@@ -98,7 +238,7 @@ export default function ProposalCard({
         </div>
       )}
 
-      {status === "Unstarted" && (
+      {proposalStatus === "Unstarted" && (
         <Button
           className="w-full rounded-[40px] text-lg"
           style={{
@@ -106,24 +246,102 @@ export default function ProposalCard({
               "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
           }}
           onClick={() => {
-            onBtnClick();
+            // onBtnClick();
+            console.log("stake");
+            setShowVoteDialog(true);
           }}
         >
           Stake
         </Button>
       )}
 
-      {/* {status === "Ongoing" && (
-        <Button
-          className="w-full rounded-[40px] text-lg"
-          style={{
-            background:
-              "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
-          }}
-        >
-          Cancel
-        </Button>
-      )} */}
+      <Dialog open={showVoteDialog} onOpenChange={setShowVoteDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="mb-[1rem] text-[2rem] font-bold text-center">
+              Make A Validation Stake
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="px-[1.625rem] mb-[1rem] font-semibold text-xl leading-normal">
+            <div className="mb-[1.25rem]">
+              <div className="flex items-center px-[1.5rem] rounded-[50px] bg-[#f8f8f8]">
+                <Input
+                  placeholder="Price"
+                  value={inputPrice}
+                  type="number"
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    setInputPrice(value);
+                  }}
+                  className="flex-1 text-lg  shadow-none border-0 outline-none border-none bg-transparent focus-visible:ring-0"
+                />
+                <div
+                  className="shrink-0 pl-[1.25rem] py-[.5625rem] border-l border-[#e6e6e6] bg-clip-text text-transparent"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                  }}
+                >
+                  FLR
+                </div>
+              </div>
+
+              <div className="flex items-center mt-[1rem]">
+                <div className="flex-1 flex items-center">
+                  <div className="text-xs text-[#9b9b9b] font-medium">
+                    Balance:
+                  </div>
+                  <div className="ml-[.5rem] mr-[.3125rem] text-lg font-bold">
+                    {balance}
+                  </div>
+                  <div
+                    className="bg-clip-text text-transparent text-lg font-bold"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                    }}
+                  >
+                    FLR
+                  </div>
+                </div>
+
+                <div className="shrink-0 flex items-center font-bold text-xs">
+                  <span>1</span>
+                  <span
+                    className="mx-[.3125rem] bg-clip-text text-transparent text-lg font-bold"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                    }}
+                  >
+                    FLR
+                  </span>
+                  <span>=</span>
+                  <span className="mx-[.3125rem]">0.1</span>
+                  <span>USD</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="px-[1.625rem] mb-[1rem]">
+            <Button
+              className="w-full rounded-[40px] text-lg"
+              style={{
+                background:
+                  "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+              }}
+              onClick={() => {
+                onVote();
+              }}
+              disabled={!inputPrice || votePending}
+            >
+              {votePending ? "Voting" : "Confirm"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
