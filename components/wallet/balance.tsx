@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Image from "next/image";
 
 import {
   connectWallet,
   fetchContractBalance,
   fetchContractAllowance,
+  fetchContractUsedVotingRights,
   approveAndSubmit,
   handleDeposit,
 } from "@/web3/action";
@@ -19,6 +20,7 @@ export default function Balance() {
   const [account, setAccount] = useState();
   const [signer, setSigner] = useState();
   const [balance, setBalance] = useState("0");
+  const [usedVote, setUsedVote] = useState("0");
   const [allowance, setAllowance] = useState("0");
   const [authorized, setAuthorized] = useState(false);
   const [transactionPending, setTransactionPending] = useState(false);
@@ -42,6 +44,8 @@ export default function Balance() {
       getBalance(res.signer, res.account);
       // @ts-ignore
       getAllowance(res.signer, res.account);
+      // @ts-ignore
+      getUsedVote(res.signer, res.account);
     });
   };
 
@@ -55,6 +59,17 @@ export default function Balance() {
 
       // @ts-ignore
       setBalance(formattedBalance);
+    });
+  };
+
+  // get used vote
+  // @ts-ignore
+  const getUsedVote = async (signer, account) => {
+    fetchContractUsedVotingRights(signer, account).then((usedVote) => {
+      console.log("======usedVote======", usedVote);
+      const formattedUsedVote = parseFloat(usedVote || "0").toString();
+      // @ts-ignore
+      setUsedVote(formattedUsedVote);
     });
   };
 
@@ -147,7 +162,10 @@ export default function Balance() {
         ></Image>
 
         <div className="grow text-[1.75rem] font-bold mr-[2.5rem]">
-          {balance} FLR
+          <div>{balance} FLR</div>
+          <div className="text-sm text-[#9b9b9b] font-medium">
+            Used: {usedVote} FLR
+          </div>
         </div>
 
         {!authorized ? (

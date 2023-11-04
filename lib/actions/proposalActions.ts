@@ -25,3 +25,21 @@ export async function createProposal(
 
   revalidatePath(path);
 }
+
+export async function updateProposal(
+  id: string,
+  status: number,
+  result: number,
+  web3ProposalId: string,
+) {
+  const proposal = await prisma.proposal.update({
+    where: { id },
+    data: {
+      status: status,
+      result: result,
+      web3ProposalId: web3ProposalId,
+    },
+  });
+
+  return proposal;
+}

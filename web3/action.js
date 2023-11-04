@@ -46,6 +46,17 @@ export const fetchContractBalance = async (signer, account) => {
   return ethers.utils.formatEther(balance);
 };
 
+export const fetchContractUsedVotingRights = async (signer, account) => {
+  const contract = new ethers.Contract(
+    SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  const used_vote = await contract.usedVotingRights(account);
+
+  return ethers.utils.formatEther(used_vote);
+};
+
 export const fetchContractAllowance = async (signer, account) => {
   if (!signer) return;
 
@@ -224,10 +235,10 @@ export const setVotingDurationForProposal = async (
   try {
     const tx = await contract.setVotingDuration(proposalId, duration);
     await tx.wait();
-    alert("成功设置投票持续时间");
+    // alert("成功设置投票持续时间");
   } catch (error) {
     console.error("设置投票持续时间失败：", error);
-    alert("设置投票持续时间失败");
+    // alert("设置投票持续时间失败");
   }
 
   const endTime = await contract.votingEndTimes(proposalId); // 假设您的合约中有一个叫做votingEndTimes的mapping
@@ -254,7 +265,7 @@ export const addOption = async (signer, proposalID, optionText) => {
   try {
     const tx = await contract.addOptions(proposalIDInt, optionText);
     await tx.wait(); // Wait for transaction to be mined
-    alert("提案选项成功增加成功");
+    // alert("提案选项成功增加成功");
 
     // Fetch the new option details and log it
     newOptionID = await contract.optionId(proposalIDInt); // Assign value here
@@ -264,7 +275,7 @@ export const addOption = async (signer, proposalID, optionText) => {
     console.log("这个选项目前有多少票: ", newOption.voteCount.toString()); // 将 BigNumber 对象转换为字符串
   } catch (error) {
     console.error("提案增加失败：", error);
-    alert("提案增加失败");
+    // alert("提案增加失败");
   }
 
   if (newOptionID) {

@@ -18,6 +18,7 @@ import {
   fetchProposalDetails,
   vote,
   fetchContractBalance,
+  fetchContractUsedVotingRights,
 } from "@/web3/action";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -39,6 +40,7 @@ export default function ProposalCard({
   const [account, setAccount] = useState();
   const [signer, setSigner] = useState();
   const [balance, setBalance] = useState("0");
+  const [usedVote, setUsedVote] = useState("0");
 
   const [proposalStatus, setProposalStatus] = useState<
     "Unstarted" | "Ongoing" | "Finished"
@@ -58,6 +60,7 @@ export default function ProposalCard({
   useEffect(() => {
     getProposalDetails();
     getBalance(signer, account);
+    getUsedVote(signer, account);
   }, [signer]);
 
   const initConnectWallet = async () => {
@@ -104,6 +107,17 @@ export default function ProposalCard({
 
       // @ts-ignore
       setBalance(formattedBalance);
+    });
+  };
+
+  // get used vote
+  // @ts-ignore
+  const getUsedVote = async (signer, account) => {
+    fetchContractUsedVotingRights(signer, account).then((usedVote) => {
+      console.log("======usedVote======", usedVote);
+      const formattedUsedVote = parseFloat(usedVote || "0").toString();
+      // @ts-ignore
+      setUsedVote(formattedUsedVote);
     });
   };
 
@@ -290,10 +304,10 @@ export default function ProposalCard({
               <div className="flex items-center mt-[1rem]">
                 <div className="flex-1 flex items-center">
                   <div className="text-xs text-[#9b9b9b] font-medium">
-                    Balance:
+                    Remaining:
                   </div>
                   <div className="ml-[.5rem] mr-[.3125rem] text-lg font-bold">
-                    {balance}
+                    {`${Number(balance) - Number(usedVote)}`}
                   </div>
                   <div
                     className="bg-clip-text text-transparent text-lg font-bold"

@@ -34,7 +34,7 @@ export default function Proposal({
 
   return (
     <div>
-      {proposal.result === 1 && (
+      {proposal.result === 2 && (
         <ProposalResult
           type="good"
           title="High-quality content"
@@ -42,7 +42,7 @@ export default function Proposal({
         />
       )}
 
-      {proposal.result === 2 && (
+      {proposal.result === 3 && (
         <ProposalResult
           type="bad"
           title="Low-quality content"
@@ -50,7 +50,7 @@ export default function Proposal({
         />
       )}
 
-      {proposal.result === 3 && (
+      {proposal.result === 4 && (
         <ProposalResult
           type="bad"
           title="Non-compliance staking"

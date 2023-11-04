@@ -80,7 +80,7 @@ model Proposal {
   status         Int      @default(0) // 0 - pending, 1 - approved, 2 - rejected
   likeRate       Float    @default(0)
   totalInfluence Float    @default(0)
-  result         Int      @default(0) // 0 - pending, 1 - good, 2 - bad
+  result         Int      @default(0) // 0 - notstarted, 1 - onGoing  2 - good, 3 - bad
 }
 
 // model VoteRecord {
