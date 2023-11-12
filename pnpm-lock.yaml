@@ -99,7 +99,7 @@ dependencies:
     specifier: ^0.258.0
     version: 0.258.0(react@18.2.0)
   markdown-to-txt:
-    specifier: ^2.0.1
+    specifier: 2.0.1
     version: 2.0.1
   next:
     specifier: 13.4.6
