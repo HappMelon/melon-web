@@ -6,8 +6,8 @@ import { Color, timeSince } from "@/lib/utils";
 import { Prisma } from "@prisma/client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import ReactMarkdown from "react-markdown";
 import { Avatar } from "@/components/avatar/avatar";
+import markdownToTxt from "markdown-to-txt";
 
 export default function Item({
   data,
@@ -90,9 +90,11 @@ export default function Item({
             <h1 className="text-lg font-[550] my-2 line-clamp-1">
               {data.title}
             </h1>
-            <ReactMarkdown className="line-clamp-1 text-[#9B9B9B]">
-              {data.text}
-            </ReactMarkdown>
+
+            <div className="line-clamp-1 text-[#9B9B9B]">
+              {markdownToTxt(data.text.slice(0, 30))}
+            </div>
+
             {data.images.length > 0 ? (
               <img
                 src={data.images[0]}
