@@ -7,6 +7,9 @@ export async function createProposal(
   postId: string,
   likeRate: number,
   totalInfluence: number,
+  userStakeId: string,
+  userStakeAmount: number,
+  unLockTime: string,
   path: string,
 ) {
   await prisma.proposal.create({
@@ -15,6 +18,10 @@ export async function createProposal(
 
       likeRate: likeRate,
       totalInfluence: totalInfluence,
+      userStakeId: userStakeId,
+      userStakeAmount: userStakeAmount,
+      unLockTime: unLockTime,
+
       // default values
       duration: 604800, // 7 days
       web3ProposalId: "",

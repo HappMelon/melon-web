@@ -135,11 +135,11 @@ export default async function ThreadPage({
             <MakeStake isWeb3User={isWeb3User} postId={post.id} type="Init" />
           )}
 
-          {!!activeProposal && activeProposal.status === 3 && (
+          {!!activeProposal && activeProposal.status > 1 && (
             <MakeStake isWeb3User={isWeb3User} postId={post.id} type="Retry" />
           )}
 
-          {!!activeProposal && activeProposal.status !== 3 && (
+          {!!activeProposal && activeProposal.status <= 1 && (
             <Proposal
               isCurUserPost={isCurUserPost}
               proposal={{
@@ -150,6 +150,9 @@ export default async function ThreadPage({
                 totalInfluence: activeProposal.totalInfluence,
                 web3ProposalId: activeProposal.web3ProposalId,
                 result: activeProposal.result,
+                userStakeId: activeProposal.userStakeId,
+                userStakeAmount: activeProposal.userStakeAmount,
+                unLockTime: activeProposal.unLockTime,
               }}
             />
           )}

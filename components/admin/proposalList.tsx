@@ -12,9 +12,8 @@ import { Button } from "@/components/ui/button";
 
 import {
   connectWallet,
-  addProposal,
-  addOption,
-  setVotingDurationForProposal,
+  processStakedProposal,
+  listentingProposalForUserAdded,
 } from "@/web3/action";
 
 import Link from "next/link";
@@ -41,6 +40,9 @@ export default function ProposalList({
     result: number;
     createdAt: Date;
     duration: number;
+    userStakeId: string;
+    userStakeAmount: number;
+    unLockTime: string;
   }>;
 }) {
   const [provider, setProvider] = useState();
@@ -67,6 +69,9 @@ export default function ProposalList({
       setAccount(res.account);
       // @ts-ignore
       setSigner(res.signer);
+
+      // @ts-ignore
+      listentingProposalForUserAdded(res.signer, onProposalAdded);
     });
   };
 
@@ -83,34 +88,31 @@ export default function ProposalList({
     if (selectedProposal === null) return;
 
     // @ts-ignore
-    const web3Proposal = await addProposal(
+    await processStakedProposal(
       signer,
+      // @ts-ignore
+      "0x9148fc8a19d8381d84da57457f04712e05e57a5c",
+      // @ts-ignore
       selectedProposal.postId,
+      // @ts-ignore
+      selectedProposal.userStakeAmount,
+      // default only one option "true"
+      [true],
+      // @ts-ignore
+      selectedProposal.userStakeId,
     ).catch((err) => {
       toast({
         title: `${err}`,
       });
     });
+  };
 
-    await addOption(signer, web3Proposal.id, "True").catch((err) => {
-      toast({
-        title: `${err}`,
-      });
-    });
-
-    // @ts-ignore
-    await setVotingDurationForProposal(
-      signer,
-      web3Proposal.id,
-      selectedProposal.duration,
-    ).catch((err) => {
-      toast({
-        title: `${err}`,
-      });
-    });
+  const onProposalAdded = async (proposalId: string) => {
+    console.log("=====onProposalAdded=====", proposalId);
+    console.log("=====selectedProposal=====", selectedProposal);
 
     // @ts-ignore
-    await updateProposal(selectedProposal.id, 1, 1, web3Proposal.id.toString())
+    await updateProposal(selectedProposal.id, 1, 1, proposalId)
       .then(() => {
         toast({
           title: "Proposal approved",

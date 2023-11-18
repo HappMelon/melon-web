@@ -16,6 +16,9 @@ export default function Proposal({
     totalInfluence: number;
     web3ProposalId: string;
     result: number;
+    userStakeId: string;
+    userStakeAmount: number;
+    unLockTime: string;
   };
 }) {
   if (proposal.status === 3) return null;
@@ -59,6 +62,10 @@ export default function Proposal({
       )}
 
       <ProposalCard
+        isCurUserPost={isCurUserPost}
+        userStakeId={proposal.userStakeId}
+        userStakeAmount={proposal.userStakeAmount}
+        unLockTime={proposal.unLockTime}
         proposalId={proposal.id}
         web3ProposalId={proposal.web3ProposalId}
       />

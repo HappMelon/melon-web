@@ -15,10 +15,11 @@ import Countdown from "@/components/thread/Countdown";
 
 import {
   connectWallet,
-  fetchProposalDetails,
+  // fetchProposalDetails,
   vote,
   fetchContractBalance,
   fetchContractUsedVotingRights,
+  fetchProposalOptions,
 } from "@/web3/action";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -30,9 +31,17 @@ import {
 } from "@/web3/abi";
 
 export default function ProposalCard({
+  isCurUserPost,
+  userStakeId,
+  userStakeAmount,
+  unLockTime,
   proposalId,
   web3ProposalId,
 }: {
+  isCurUserPost: boolean;
+  userStakeId: string;
+  userStakeAmount: number;
+  unLockTime: string;
   proposalId: string;
   web3ProposalId: string;
 }) {
@@ -50,7 +59,7 @@ export default function ProposalCard({
   const [totalPrice, setTotalPrice] = useState(0);
   const [showVoteDialog, setShowVoteDialog] = useState(false);
   const [votePending, setVotePending] = useState(false);
-  const [endTime, setEndTime] = useState(0);
+  const [endTime, setEndTime] = useState(new Date(Number(unLockTime) * 1000));
   const { toast } = useToast();
 
   useEffect(() => {
@@ -78,7 +87,7 @@ export default function ProposalCard({
   const getProposalDetails = async () => {
     if (!web3ProposalId) return;
 
-    const proposalDetails = await fetchProposalDetails(
+    const proposalDetails = await fetchProposalOptions(
       signer,
       web3ProposalId,
     ).catch((err) => {
@@ -90,8 +99,7 @@ export default function ProposalCard({
       proposalDetails.options.map((option) => {
         totalPrice += Number(option.voteCount);
       });
-      setTotalPrice(totalPrice);
-      setEndTime(proposalDetails.endTime * 1000);
+      setTotalPrice(totalPrice + userStakeAmount);
     }
 
     console.log("======proposalDetails======", proposalDetails);
@@ -264,6 +272,7 @@ export default function ProposalCard({
             console.log("stake");
             setShowVoteDialog(true);
           }}
+          disabled={isCurUserPost}
         >
           Stake
         </Button>

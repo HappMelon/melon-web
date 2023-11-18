@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
+import { ethers } from "ethers";
 
 import {
   Dialog,
@@ -20,6 +21,20 @@ import { useToast } from "@/components/ui/use-toast";
 import { usePathname } from "next/navigation";
 import { createProposal } from "@/lib/actions";
 
+import {
+  sleep,
+  connectWallet,
+  handleStakeTokensForProposal,
+  listentingStakeAdded,
+} from "@/web3/action";
+
+import {
+  NEXT_PUBLIC_PROPOSAL_ID,
+  NEXT_PUBLIC_PROPOSAL_OPTION_ID,
+  NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+  spenderContractAbi,
+} from "@/web3/abi";
+
 export default function MakeStake({
   isWeb3User,
   postId,
@@ -29,8 +44,15 @@ export default function MakeStake({
   postId: string;
   type: "Init" | "Retry";
 }) {
-  const [inputTotalInfluence, setInputTotalInfluence] = useState(0);
-  const [inputLikeRate, setInputLikeRate] = useState(0);
+  const [provider, setProvider] = useState();
+  const [account, setAccount] = useState();
+  const [signer, setSigner] = useState();
+
+  const [inputTotalInfluence, setInputTotalInfluence] = useState(100);
+  const [inputLikeRate, setInputLikeRate] = useState(0.2);
+  const [userStakeId, setUserStakeId] = useState(""); // 设置提案的id
+  const [userStakeAmount, setUserStakeAmount] = useState(0); // 设置提案的amount
+  const [unLockTime, setUnLockTime] = useState(0); // 设置质押的解锁时间
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showStakeDialog, setShowStakeDialog] = useState(false);
 
@@ -38,6 +60,29 @@ export default function MakeStake({
   const pathname = usePathname();
 
   const { signOut } = useAuth();
+
+  useEffect(() => {
+    initConnectWallet();
+  }, []);
+
+  const initConnectWallet = async () => {
+    await connectWallet().then((res) => {
+      // @ts-ignore
+      setProvider(res.provider);
+      // @ts-ignore
+      setAccount(res.account);
+      // @ts-ignore
+      setSigner(res.signer);
+      // @ts-ignore
+      listentingStakeAdded(
+        res?.signer,
+        res?.account,
+        (stakeIndex, stakeAmount, unLockTime) => {
+          createProposalToDB(stakeIndex, stakeAmount, unLockTime);
+        },
+      );
+    });
+  };
 
   const onMakeStake = async () => {
     console.log("=====onMakeStake ======");
@@ -52,7 +97,36 @@ export default function MakeStake({
 
   const onMakeStakeConfirm = async () => {
     console.log("======onMakeStakeConfirm======");
-    createProposal(postId, inputLikeRate, inputTotalInfluence, pathname);
+
+    await handleStakeTokensForProposal(
+      signer,
+      account,
+      userStakeAmount.toString(),
+    );
+
+    await sleep(10000);
+  };
+
+  // @ts-ignore
+  const createProposalToDB = async (stakeIndex, stakeAmount, unLockTime) => {
+    console.log(
+      "===========",
+      inputLikeRate,
+      inputTotalInfluence,
+      stakeIndex,
+      stakeAmount,
+      unLockTime,
+    );
+    createProposal(
+      postId,
+      inputLikeRate,
+      inputTotalInfluence,
+      stakeIndex,
+      // @ts-ignore
+      parseFloat(stakeAmount),
+      unLockTime.toString(),
+      pathname,
+    );
   };
 
   return (
@@ -171,6 +245,22 @@ export default function MakeStake({
             <div className="mt-[2rem] text-sm font-medium">
               <span className=" text-base font-bold">*Results judgment</span>
               (both of the following need to be met)
+            </div>
+
+            <div className="mt-[.875rem]">
+              <div className="text-sm font-medium mb-[.25rem]">
+                Stake Amount
+              </div>
+              <Input
+                placeholder=""
+                value={userStakeAmount}
+                type="number"
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  setUserStakeAmount(value);
+                }}
+                className="text-lg outline-none bg-[#f8f8f8] rounded-[3.125rem] focus-visible:ring-0"
+              />
             </div>
 
             <div className="mt-[.875rem]">

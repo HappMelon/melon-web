@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Currency from "@/components/wallet/currency";
 import Address from "@/components/wallet/address";
 import Balance from "@/components/wallet/balance";
+import TransactionList from "@/components/wallet/transactionList";
 
 export default async function Page() {
   const user = await currentUser();
@@ -36,7 +37,7 @@ export default async function Page() {
 
         {isWeb3User && (
           <div className="mt-[1.875rem] text-xl font-bold">
-            Transaction History Comming soon
+            <TransactionList />
           </div>
         )}
       </div>
