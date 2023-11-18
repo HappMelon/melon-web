@@ -77,6 +77,7 @@ export default function MakeStake({
       listentingStakeAdded(
         res?.signer,
         res?.account,
+        // @ts-ignore
         (stakeIndex, stakeAmount, unLockTime) => {
           createProposalToDB(stakeIndex, stakeAmount, unLockTime);
         },
