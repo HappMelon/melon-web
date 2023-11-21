@@ -466,6 +466,7 @@ export const listentingStakeAdded = async (signer, account, callback) => {
 
       if (staked && staker.toUpperCase() === account.toUpperCase()) {
         callback(
+          staker,
           stakeIndex.toString(),
           ethers.utils.formatEther(amount),
           unlockTime,
@@ -613,17 +614,25 @@ export const processStakedProposal = async (
     signer,
   );
 
+  const formatOptions = optionDescriptions.split(",");
+
   try {
     // 发起处理质押提案的请求
     const tx = await contract.processUserStakedProposal(
       UserAddress,
       proposalDescription,
       ethers.utils.parseUnits(stakeAmount.toString(), "ether"), // 假设stakeAmount是以ether单位
-      optionDescriptions,
+      formatOptions,
       stakeIndex,
     );
     await tx.wait(); // 等待交易被挖矿确认
-    alert("提案及选项处理成功");
+    console.log("提案及选项处理成功");
+
+    const proposalId = await contract.proposalsLength();
+
+    console.log("proposalId", proposalId.toString());
+
+    return proposalId;
   } catch (error) {
     console.error("提案及选项处理失败：", error);
     alert("提案及选项处理失败");
@@ -660,6 +669,28 @@ export const fetchProposalOptions = async (signer, queryProposalID) => {
       id: queryProposalID,
       options,
     };
+  } catch (error) {
+    console.error("获取选项失败：", error);
+  }
+};
+
+export const checkUserVoted = async (signer, account, queryProposalID) => {
+  if (!signer) return;
+  console.log("正在查询提案ID: ", queryProposalID);
+  const contract = new ethers.Contract(
+    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  console.log("=====contract", contract);
+
+  try {
+    // 获取特定提案的选项数量
+    const userVoted = await contract.voters(account, queryProposalID);
+
+    console.log("userVoted", userVoted);
+
+    return userVoted;
   } catch (error) {
     console.error("获取选项失败：", error);
   }

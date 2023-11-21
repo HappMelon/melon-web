@@ -92,7 +92,9 @@ export default function Balance() {
       );
 
       if (parseFloat(allowance || "0") > 0) {
-        setAuthorized(true);
+        // setAuthorized(true);
+      } else {
+        setAuthorized(false);
       }
     });
   };
@@ -114,6 +116,8 @@ export default function Balance() {
 
     setAuthorized(true);
     setTransactionPending(false);
+    // @ts-ignore
+    setAllowance(allowance);
   };
 
   const stakeAllowance = async () => {
@@ -180,6 +184,7 @@ export default function Balance() {
               console.log("======authorize btn click======");
               authorizeWallet();
             }}
+            disabled={transactionPending}
           >
             {!transactionPending ? "Authorize" : "Authorizing"}
           </Button>
@@ -195,6 +200,7 @@ export default function Balance() {
               console.log("======stake btn click======");
               stakeAllowance();
             }}
+            disabled={transactionPending}
           >
             {!transactionPending ? "Stake" : "Staking"}
           </Button>

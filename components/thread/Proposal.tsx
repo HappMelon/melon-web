@@ -16,27 +16,31 @@ export default function Proposal({
     totalInfluence: number;
     web3ProposalId: string;
     result: number;
+    userAddress: string;
     userStakeId: string;
     userStakeAmount: number;
     unLockTime: string;
   };
 }) {
-  if (proposal.status === 3) return null;
-
-  if (isCurUserPost && proposal.status === 0) {
-    return (
-      <div>
+  // case1: user proposaled and waiting for review
+  if (proposal.status === 0) {
+    if (isCurUserPost) {
+      return (
         <ProposalResult
           type="good"
           // title="High-quality content"
           content="Your submission will be reviewed within 24 hours. Thank you for your patience."
         />
-      </div>
-    );
+      );
+    }
+
+    return null;
   }
 
+  // case2: proposal.status === 1  ongoing or finished
   return (
     <div>
+      {/* case2: get good result */}
       {proposal.result === 2 && (
         <ProposalResult
           type="good"
@@ -45,6 +49,7 @@ export default function Proposal({
         />
       )}
 
+      {/* case3: get bad result */}
       {proposal.result === 3 && (
         <ProposalResult
           type="bad"
@@ -53,6 +58,7 @@ export default function Proposal({
         />
       )}
 
+      {/* case4: get bad result */}
       {proposal.result === 4 && (
         <ProposalResult
           type="bad"
@@ -61,13 +67,17 @@ export default function Proposal({
         />
       )}
 
+      {/* case5: proposal onGoing */}
       <ProposalCard
         isCurUserPost={isCurUserPost}
+        userAddress={proposal.userAddress}
         userStakeId={proposal.userStakeId}
         userStakeAmount={proposal.userStakeAmount}
         unLockTime={proposal.unLockTime}
         proposalId={proposal.id}
         web3ProposalId={proposal.web3ProposalId}
+        proposalStatus={proposal.status}
+        proposalResult={proposal.result}
       />
     </div>
   );

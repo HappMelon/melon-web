@@ -55,6 +55,7 @@ export default function MakeStake({
   const [unLockTime, setUnLockTime] = useState(0); // 设置质押的解锁时间
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showStakeDialog, setShowStakeDialog] = useState(false);
+  const [transactionPending, setTransactionPending] = useState(false); // 链上交易进行中
 
   const { toast } = useToast();
   const pathname = usePathname();
@@ -78,8 +79,8 @@ export default function MakeStake({
         res?.signer,
         res?.account,
         // @ts-ignore
-        (stakeIndex, stakeAmount, unLockTime) => {
-          createProposalToDB(stakeIndex, stakeAmount, unLockTime);
+        (staker, stakeIndex, stakeAmount, unLockTime) => {
+          createProposalToDB(staker, stakeIndex, stakeAmount, unLockTime);
         },
       );
     });
@@ -98,18 +99,25 @@ export default function MakeStake({
 
   const onMakeStakeConfirm = async () => {
     console.log("======onMakeStakeConfirm======");
+    setTransactionPending(true);
 
     await handleStakeTokensForProposal(
       signer,
       account,
       userStakeAmount.toString(),
-    );
-
-    await sleep(10000);
+    ).finally(() => {
+      setShowStakeDialog(false);
+      setTransactionPending(false);
+    });
   };
 
   // @ts-ignore
-  const createProposalToDB = async (stakeIndex, stakeAmount, unLockTime) => {
+  const createProposalToDB = async (
+    staker,
+    stakeIndex,
+    stakeAmount,
+    unLockTime,
+  ) => {
     console.log(
       "===========",
       inputLikeRate,
@@ -122,6 +130,7 @@ export default function MakeStake({
       postId,
       inputLikeRate,
       inputTotalInfluence,
+      staker,
       stakeIndex,
       // @ts-ignore
       parseFloat(stakeAmount),
@@ -194,6 +203,7 @@ export default function MakeStake({
             "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
         }}
         onClick={onMakeStake}
+        disabled={transactionPending}
       >
         Make A Stake
       </Button>
@@ -307,7 +317,9 @@ export default function MakeStake({
               onClick={() => {
                 onMakeStakeConfirm();
               }}
-              disabled={!inputTotalInfluence || !inputLikeRate}
+              disabled={
+                !inputTotalInfluence || !inputLikeRate || transactionPending
+              }
             >
               Confirm
             </Button>

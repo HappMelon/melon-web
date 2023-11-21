@@ -20,6 +20,7 @@ import {
   fetchContractBalance,
   fetchContractUsedVotingRights,
   fetchProposalOptions,
+  checkUserVoted,
 } from "@/web3/action";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -32,18 +33,24 @@ import {
 
 export default function ProposalCard({
   isCurUserPost,
+  userAddress,
   userStakeId,
   userStakeAmount,
   unLockTime,
   proposalId,
   web3ProposalId,
+  proposalStatus,
+  proposalResult,
 }: {
   isCurUserPost: boolean;
+  userAddress: string;
   userStakeId: string;
   userStakeAmount: number;
   unLockTime: string;
   proposalId: string;
   web3ProposalId: string;
+  proposalStatus: number; // 0 - pending, 1 - approved, 2 - rejected
+  proposalResult: number; // 0 - notstarted, 1 - onGoing  2 - good, 3 - bad
 }) {
   const [provider, setProvider] = useState();
   const [account, setAccount] = useState();
@@ -51,15 +58,14 @@ export default function ProposalCard({
   const [balance, setBalance] = useState("0");
   const [usedVote, setUsedVote] = useState("0");
 
-  const [proposalStatus, setProposalStatus] = useState<
-    "Unstarted" | "Ongoing" | "Finished"
-  >("Unstarted");
-
   const [inputPrice, setInputPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [showVoteDialog, setShowVoteDialog] = useState(false);
   const [votePending, setVotePending] = useState(false);
   const [endTime, setEndTime] = useState(new Date(Number(unLockTime) * 1000));
+  const [transactionPending, setTransactionPending] = useState(false);
+  const [hasUserVoted, setHasUserVoted] = useState(false);
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -67,10 +73,16 @@ export default function ProposalCard({
   }, []);
 
   useEffect(() => {
+    if (!signer) return;
     getProposalDetails();
     getBalance(signer, account);
     getUsedVote(signer, account);
   }, [signer]);
+
+  useEffect(() => {
+    if (!web3ProposalId || !signer) return;
+    getUserVoted();
+  }, [web3ProposalId, signer]);
 
   const initConnectWallet = async () => {
     await connectWallet().then((res) => {
@@ -129,6 +141,14 @@ export default function ProposalCard({
     });
   };
 
+  const getUserVoted = async () => {
+    const hasUserVoted = await checkUserVoted(signer, account, web3ProposalId);
+
+    console.log("======hasUserVoted======", hasUserVoted);
+
+    setHasUserVoted(hasUserVoted);
+  };
+
   const onVote = async () => {
     console.log("======onVote======");
 
@@ -159,7 +179,7 @@ export default function ProposalCard({
         toast({
           title: "Stake Success",
         });
-        setProposalStatus("Ongoing");
+
         setShowVoteDialog(false);
         setTotalPrice(totalPrice + inputPrice);
       })
@@ -178,7 +198,7 @@ export default function ProposalCard({
 
   return (
     <div className="w-full box-border px-[1.75rem] py-[1.5rem] bg-white border border-[#e6e6e6] rounded-[10px] shadow-[0_0_4px_0_rgba(0,0,0,0.15)]">
-      {proposalStatus === "Unstarted" && (
+      {!hasUserVoted && !isCurUserPost && (
         <div
           className="mb-[1.875rem] px-[1.25rem] py-[1rem] rounded-[10px] border border-[#e6e6e6] shadow-[0_0_4px_0_rgba(0,0,0,0.15)] text-white text-sm font-bold leading-normal "
           style={{
@@ -214,7 +234,7 @@ export default function ProposalCard({
           </div>
         </div>
 
-        {proposalStatus !== "Finished" ? (
+        {proposalResult === 1 ? (
           <div>
             <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-medium">
               Ends in
@@ -233,7 +253,7 @@ export default function ProposalCard({
         )}
       </div>
 
-      {!!inputPrice && proposalStatus === "Ongoing" && (
+      {(hasUserVoted || isCurUserPost) && (
         <div className="my-[1.25rem] text-center py-[.9375rem] border rounded-[15px] border-[#f9d423]">
           <div>
             <span
@@ -254,13 +274,13 @@ export default function ProposalCard({
                   "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
               }}
             >
-              {inputPrice} FLR
+              {isCurUserPost ? userStakeAmount : inputPrice} FLR
             </span>
           </div>
         </div>
       )}
 
-      {proposalStatus === "Unstarted" && (
+      {!isCurUserPost && !hasUserVoted && (
         <Button
           className="w-full rounded-[40px] text-lg"
           style={{
@@ -272,7 +292,6 @@ export default function ProposalCard({
             console.log("stake");
             setShowVoteDialog(true);
           }}
-          disabled={isCurUserPost}
         >
           Stake
         </Button>

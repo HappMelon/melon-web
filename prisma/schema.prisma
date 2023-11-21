@@ -81,6 +81,7 @@ model Proposal {
   likeRate        Float    @default(0)
   totalInfluence  Float    @default(0)
   result          Int      @default(0) // 0 - notstarted, 1 - onGoing  2 - good, 3 - bad
+  userAddress     String   @default("")
   userStakeId     String   @default("")
   userStakeAmount Float    @default(0)
   unLockTime      String   @default("")

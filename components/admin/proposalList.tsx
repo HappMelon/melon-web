@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 import {
+  sleep,
   connectWallet,
   processStakedProposal,
   listentingProposalForUserAdded,
@@ -40,6 +41,7 @@ export default function ProposalList({
     result: number;
     createdAt: Date;
     duration: number;
+    userAddress: string;
     userStakeId: string;
     userStakeAmount: number;
     unLockTime: string;
@@ -69,35 +71,35 @@ export default function ProposalList({
       setAccount(res.account);
       // @ts-ignore
       setSigner(res.signer);
-
-      // @ts-ignore
-      listentingProposalForUserAdded(res.signer, onProposalAdded);
     });
   };
 
   const declineProposal = async () => {
     if (selectedProposal === null) return;
 
+    setActionPending(true);
     // @ts-ignore
-    await updateProposal(selectedProposal.id, 2, 0, "");
-    setActionPending(false);
-    setShowReviewDialog(false);
+    await updateProposal(selectedProposal.id, 2, 0, "").finally(() => {
+      setActionPending(false);
+      setShowReviewDialog(false);
+    });
   };
 
   const approveAndSubmitProposal = async () => {
     if (selectedProposal === null) return;
+    setActionPending(true);
 
     // @ts-ignore
-    await processStakedProposal(
+    const returnedProposalId = await processStakedProposal(
       signer,
       // @ts-ignore
-      "0x9148fc8a19d8381d84da57457f04712e05e57a5c",
+      selectedProposal.userAddress,
       // @ts-ignore
       selectedProposal.postId,
       // @ts-ignore
       selectedProposal.userStakeAmount,
       // default only one option "true"
-      [true],
+      "real,fake",
       // @ts-ignore
       selectedProposal.userStakeId,
     ).catch((err) => {
@@ -105,6 +107,16 @@ export default function ProposalList({
         title: `${err}`,
       });
     });
+
+    console.log("=====returnedProposalId=====", returnedProposalId);
+
+    setWeb3ProposalId(returnedProposalId);
+
+    await sleep(10000);
+
+    await onProposalAdded(returnedProposalId.toString());
+
+    setActionPending(false);
   };
 
   const onProposalAdded = async (proposalId: string) => {
@@ -202,7 +214,7 @@ export default function ProposalList({
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {proposalList.map((proposal) => (
-                    <tr key={proposal.id}>
+                    <tr key={`${proposal.id}-${proposal.status}`}>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                         {proposal.id}
                       </td>
@@ -270,6 +282,7 @@ export default function ProposalList({
                 console.log("reject");
                 declineProposal();
               }}
+              disabled={actionPending}
             >
               Decline
             </Button>
@@ -286,6 +299,7 @@ export default function ProposalList({
                 console.log("approved");
                 approveAndSubmitProposal();
               }}
+              disabled={actionPending}
             >
               Approve
             </Button>

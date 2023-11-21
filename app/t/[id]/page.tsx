@@ -73,7 +73,11 @@ export default async function ThreadPage({
         },
       },
       likes: true,
-      proposals: true,
+      proposals: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 
@@ -87,10 +91,10 @@ export default async function ThreadPage({
 
   const proposals = post?.proposals;
   console.log("=======proposal", proposals);
-  const activeProposal = !!proposals.length
-    ? proposals[proposals.length - 1]
-    : null;
+  const activeProposal = !!proposals.length ? proposals[0] : null;
   // const
+
+  console.log("=======activeProposal", activeProposal);
 
   return (
     <>
@@ -150,6 +154,7 @@ export default async function ThreadPage({
                 totalInfluence: activeProposal.totalInfluence,
                 web3ProposalId: activeProposal.web3ProposalId,
                 result: activeProposal.result,
+                userAddress: activeProposal.userAddress,
                 userStakeId: activeProposal.userStakeId,
                 userStakeAmount: activeProposal.userStakeAmount,
                 unLockTime: activeProposal.unLockTime,
