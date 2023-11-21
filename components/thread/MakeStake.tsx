@@ -118,14 +118,6 @@ export default function MakeStake({
     stakeAmount,
     unLockTime,
   ) => {
-    console.log(
-      "===========",
-      inputLikeRate,
-      inputTotalInfluence,
-      stakeIndex,
-      stakeAmount,
-      unLockTime,
-    );
     createProposal(
       postId,
       inputLikeRate,
