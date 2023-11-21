@@ -113,9 +113,13 @@ export default function MakeStake({
 
   // @ts-ignore
   const createProposalToDB = async (
+    // @ts-ignore
     staker,
+    // @ts-ignore
     stakeIndex,
+    // @ts-ignore
     stakeAmount,
+    // @ts-ignore
     unLockTime,
   ) => {
     createProposal(
