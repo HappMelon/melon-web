@@ -359,20 +359,20 @@ export const vote = async (
     // alert("投票成功");
 
     // Fetch the updated option details and log it
-    const updatedOption = await contract.options(proposalIDInt, optionIDInt);
-    console.log("投票的选项是: ", updatedOption.name);
-    console.log("在哪个id: ", updatedOption.id.toString()); // Convert BigNumber object to string
-    console.log(
-      "这个选项现在有多少票: ",
-      ethers.utils.formatEther(updatedOption.voteCount),
-    ); // Convert BigNumber object to string，
+    // const updatedOption = await contract.options(proposalIDInt, optionIDInt);
+    // console.log("投票的选项是: ", updatedOption.name);
+    // console.log("在哪个id: ", updatedOption.id.toString()); // Convert BigNumber object to string
+    // console.log(
+    //   "这个选项现在有多少票: ",
+    //   ethers.utils.formatEther(updatedOption.voteCount),
+    // ); // Convert BigNumber object to string，
 
     return {
       status: "success",
       message: "Stake Success",
-      data: {
-        updatedOption,
-      },
+      // data: {
+      //   updatedOption,
+      // },
     };
   } catch (error) {
     console.error("投票失败：", error);

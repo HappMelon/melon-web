@@ -182,6 +182,7 @@ export default function ProposalCard({
 
         setShowVoteDialog(false);
         setTotalPrice(totalPrice + inputPrice);
+        setHasUserVoted(true);
       })
       .catch((err) => {
         console.log("======err======", err);

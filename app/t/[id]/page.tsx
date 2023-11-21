@@ -139,7 +139,7 @@ export default async function ThreadPage({
             <MakeStake isWeb3User={isWeb3User} postId={post.id} type="Init" />
           )}
 
-          {!!activeProposal && activeProposal.status > 1 && (
+          {isCurUserPost && !!activeProposal && activeProposal.status > 1 && (
             <MakeStake isWeb3User={isWeb3User} postId={post.id} type="Retry" />
           )}
 
