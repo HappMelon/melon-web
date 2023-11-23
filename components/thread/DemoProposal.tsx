@@ -104,14 +104,7 @@ export default function DemoProposal({ proposalId }: { proposalId: string }) {
 
   return (
     <div>
-      <ProposalCard
-        status={proposalStatus}
-        totalPrice={totalPrice}
-        inputPrice={inputPrice}
-        onBtnClick={() => {
-          setShowVoteDialog(true);
-        }}
-      />
+      {/* <ProposalCard /> */}
 
       <Dialog open={showVoteDialog} onOpenChange={setShowVoteDialog}>
         <DialogContent>

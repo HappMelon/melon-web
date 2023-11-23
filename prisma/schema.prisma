@@ -25,10 +25,10 @@ model Post {
   views     Int      @default(0)
   reposts   Int      @default(0)
 
-  parentId String?
-  parent   Post?   @relation("ParentChildren", fields: [parentId], references: [id])
-  children Post[]  @relation("ParentChildren")
-  // proposals Proposal[]
+  parentId  String?
+  parent    Post?      @relation("ParentChildren", fields: [parentId], references: [id])
+  children  Post[]     @relation("ParentChildren")
+  proposals Proposal[]
 }
 
 model TagsFrequencies {
@@ -69,11 +69,30 @@ model Likes {
   @@id([postId, userId])
 }
 
-// model Proposal {
+model Proposal {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updateAt        DateTime @updatedAt
+  post            Post     @relation(fields: [postId], references: [id])
+  postId          String
+  web3ProposalId  String   @default("")
+  duration        Int      @default(3600)
+  status          Int      @default(0) // 0 - pending, 1 - approved, 2 - rejected
+  likeRate        Float    @default(0)
+  totalInfluence  Float    @default(0)
+  result          Int      @default(0) // 0 - notstarted, 1 - onGoing  2 - good, 3 - bad
+  userAddress     String   @default("")
+  userStakeId     String   @default("")
+  userStakeAmount Float    @default(0)
+  unLockTime      String   @default("")
+}
+
+// model VoteRecord {
 //   id             String   @id @default(cuid())
 //   createdAt      DateTime @default(now())
-//   post           Post     @relation(fields: [postId], references: [id])
-//   postId         String   @unique
-//   web3ProposalId String   @unique
-//   duration       Int      @default(3600)
+//   postId         String
+//   proposalId     String
+//   web3ProposalId String
+//   userId         String
+//   vote           Int      @default(0) // 0 - pending, 1 - good, 2 - bad
 // }

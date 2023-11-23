@@ -14,6 +14,8 @@ import Proposal from "@/components/thread/Proposal";
 import MakeProposal from "@/components/thread/MakeProposal";
 import DemoProposal from "@/components/thread/DemoProposal";
 
+import MakeStake from "@/components/thread/MakeStake";
+
 export const revalidate = 0;
 
 export default async function ThreadPage({
@@ -71,7 +73,11 @@ export default async function ThreadPage({
         },
       },
       likes: true,
-      // proposals: true,
+      proposals: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 
@@ -80,6 +86,15 @@ export default async function ThreadPage({
   }
 
   const isCurUserPost = post?.author.id === user?.id;
+
+  console.log("======= isCurUserPost", isCurUserPost);
+
+  const proposals = post?.proposals;
+  console.log("=======proposal", proposals);
+  const activeProposal = !!proposals.length ? proposals[0] : null;
+  // const
+
+  console.log("=======activeProposal", activeProposal);
 
   return (
     <>
@@ -119,15 +134,36 @@ export default async function ThreadPage({
 
         <div className="shrink-0 w-[22.9375rem] box-content px-[1.875rem] pb-[1.875rem] border-l border-[#e6e6e6] space-y-[1.875rem]">
           <UserCard user={post.author} />
-          {/* {post?.proposals?.length > 0 ? (
-            <Proposal proposalId={post.proposals[0].id} />
-          ) : isCurUserPost ? (
-            <MakeProposal isWeb3User={isWeb3User} postId={post.id} />
-          ) : (
-            <></>
-          )} */}
+
+          {isCurUserPost && !post?.proposals?.length && (
+            <MakeStake isWeb3User={isWeb3User} postId={post.id} type="Init" />
+          )}
+
+          {isCurUserPost && !!activeProposal && activeProposal.status > 1 && (
+            <MakeStake isWeb3User={isWeb3User} postId={post.id} type="Retry" />
+          )}
+
+          {!!activeProposal && activeProposal.status <= 1 && (
+            <Proposal
+              isCurUserPost={isCurUserPost}
+              proposal={{
+                id: activeProposal.id,
+                postId: activeProposal.postId,
+                status: activeProposal.status,
+                likeRate: activeProposal.likeRate,
+                totalInfluence: activeProposal.totalInfluence,
+                web3ProposalId: activeProposal.web3ProposalId,
+                result: activeProposal.result,
+                userAddress: activeProposal.userAddress,
+                userStakeId: activeProposal.userStakeId,
+                userStakeAmount: activeProposal.userStakeAmount,
+                unLockTime: activeProposal.unLockTime,
+              }}
+            />
+          )}
+
           {/* TODO: hardcode for demo */}
-          {isWeb3User && <DemoProposal proposalId={"1"} />}
+          {/* {isWeb3User && <DemoProposal proposalId={"1"} />} */}
         </div>
       </div>
     </>
