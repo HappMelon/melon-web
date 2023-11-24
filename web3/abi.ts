@@ -50,6 +50,8 @@ export const spenderContractAbi = [
   "function getProposalStatus(uint256 _proposalId) public view returns(bool)",
   "function SetProposalStatus(uint256 _proposalId, bool _isActive) public",
   "function getAvailableWithdrawBalance(address user) public view returns (uint256)",
+  "function getLastStakeIndex(address user) public view returns (uint256)",
+  "function getCurrentProposalId() public view returns (uint256)",
 
   "event DepositForProposal(address indexed staker, uint256 amount, bool staked, uint256 unlockTime, uint256 indexed stakeIndex)",
   "event ProposalAndOptionsSubmitted(address indexed user, uint256 indexed proposalIndex, string proposalDescription, string[] optionDescriptions)",

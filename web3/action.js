@@ -490,6 +490,15 @@ export const handleStakeTokensForProposal = async (
     signer,
   );
 
+  console.log(
+    "=======NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS",
+    NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS,
+  );
+  console.log(
+    "=======NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS",
+    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+  );
+
   // const allowance_valued = await permitTokenContract.allowance(account, NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS);
   // if (allowance_valued.lt(depositAmount)) {
   //   throw new Error("allowance_valued 不足");
@@ -608,6 +617,15 @@ export const processStakedProposal = async (
 ) => {
   if (!signer) return;
 
+  console.log(
+    "=======NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS",
+    NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS,
+  );
+  console.log(
+    "=======NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS",
+    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+  );
+
   const contract = new ethers.Contract(
     NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
     spenderContractAbi,
@@ -628,9 +646,12 @@ export const processStakedProposal = async (
     await tx.wait(); // 等待交易被挖矿确认
     console.log("提案及选项处理成功");
 
-    const proposalId = await contract.proposalsLength();
+    const proposalsCount = await contract.proposalsLength();
+    const proposalId = await contract.getCurrentProposalId();
 
-    console.log("proposalId", proposalId.toString());
+    console.log(`当前提案id：${proposalId}`);
+
+    console.log(`当前提案总数量：${proposalsCount}`);
 
     return proposalId;
   } catch (error) {

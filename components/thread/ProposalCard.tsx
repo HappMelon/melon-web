@@ -11,6 +11,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
+import { useAuth } from "@clerk/nextjs";
+import { redirect } from "next/navigation";
+
 import Countdown from "@/components/thread/Countdown";
 
 import {
@@ -33,6 +36,7 @@ import {
 
 export default function ProposalCard({
   isCurUserPost,
+  isWeb3User,
   userAddress,
   userStakeId,
   userStakeAmount,
@@ -43,6 +47,7 @@ export default function ProposalCard({
   proposalResult,
 }: {
   isCurUserPost: boolean;
+  isWeb3User: boolean;
   userAddress: string;
   userStakeId: string;
   userStakeAmount: number;
@@ -60,6 +65,7 @@ export default function ProposalCard({
 
   const [inputPrice, setInputPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showVoteDialog, setShowVoteDialog] = useState(false);
   const [votePending, setVotePending] = useState(false);
   const [endTime, setEndTime] = useState(new Date(Number(unLockTime) * 1000));
@@ -67,8 +73,10 @@ export default function ProposalCard({
   const [hasUserVoted, setHasUserVoted] = useState(false);
 
   const { toast } = useToast();
+  const { signOut } = useAuth();
 
   useEffect(() => {
+    if (!isWeb3User) return;
     initConnectWallet();
   }, []);
 
@@ -112,6 +120,7 @@ export default function ProposalCard({
         totalPrice += Number(option.voteCount);
       });
       setTotalPrice(totalPrice + userStakeAmount);
+      setInputPrice(totalPrice);
     }
 
     console.log("======proposalDetails======", proposalDetails);
@@ -230,7 +239,7 @@ export default function ProposalCard({
                   "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
               }}
             >
-              {totalPrice} FLR
+              {isWeb3User ? `${totalPrice} FLR` : "--"}
             </span>
           </div>
         </div>
@@ -291,7 +300,12 @@ export default function ProposalCard({
           onClick={() => {
             // onBtnClick();
             console.log("stake");
-            setShowVoteDialog(true);
+            if (!isWeb3User) {
+              setShowUpgradeDialog(true);
+              return;
+            } else {
+              setShowVoteDialog(true);
+            }
           }}
         >
           Stake
@@ -381,6 +395,36 @@ export default function ProposalCard({
               disabled={!inputPrice || votePending}
             >
               {votePending ? "Voting" : "Confirm"}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showUpgradeDialog} onOpenChange={setShowUpgradeDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="mb-[1rem] text-[2rem] font-bold text-center">
+              Upgrade Account
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="px-[1.625rem] mb-[1rem] font-semibold text-xl leading-normal">
+            {`Email account can't  mint because a wallet is reguired to keep your assets`}
+          </div>
+
+          <div className="px-[1.625rem] mb-[1rem]">
+            <Button
+              className="w-full rounded-[40px] text-lg"
+              style={{
+                background:
+                  "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+              }}
+              onClick={() => {
+                signOut();
+                redirect("/sign-in");
+              }}
+            >
+              Confirm
             </Button>
           </div>
         </DialogContent>

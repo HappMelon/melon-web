@@ -75,7 +75,7 @@ export default async function ThreadPage({
       likes: true,
       proposals: {
         orderBy: {
-          createdAt: "desc",
+          updateAt: "desc",
         },
       },
     },
@@ -146,6 +146,7 @@ export default async function ThreadPage({
           {!!activeProposal && activeProposal.status <= 1 && (
             <Proposal
               isCurUserPost={isCurUserPost}
+              isWeb3User={isWeb3User}
               proposal={{
                 id: activeProposal.id,
                 postId: activeProposal.postId,

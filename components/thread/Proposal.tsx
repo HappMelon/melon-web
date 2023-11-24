@@ -5,9 +5,11 @@ import ProposalResult from "@/components/thread/ProposalResult";
 
 export default function Proposal({
   isCurUserPost,
+  isWeb3User,
   proposal,
 }: {
   isCurUserPost: boolean;
+  isWeb3User: boolean;
   proposal: {
     id: string;
     postId: string;
@@ -70,6 +72,7 @@ export default function Proposal({
       {/* case5: proposal onGoing */}
       <ProposalCard
         isCurUserPost={isCurUserPost}
+        isWeb3User={isWeb3User}
         userAddress={proposal.userAddress}
         userStakeId={proposal.userStakeId}
         userStakeAmount={proposal.userStakeAmount}
