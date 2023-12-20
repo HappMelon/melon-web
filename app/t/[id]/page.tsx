@@ -11,8 +11,6 @@ import { redirect } from "next/navigation";
 
 import UserCard from "@/components/thread/UserCard";
 import Proposal from "@/components/thread/Proposal";
-import MakeProposal from "@/components/thread/MakeProposal";
-import DemoProposal from "@/components/thread/DemoProposal";
 
 import MakeStake from "@/components/thread/MakeStake";
 

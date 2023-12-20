@@ -55,6 +55,12 @@ export default async function ProfilePage({
   const userFollowing = userProfile?.following;
   const userFollowedBy = userProfile?.followedBy;
 
+  const mill = await prisma.mill.findMany({
+    where: {
+      ownerId: userProfile?.id,
+    },
+  });
+
   const posts = await prisma.post.findMany({
     where: {
       authorId: userProfile?.id,
@@ -101,7 +107,6 @@ export default async function ProfilePage({
         {userProfile && (
           <div className="flex mt-[3.125rem]">
             <Content posts={posts} likePosts={userLikePosts} />
-            {/* <Relation curUser={curUserProfile} following={userFollowing} /> */}
             <Relation
               curUser={curUserProfile}
               following={userFollowing}

@@ -105,6 +105,7 @@ export function EditProfileModal({
                     <div className="flex items-center justify-center w-10 absolute right-0 bottom-0">
                       <label htmlFor="dropzone-file">
                         <Image
+                          quality={50}
                           className="cursor-pointer"
                           alt="avatar"
                           src="/upload-camera.png"
