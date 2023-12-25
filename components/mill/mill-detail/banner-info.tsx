@@ -30,13 +30,16 @@ export async function BannerInfo({
   return (
     <div className="relative">
       <img
-        src="/mill-bg.png"
+        src={mill.image || "/mill-bg.png"}
         className="w-full rounded-2xl object-cover h-52 absolute left-0 top-0"
         alt=""
       />
       <div className="h-52 relative pt-10 flex justify-between w-full px-10">
         <div className="w-full left-0 justify-between items-start gap-6 inline-flex">
-          <img className="w-28 h-28 rounded-2xl" src="/mill-bg.png" />
+          <img
+            className="w-28 h-28 aspect-square rounded-2xl"
+            src={mill.image || "/mill-bg.png"}
+          />
           <div className="flex-col w-full justify-start items-start gap-3 inline-flex">
             <div className="flex w-full justify-between ">
               <div className="text-white text-xl font-medium font-['PingFang SC'] leading-7">

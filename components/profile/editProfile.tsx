@@ -17,8 +17,8 @@ import { editProfile } from "@/lib/actions";
 import { usePathname } from "next/navigation";
 import { useToast } from "../ui/use-toast";
 import Image from "next/image";
-import { linktoipfs, UploadFile } from "@/lib/upload-file";
 import { useClerk } from "@clerk/nextjs";
+import { handleFileUpload } from "@/lib/oss/get-signature";
 
 export function EditProfileModal({
   data,
@@ -52,14 +52,6 @@ export function EditProfileModal({
       });
     }
   }, [isPending]);
-
-  const handleFileUpload = (file: File) => {
-    return UploadFile(file)
-      .then((res) => {
-        return linktoipfs(res.key);
-      })
-      .catch((e) => console.error("Can't upload file", e));
-  };
 
   async function updateInfo() {
     if (avatarFile) {
@@ -119,6 +111,7 @@ export function EditProfileModal({
                               setAvatarLoading(true);
                               handleFileUpload(e.target.files[0]).then(
                                 (res) => {
+                                  console.log(res);
                                   res && setAvatar(res);
                                   setAvatarLoading(false);
                                 },

@@ -11,7 +11,7 @@ import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import TagSelect from "@/components/post/tags-select";
 import { handleFileUpload } from "@/lib/oss/get-signature";
@@ -90,12 +90,7 @@ export function UpdateMillDialog({
   if (!user) return null;
 
   return (
-    <div
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
+    <div>
       <Dialog onOpenChange={() => setOpen(false)} open={open}>
         <div
           onClick={(e) => {
@@ -113,7 +108,9 @@ export function UpdateMillDialog({
         <DialogContent className="p-10 rounded-full">
           <DialogHeader>
             <DialogTitle className="text-center">
-              <div className="text-[32px] pb-[10px]">Edit Profile</div>
+              <div className="text-[32px] pb-[10px]">
+                {initMill ? "Edit" : "Create"} Mill
+              </div>
             </DialogTitle>
           </DialogHeader>
 
@@ -143,14 +140,12 @@ export function UpdateMillDialog({
                           height={35}
                         ></Image>
                         <input
+                          accept="image/*"
                           onChange={async (e) => {
                             if (e.target.files) {
                               // setAvatarFile(e.target.files[0]);
-                              handleFileUpload(e.target.files[0]).then(
-                                (res) => {
-                                  // res && setAvatar(res);
-                                  // setAvatarLoading(false);
-                                },
+                              handleFileUpload(e.target.files[0]).then((url) =>
+                                setForm({ ...form, avatar: url }),
                               );
                             }
                           }}

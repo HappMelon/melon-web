@@ -1,22 +1,16 @@
 import OSS from "ali-oss";
-import { linktoipfs, UploadFile } from "@/lib/upload-file";
+import * as process from "process";
+
 const store = new OSS({
   region: "oss-cn-beijing",
-  accessKeyId: "<Your accessKeyId>",
-  accessKeySecret: "<Your accessKeySecret>",
+  accessKeyId: process.env.NEXT_PUBLIC_AliAccessKeyId || "",
+  accessKeySecret: process.env.NEXT_PUBLIC_AliAccessSecret || "",
   bucket: "happymelon",
 });
 
-const signature = store.signatureUrl("test.jpg", { expires: 3600 });
-
-export const handleFileUpload = (file: File) => {
-  return store.multipartUpload("happymelon", file, {}).then((r) => {
-    console.log(r);
-  });
-
-  // return UploadFile(file)
-  //   .then((res) => {
-  //     return linktoipfs(res.key);
-  //   })
-  //   .catch((e) => console.error("Can't upload file", e));
+const prefix = "https://happymelon.oss-cn-beijing.aliyuncs.com/";
+export const handleFileUpload = async (file: File) => {
+  const name = "avatar/" + Date.now() + "-" + file.name;
+  const res = await store.multipartUpload(name, file, {});
+  return prefix + res.name;
 };

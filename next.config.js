@@ -13,7 +13,11 @@ const nextConfig = {
     ];
   },
   images: {
-    domains: ["img.clerk.com", "ipfs.xlog.app"],
+    domains: [
+      "img.clerk.com",
+      "ipfs.xlog.app",
+      "happymelon.oss-cn-beijing.aliyuncs.com",
+    ],
     // remotePatterns: [
     //   {
     //     // https://nextjs.org/docs/pages/api-reference/components/image#remotepatterns
