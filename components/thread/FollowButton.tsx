@@ -14,7 +14,7 @@ export default function NotSigninFollowButton() {
         router.push("/sign-in");
       }}
     >
-      <img src="/🦆 icon _plus_.svg" alt="" className="pr-[.375rem]" />
+      <img src="/plus.svg" alt="" className="pr-[.375rem]" />
       Follow
     </div>
   );

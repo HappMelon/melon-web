@@ -16,8 +16,8 @@ import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import "react-quill/dist/quill.snow.css";
-import { Listbox } from "@headlessui/react";
 import TagSelect from "./tags-select";
+import { Prisma } from "@prisma/client";
 
 const MarkdownEditor = dynamic(
   () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
@@ -26,7 +26,9 @@ const MarkdownEditor = dynamic(
 
 export default function Q({
   create,
+  mill,
 }: {
+  mill: Prisma.MillGetPayload<{}> | null;
   create: { id: string; name: string; image: string };
 }) {
   const [title, setTitle] = useState("");
@@ -54,8 +56,13 @@ export default function Q({
 
   return (
     <div className="h-[auto] ml-[2.5rem] bg-white mt-[2.25rem] border-#EAEAEA rounded-[1rem] w-[calc(100vw-23rem)]">
-      <div className="pt-[1.875rem] pl-[1.875rem] text-[32px] font-[750]">
-        Create a post
+      <div className="pt-[1.875rem] pl-[1.875rem] text-[32px] font-[750] flex items-center gap-4">
+        Create a post{" "}
+        {mill && (
+          <span className="text-xs bg-orange-300 text-white font-semibold px-2 py-1 rounded">
+            {mill.name}
+          </span>
+        )}
       </div>
       <div className="h-[auto]  p-[1.625rem]">
         <input
@@ -144,6 +151,7 @@ export default function Q({
                 uploadImg,
                 create.id,
                 pathname,
+                mill?.id,
               ).catch(() => {
                 toast({
                   title: "Failed publish Post.",

@@ -24,7 +24,8 @@ model Post {
   likes     Likes[]
   views     Int      @default(0)
   reposts   Int      @default(0)
-
+  mill      Mill?     @relation(fields: [millId], references: [id])
+  millId    String?
   parentId  String?
   parent    Post?      @relation("ParentChildren", fields: [parentId], references: [id])
   children  Post[]     @relation("ParentChildren")
@@ -57,6 +58,8 @@ model User {
   followedBy User[]   @relation("UserFollows")
   following  User[]   @relation("UserFollows")
   onboarded  Boolean  @default(false)
+  mill       Mill[]
+  millSubscriptions MillSubscriptions[]
 }
 
 model Likes {
@@ -67,6 +70,16 @@ model Likes {
   createdAt DateTime @default(now())
 
   @@id([postId, userId])
+}
+
+model MillSubscriptions {
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  mill      Mill     @relation(fields: [millId], references: [id], onDelete: Cascade)
+  millId    String
+  createdAt DateTime @default(now())
+
+  @@id([millId, userId])
 }
 
 model Proposal {
@@ -96,3 +109,18 @@ model Proposal {
 //   userId         String
 //   vote           Int      @default(0) // 0 - pending, 1 - good, 2 - bad
 // }
+
+model Mill {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    name      String
+    image     String
+    bio       String?
+    owner     User     @relation(fields: [ownerId], references: [id])
+    ownerId   String
+    posts     Post[]
+    topics    String[]
+    cost      Float    @default(0)
+    subscribers MillSubscriptions[]
+}

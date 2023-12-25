@@ -3,6 +3,7 @@
 import prisma from "@/lib/prisma";
 import { cleanup } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
 
 export async function createNotes(
   title: string,
@@ -11,8 +12,9 @@ export async function createNotes(
   images: string[],
   authorId: string,
   path: string,
+  millId?: string,
 ) {
-  await prisma.post.create({
+  const data: { data: Prisma.PostCreateInput } = {
     data: {
       title: title,
       text: cleanup(text),
@@ -24,7 +26,15 @@ export async function createNotes(
         },
       },
     },
-  });
+  };
+  if (millId) {
+    data.data.mill = {
+      connect: {
+        id: millId,
+      },
+    };
+  }
+  await prisma.post.create(data);
 
   revalidatePath(path);
 }

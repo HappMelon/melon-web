@@ -43,6 +43,9 @@ export function Content({
           <TabsTrigger value="Likes" className="!bg-[#F8F8F8]">
             Likes
           </TabsTrigger>
+          <TabsTrigger value="Mills" className="!bg-[#F8F8F8]">
+            Mills
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="Posts">
@@ -67,6 +70,7 @@ export function Content({
             )}
           </div>
         </TabsContent>
+        <TabsContent value="Mills">Coming soon</TabsContent>
       </Tabs>
     </div>
   );
