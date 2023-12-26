@@ -11,7 +11,7 @@ import Image from "next/image";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { DialogClose } from "@radix-ui/react-dialog";
 import TagSelect from "@/components/post/tags-select";
 import { handleFileUpload } from "@/lib/oss/get-signature";
@@ -20,6 +20,7 @@ import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { Prisma } from "@prisma/client";
+import { TagsInput } from "react-tag-input-component";
 
 export function UpdateMillDialog({
   initMill,
@@ -32,7 +33,7 @@ export function UpdateMillDialog({
         name: initMill.name,
         bio: initMill.bio || "",
         cost: 0, // TODO
-        topics: [],
+        topics: initMill.topics,
       }
     : {
         avatar: "",
@@ -62,6 +63,7 @@ export function UpdateMillDialog({
         cost: form.cost,
         path,
         id: initMill.id,
+        topics: form.topics,
       });
     } else {
       await CreateMill({
@@ -70,6 +72,7 @@ export function UpdateMillDialog({
         name: form.name,
         cost: form.cost,
         ownerId: user?.id,
+        topics: form.topics,
         path,
       });
     }
@@ -173,16 +176,13 @@ export function UpdateMillDialog({
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="bio">Topics</Label>
-                <TagSelect
-                  selected={form.topics.map((i) => {
-                    return {
-                      name: i,
-                      id: i,
-                    };
-                  })}
-                  onChange={(v) =>
-                    setForm({ ...form, topics: v.map((i) => i.name) })
-                  }
+                <TagsInput
+                  value={form.topics}
+                  onChange={(v) => {
+                    setForm({ ...form, topics: v });
+                  }}
+                  name="tags"
+                  placeHolder=""
                 />
               </div>
               <div className="flex flex-col space-y-1.5">
