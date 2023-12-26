@@ -29,7 +29,7 @@ export async function TribeCard({
   const followings = await getFollowingMills(data.id);
   const user = await currentUser();
   return (
-    <>
+    <div className="relative">
       <Link
         href={`/mill/${data.id}${
           data.posts.length ? "/" + data.posts[0].id : ""
@@ -37,7 +37,12 @@ export async function TribeCard({
         className="flex h-[7.5rem] cursor-pointer bg-[#F8F8F8] rounded-r-xl items-center"
       >
         <div className="relative rounded-r-xl bg-white h-full aspect-square shrink-0">
-          <Image alt="" className="rounded-xl" fill src="/item-bg.png"></Image>
+          <Image
+            alt=""
+            className="rounded-xl"
+            fill
+            src={data.image || "/item-bg.png"}
+          ></Image>
         </div>
 
         <div className="flex py-3 flex-col relative pl-4 flex-1">
@@ -81,19 +86,19 @@ export async function TribeCard({
                 </div>
               </div>
             </div>
-            <div>
-              {user?.id === data.ownerId ? (
-                <UpdateMillDialog initMill={data} />
-              ) : (
-                <MillFollowButton
-                  isFollowing={!!followings.length}
-                  millId={data.id}
-                />
-              )}
-            </div>
           </div>
         </div>
       </Link>
-    </>
+      <div className="absolute right-3 bottom-3">
+        {user?.id === data.ownerId ? (
+          <UpdateMillDialog initMill={data} />
+        ) : (
+          <MillFollowButton
+            isFollowing={!!followings.length}
+            millId={data.id}
+          />
+        )}
+      </div>
+    </div>
   );
 }

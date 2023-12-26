@@ -11,12 +11,14 @@ export async function CreateMill(params: {
   path: string;
   avatar: string;
   cost: number;
+  topics: string[];
 }) {
-  const { name, bio, ownerId, path, cost, avatar } = params;
+  const { name, bio, topics, ownerId, path, cost, avatar } = params;
   const mill = prisma.mill.create({
     data: {
       name,
       bio,
+      topics,
       owner: {
         connect: {
           id: ownerId,
@@ -37,13 +39,15 @@ export async function UpdateMill(params: {
   path: string;
   avatar: string;
   cost: number;
+  topics: string[];
 }) {
-  const { name, bio, path, cost, avatar, id } = params;
+  const { name, bio, topics, path, cost, avatar, id } = params;
   await prisma.mill.update({
     where: {
       id,
     },
     data: {
+      topics,
       name,
       bio,
       cost,

@@ -20,6 +20,7 @@ import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 import { Prisma } from "@prisma/client";
+import { TagsInput } from "react-tag-input-component";
 
 export function UpdateMillDialog({
   initMill,
@@ -32,7 +33,7 @@ export function UpdateMillDialog({
         name: initMill.name,
         bio: initMill.bio || "",
         cost: 0, // TODO
-        topics: [],
+        topics: initMill.topics,
       }
     : {
         avatar: "",
@@ -62,6 +63,7 @@ export function UpdateMillDialog({
         cost: form.cost,
         path,
         id: initMill.id,
+        topics: form.topics,
       });
     } else {
       await CreateMill({
@@ -70,6 +72,7 @@ export function UpdateMillDialog({
         name: form.name,
         cost: form.cost,
         ownerId: user?.id,
+        topics: form.topics,
         path,
       });
     }
@@ -90,12 +93,7 @@ export function UpdateMillDialog({
   if (!user) return null;
 
   return (
-    <div
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
+    <div>
       <Dialog onOpenChange={() => setOpen(false)} open={open}>
         <div
           onClick={(e) => {
@@ -113,7 +111,9 @@ export function UpdateMillDialog({
         <DialogContent className="p-10 rounded-full">
           <DialogHeader>
             <DialogTitle className="text-center">
-              <div className="text-[32px] pb-[10px]">Edit Profile</div>
+              <div className="text-[32px] pb-[10px]">
+                {initMill ? "Edit" : "Create"} Mill
+              </div>
             </DialogTitle>
           </DialogHeader>
 
@@ -143,14 +143,12 @@ export function UpdateMillDialog({
                           height={35}
                         ></Image>
                         <input
+                          accept="image/*"
                           onChange={async (e) => {
                             if (e.target.files) {
                               // setAvatarFile(e.target.files[0]);
-                              handleFileUpload(e.target.files[0]).then(
-                                (res) => {
-                                  // res && setAvatar(res);
-                                  // setAvatarLoading(false);
-                                },
+                              handleFileUpload(e.target.files[0]).then((url) =>
+                                setForm({ ...form, avatar: url }),
                               );
                             }
                           }}
@@ -178,16 +176,13 @@ export function UpdateMillDialog({
               </div>
               <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="bio">Topics</Label>
-                <TagSelect
-                  selected={form.topics.map((i) => {
-                    return {
-                      name: i,
-                      id: i,
-                    };
-                  })}
-                  onChange={(v) =>
-                    setForm({ ...form, topics: v.map((i) => i.name) })
-                  }
+                <TagsInput
+                  value={form.topics}
+                  onChange={(v) => {
+                    setForm({ ...form, topics: v });
+                  }}
+                  name="tags"
+                  placeHolder=""
                 />
               </div>
               <div className="flex flex-col space-y-1.5">

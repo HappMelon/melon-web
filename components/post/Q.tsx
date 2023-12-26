@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/popover";
 import { toast } from "@/components/ui/use-toast";
 import { createNotes, updateTagsCount } from "@/lib/actions";
-import { linktoipfs, UploadFile } from "@/lib/upload-file";
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,6 +17,7 @@ import { useState, useTransition } from "react";
 import "react-quill/dist/quill.snow.css";
 import TagSelect from "./tags-select";
 import { Prisma } from "@prisma/client";
+import { handleFileUpload } from "@/lib/oss/get-signature";
 
 const MarkdownEditor = dynamic(
   () => import("@uiw/react-markdown-editor").then((mod) => mod.default),
@@ -45,14 +45,6 @@ export default function Q({
   }
 
   const router = useRouter();
-
-  const handleFileUpload = (file: File) => {
-    return UploadFile(file)
-      .then((res) => {
-        return linktoipfs(res.key);
-      })
-      .catch((e) => console.error("Can't upload file", e));
-  };
 
   return (
     <div className="h-[auto] ml-[2.5rem] bg-white mt-[2.25rem] border-#EAEAEA rounded-[1rem] w-[calc(100vw-23rem)]">
