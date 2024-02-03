@@ -12,19 +12,19 @@ datasource db {
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  title     String   @default("") @db.VarChar(40)
-  text      String   @db.VarChar(800)
+  id        String     @id @default(cuid())
+  title     String     @default("") @db.VarChar(40)
+  text      String     @db.VarChar(800)
   tags      String[]
   images    String[]
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User       @relation(fields: [authorId], references: [id])
   authorId  String
   repost    Repost?
-  createdAt DateTime @default(now())
+  createdAt DateTime   @default(now())
   likes     Likes[]
-  views     Int      @default(0)
-  reposts   Int      @default(0)
-  mill      Mill?     @relation(fields: [millId], references: [id])
+  views     Int        @default(0)
+  reposts   Int        @default(0)
+  mill      Mill?      @relation(fields: [millId], references: [id])
   millId    String?
   parentId  String?
   parent    Post?      @relation("ParentChildren", fields: [parentId], references: [id])
@@ -47,18 +47,18 @@ model Repost {
 }
 
 model User {
-  id         String   @id
-  username   String   @unique
-  name       String
-  image      String
-  bio        String
-  posts      Post[]
-  reposts    Repost[]
-  likes      Likes[]
-  followedBy User[]   @relation("UserFollows")
-  following  User[]   @relation("UserFollows")
-  onboarded  Boolean  @default(false)
-  mill       Mill[]
+  id                String              @id
+  username          String              @unique
+  name              String
+  image             String
+  bio               String
+  posts             Post[]
+  reposts           Repost[]
+  likes             Likes[]
+  followedBy        User[]              @relation("UserFollows")
+  following         User[]              @relation("UserFollows")
+  onboarded         Boolean             @default(false)
+  mill              Mill[]
   millSubscriptions MillSubscriptions[]
 }
 
@@ -111,16 +111,16 @@ model Proposal {
 // }
 
 model Mill {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    name      String
-    image     String
-    bio       String?
-    owner     User     @relation(fields: [ownerId], references: [id])
-    ownerId   String
-    posts     Post[]
-    topics    String[]
-    cost      Float    @default(0)
-    subscribers MillSubscriptions[]
+  id          String              @id @default(cuid())
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  name        String
+  image       String
+  bio         String?
+  owner       User                @relation(fields: [ownerId], references: [id])
+  ownerId     String
+  posts       Post[]
+  topics      String[]
+  cost        Float               @default(0)
+  subscribers MillSubscriptions[]
 }

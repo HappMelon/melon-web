@@ -7,6 +7,9 @@ import {
   permitTokenContractAbi,
 } from "./abi";
 
+const SPENDERCONTRACT_ADDRESS = NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS;
+const PERMITTOKENCONTRACT_ADDRESS = NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS;
+
 export function sleep(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
@@ -476,38 +479,60 @@ export const listentingStakeAdded = async (signer, account, callback) => {
   );
 };
 
-export const handleStakeTokensForProposal = async (
+export const handleSubmitProposalForReview = async (
   signer,
   account,
   stakeAmount,
 ) => {
-  console.log("handleStakeTokensForProposal 被调用，质押金额为: ", stakeAmount);
+  console.log(
+    "handleSubmitProposalForReview 被调用，质押金额为: ",
+    stakeAmount,
+  );
   if (!signer) return;
 
-  const permitTokenContract = new ethers.Contract(
-    NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS,
-    permitTokenContractAbi,
-    signer,
-  );
+  try {
+    // 创建VotingContract合约实例
+    const votingContract = new ethers.Contract(
+      SPENDERCONTRACT_ADDRESS,
+      spenderContractAbi,
+      signer,
+    );
 
-  // const allowance_valued = await permitTokenContract.allowance(account, NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS);
-  // if (allowance_valued.lt(depositAmount)) {
-  //   throw new Error("allowance_valued 不足");
-  // }
+    // 调用合约的submitProposalForReview函数
+    const tx = await votingContract.submitProposalForReview(
+      ethers.utils.parseEther(stakeAmount),
+    );
+    const receipt = await tx.wait(); // 等待交易被确认
 
-  const spenderContract = new ethers.Contract(
-    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
-    spenderContractAbi,
-    signer,
-  );
+    // 从事件中提取质押索引
+    const depositForProposalEvent = receipt.events?.find(
+      (event) => event.event === "DepositForProposal",
+    );
+    if (depositForProposalEvent && depositForProposalEvent.args) {
+      const { staker, amount, staked, unlockTime, stakeIndex } =
+        depositForProposalEvent.args;
+      console.log("提案审查提交完成");
+      console.log(`质押者: ${staker}`);
+      console.log(`质押金额(FLARE): ${ethers.utils.formatEther(amount)}`);
+      console.log(`是否质押: ${staked}`);
+      console.log(`解锁时间: ${new Date(unlockTime * 1000).toLocaleString()}`);
+      console.log(`质押索引: ${stakeIndex.toString()}`);
 
-  // 发起质押
-  const tx = await spenderContract.stakeTokensForProposal(
-    ethers.utils.parseEther(stakeAmount),
-  );
+      return {
+        staker,
+        stakeAmount: ethers.utils.formatEther(amount),
+        staked,
+        unlockTime,
+        stakeIndex: stakeIndex.toString(), // 将BigNumber对象转换为字符串
+      };
+    } else {
+      console.log("没有找到DepositForProposal事件，或者事件没有参数。");
 
-  const receipt = await tx.wait(); // 等待交易被挖矿确认
-  console.log("质押交易完成，交易凭据:", receipt);
+      return null;
+    }
+  } catch (error) {
+    console.error("提交提案审查失败:", error);
+  }
 };
 
 export const Add_ProposalWithOptions = async (

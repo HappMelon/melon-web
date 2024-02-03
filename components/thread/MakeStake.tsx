@@ -24,8 +24,7 @@ import { createProposal } from "@/lib/actions";
 import {
   sleep,
   connectWallet,
-  handleStakeTokensForProposal,
-  listentingStakeAdded,
+  handleSubmitProposalForReview,
 } from "@/web3/action";
 
 import {
@@ -74,15 +73,6 @@ export default function MakeStake({
       setAccount(res.account);
       // @ts-ignore
       setSigner(res.signer);
-      // @ts-ignore
-      listentingStakeAdded(
-        res?.signer,
-        res?.account,
-        // @ts-ignore
-        (staker, stakeIndex, stakeAmount, unLockTime) => {
-          createProposalToDB(staker, stakeIndex, stakeAmount, unLockTime);
-        },
-      );
     });
   };
 
@@ -101,14 +91,29 @@ export default function MakeStake({
     console.log("======onMakeStakeConfirm======");
     setTransactionPending(true);
 
-    await handleStakeTokensForProposal(
+    await handleSubmitProposalForReview(
       signer,
       account,
       userStakeAmount.toString(),
-    ).finally(() => {
-      setShowStakeDialog(false);
-      setTransactionPending(false);
-    });
+    )
+      .then(async (res) => {
+        console.log("======make stake res", res);
+        await createProposalToDB(
+          res?.staker,
+          res?.stakeIndex,
+          res?.stakeAmount,
+          new Date(res?.unlockTime * 1000).toLocaleString(),
+        );
+      })
+      .catch((err) => {
+        toast({
+          title: `${err}`,
+        });
+      })
+      .finally(() => {
+        setShowStakeDialog(false);
+        setTransactionPending(false);
+      });
   };
 
   // @ts-ignore
@@ -314,7 +319,10 @@ export default function MakeStake({
                 onMakeStakeConfirm();
               }}
               disabled={
-                !inputTotalInfluence || !inputLikeRate || transactionPending
+                !userStakeAmount ||
+                !inputTotalInfluence ||
+                !inputLikeRate ||
+                transactionPending
               }
             >
               Confirm
