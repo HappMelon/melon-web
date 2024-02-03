@@ -62,9 +62,10 @@ export default function ProposalCard({
   const [totalPrice, setTotalPrice] = useState(0);
   const [showVoteDialog, setShowVoteDialog] = useState(false);
   const [votePending, setVotePending] = useState(false);
-  const [endTime, setEndTime] = useState(new Date(Number(unLockTime) * 1000));
+  const [endTime, setEndTime] = useState(new Date(unLockTime));
   const [transactionPending, setTransactionPending] = useState(false);
   const [hasUserVoted, setHasUserVoted] = useState(false);
+  const [userVoteOptionId, setUserVoteOptionId] = useState(0);
 
   const { toast } = useToast();
 
@@ -162,7 +163,7 @@ export default function ProposalCard({
       signer,
       account,
       web3ProposalId,
-      NEXT_PUBLIC_PROPOSAL_OPTION_ID,
+      userVoteOptionId,
       inputPrice.toString(),
     )
       .then((res) => {

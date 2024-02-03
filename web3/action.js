@@ -357,44 +357,43 @@ export const vote = async (
       }投票权利， 投票数量为${voteAmount}`,
     );
     const tx = await contract.vote(proposalIDInt, optionIDInt, voteAmountInt);
-    await tx.wait(); // Wait for transaction to be mined
+    console.log("Awaiting confirmation...");
+    const receipt = await tx.wait(); // Wait for transaction to be mined
 
-    // alert("投票成功");
+    // 从收据中提取Voted事件
+    const votedEvent = receipt.events?.find((event) => event.event === "Voted");
+    if (votedEvent && votedEvent.args) {
+      const { _address, _proposalId, _optionId, _amount } = votedEvent.args;
+      console.log("投票事件详情：");
+      console.log(`用户: ${_address}`);
+      console.log(`提案ID: ${_proposalId.toString()}`);
+      console.log(`选项ID: ${_optionId.toString()}`);
+      console.log(`投票数量: ${ethers.utils.formatEther(_amount)}`);
+      console.log(
+        `投票成功！提案ID: ${_proposalId}, 选项ID: ${_optionId}, 投票数量: ${ethers.utils.formatEther(
+          _amount,
+        )}`,
+      );
 
-    // Fetch the updated option details and log it
-    // const updatedOption = await contract.options(proposalIDInt, optionIDInt);
-    // console.log("投票的选项是: ", updatedOption.name);
-    // console.log("在哪个id: ", updatedOption.id.toString()); // Convert BigNumber object to string
-    // console.log(
-    //   "这个选项现在有多少票: ",
-    //   ethers.utils.formatEther(updatedOption.voteCount),
-    // ); // Convert BigNumber object to string，
+      return {
+        status: "success",
+        message: "Vote Success",
+      };
+    } else {
+      console.log("No Voted event found or the event had no arguments.");
 
-    return {
-      status: "success",
-      message: "Stake Success",
-      // data: {
-      //   updatedOption,
-      // },
-    };
+      return {
+        status: "fail",
+        message: "No Voted event found or the event had no arguments",
+      };
+    }
   } catch (error) {
-    console.error("投票失败：", error);
-    // alert("投票失败");
+    console.error("投票过程中发生错误：", error);
     return {
       status: "fail",
       message: error.message,
     };
   }
-
-  // Optionally, list all options for the given proposal with updated vote counts
-  // const optionCount = await contract.optionId(proposalIDInt);
-  // for (let i = 1; i <= optionCount; i++) {
-  //   const option = await contract.options(proposalIDInt, i);
-  //   console.log(
-  //     `选项ID: ${option.id.toString()}, 选项名称: ${option.name
-  //     }, 投票数: ${ethers.utils.formatEther(option.voteCount)}`,
-  //   );
-  // }
 };
 
 export const getAccountVotingHistory = async (signer, account) => {
