@@ -100,15 +100,17 @@ model Proposal {
   unLockTime      String   @default("")
 }
 
-// model VoteRecord {
-//   id             String   @id @default(cuid())
-//   createdAt      DateTime @default(now())
-//   postId         String
-//   proposalId     String
-//   web3ProposalId String
-//   userId         String
-//   vote           Int      @default(0) // 0 - pending, 1 - good, 2 - bad
-// }
+model VoteRecord {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  postId         String
+  proposalId     String
+  web3ProposalId String
+  userId         String
+  userAddress    String   @default("")
+  optionId       String
+  voteAmount     Float
+}
 
 model Mill {
   id          String              @id @default(cuid())

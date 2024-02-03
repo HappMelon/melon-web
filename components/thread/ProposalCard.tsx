@@ -20,16 +20,11 @@ import {
   fetchContractBalance,
   fetchContractUsedVotingRights,
   fetchProposalOptions,
-  checkUserVoted,
 } from "@/web3/action";
 import { useToast } from "@/components/ui/use-toast";
 
 import { useEffect, useState } from "react";
-
-import {
-  NEXT_PUBLIC_PROPOSAL_ID,
-  NEXT_PUBLIC_PROPOSAL_OPTION_ID,
-} from "@/web3/abi";
+import { addVoteRecord, getVoteRecords } from "@/lib/actions";
 
 export default function ProposalCard({
   isCurUserPost,
@@ -65,7 +60,7 @@ export default function ProposalCard({
   const [endTime, setEndTime] = useState(new Date(unLockTime));
   const [transactionPending, setTransactionPending] = useState(false);
   const [hasUserVoted, setHasUserVoted] = useState(false);
-  const [userVoteOptionId, setUserVoteOptionId] = useState(0);
+  const [userVoteOptionId, setUserVoteOptionId] = useState("");
 
   const { toast } = useToast();
 
@@ -81,9 +76,9 @@ export default function ProposalCard({
   }, [signer]);
 
   useEffect(() => {
-    if (!web3ProposalId || !signer) return;
+    if (!web3ProposalId || !signer || !account) return;
     getUserVoted();
-  }, [web3ProposalId, signer]);
+  }, [web3ProposalId, signer, account]);
 
   const initConnectWallet = async () => {
     await connectWallet().then((res) => {
@@ -143,11 +138,18 @@ export default function ProposalCard({
   };
 
   const getUserVoted = async () => {
-    const hasUserVoted = await checkUserVoted(signer, account, web3ProposalId);
+    if (!account) return;
+    const voteRecords = await getVoteRecords(web3ProposalId, account);
 
-    console.log("======hasUserVoted======", hasUserVoted);
-
-    setHasUserVoted(hasUserVoted);
+    console.log("======voteRecords======", voteRecords);
+    if (!!voteRecords && !!voteRecords.length) {
+      setInputPrice(voteRecords[0].voteAmount);
+      setUserVoteOptionId(voteRecords[0].optionId);
+      setHasUserVoted(true);
+    } else {
+      setInputPrice(0);
+      setHasUserVoted(false);
+    }
   };
 
   const onVote = async () => {
