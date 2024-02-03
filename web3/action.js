@@ -625,42 +625,77 @@ export const listentingProposalForUserAdded = async (signer, callback) => {
 
 export const processStakedProposal = async (
   signer,
-  UserAddress,
+  userAddress,
   proposalDescription,
   stakeAmount,
-  optionDescriptions,
+  optionTexts,
   stakeIndex,
+  endTimeString,
 ) => {
   if (!signer) return;
 
-  const contract = new ethers.Contract(
-    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+  const endTime = new Date(endTimeString).getTime(); // 将时间字符串转换为时间戳（秒数）
+
+  console.log(
+    "处理用户质押的提案：",
+    proposalDescription,
+    "选项：",
+    optionTexts,
+    "质押金额：",
+    stakeAmount,
+    "质押索引：",
+    stakeIndex,
+    "结束时间：",
+    endTime,
+  );
+  const currentTime = new Date().toLocaleString();
+  console.log(`提交时间: ${currentTime}`);
+  console.log(`预期提案结束时间: ${endTimeString} `); // 添加此行以显示提案结束时间
+
+  const votingContract = new ethers.Contract(
+    SPENDERCONTRACT_ADDRESS,
     spenderContractAbi,
     signer,
   );
 
-  const formatOptions = optionDescriptions.split(",");
+  const tx = await votingContract.processUserStakedProposal(
+    userAddress.toString(),
+    proposalDescription.toString(),
+    ethers.utils.parseEther(stakeAmount.toString()),
+    optionTexts.toString().split(","),
+    stakeIndex.toString(),
+    endTime.toString(),
+  );
 
-  try {
-    // 发起处理质押提案的请求
-    const tx = await contract.processUserStakedProposal(
-      UserAddress,
+  // 等待交易被确认
+  const receipt = await tx.wait();
+  // 从事件中提取提案ID
+  const proposalForUserEvent = receipt.events?.find(
+    (event) => event.event === "ProposalForUser",
+  );
+  if (proposalForUserEvent && proposalForUserEvent.args) {
+    const {
+      userAddress,
+      proposalId,
       proposalDescription,
-      ethers.utils.parseUnits(stakeAmount.toString(), "ether"), // 假设stakeAmount是以ether单位
-      formatOptions,
-      stakeIndex,
-    );
-    await tx.wait(); // 等待交易被挖矿确认
-    console.log("提案及选项处理成功");
-
-    const proposalId = await contract.proposalsLength();
-
-    console.log("proposalId", proposalId.toString());
+      stakeAmount,
+      optionDescriptions,
+      endtime,
+    } = proposalForUserEvent.args;
+    console.log("用户质押的提案已处理：");
+    console.log("用户地址:", userAddress);
+    console.log("提案ID:", proposalId.toString());
+    console.log("提案描述:", proposalDescription);
+    console.log("质押金额:", ethers.utils.formatEther(stakeAmount));
+    console.log("选项描述:", optionDescriptions.join(", "));
+    console.log("endtime: " + endtime);
+    console.log("endtime string: " + new Date(endtime).toLocaleString());
+    console.log(`提案及选项已成功处理.提案ID: ${proposalId}`);
 
     return proposalId;
-  } catch (error) {
-    console.error("提案及选项处理失败：", error);
-    alert("提案及选项处理失败");
+  } else {
+    console.log("没有找到ProposalForUser事件，或者事件没有参数。");
+    return null;
   }
 };
 
