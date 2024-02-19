@@ -98,6 +98,8 @@ model Proposal {
   userStakeId     String   @default("")
   userStakeAmount Float    @default(0)
   unLockTime      String   @default("")
+  option1         String   @default("")
+  option2         String   @default("")
 }
 
 model VoteRecord {

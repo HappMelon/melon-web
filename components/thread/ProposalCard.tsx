@@ -23,7 +23,7 @@ import {
 } from "@/web3/action";
 import { useToast } from "@/components/ui/use-toast";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { addVoteRecord, getVoteRecords } from "@/lib/actions";
 
 export default function ProposalCard({
@@ -36,6 +36,10 @@ export default function ProposalCard({
   web3ProposalId,
   proposalStatus,
   proposalResult,
+  stakeOption1,
+  stakeOption2,
+  postId,
+  userId,
 }: {
   isCurUserPost: boolean;
   userAddress: string;
@@ -46,6 +50,10 @@ export default function ProposalCard({
   web3ProposalId: string;
   proposalStatus: number; // 0 - pending, 1 - approved, 2 - rejected
   proposalResult: number; // 0 - notstarted, 1 - onGoing  2 - good, 3 - bad
+  stakeOption1: string;
+  stakeOption2: string;
+  postId: string;
+  userId: string;
 }) {
   const [provider, setProvider] = useState();
   const [account, setAccount] = useState();
@@ -61,6 +69,9 @@ export default function ProposalCard({
   const [transactionPending, setTransactionPending] = useState(false);
   const [hasUserVoted, setHasUserVoted] = useState(false);
   const [userVoteOptionId, setUserVoteOptionId] = useState("");
+
+  const [option1Amount, setOption1Amount] = useState(0);
+  const [option2Amount, setOption2Amount] = useState(0);
 
   const { toast } = useToast();
 
@@ -104,10 +115,21 @@ export default function ProposalCard({
 
     if (!!proposalDetails) {
       let totalPrice = 0;
+      let option1Amount = 0;
+      let option2Amount = 0;
       proposalDetails.options.map((option) => {
         totalPrice += Number(option.voteCount);
+
+        if (option.index === 0) {
+          option1Amount += Number(option.voteCount);
+        } else {
+          option2Amount = Number(option.voteCount);
+        }
       });
+
       setTotalPrice(totalPrice + userStakeAmount);
+      setOption1Amount(option1Amount);
+      setOption2Amount(option2Amount);
     }
 
     console.log("======proposalDetails======", proposalDetails);
@@ -140,7 +162,7 @@ export default function ProposalCard({
   const getUserVoted = async () => {
     if (!account) return;
     const voteRecords = await getVoteRecords(web3ProposalId, account);
-
+    console.log("======voteRecords======", web3ProposalId, account);
     console.log("======voteRecords======", voteRecords);
     if (!!voteRecords && !!voteRecords.length) {
       setInputPrice(voteRecords[0].voteAmount);
@@ -168,7 +190,7 @@ export default function ProposalCard({
       userVoteOptionId,
       inputPrice.toString(),
     )
-      .then((res) => {
+      .then(async (res) => {
         console.log("======vote res", res);
 
         // @ts-ignore
@@ -185,7 +207,26 @@ export default function ProposalCard({
 
         setShowVoteDialog(false);
         setTotalPrice(totalPrice + inputPrice);
+
+        if (userVoteOptionId === "0") {
+          setOption1Amount(option1Amount + inputPrice);
+        } else {
+          setOption2Amount(option2Amount + inputPrice);
+        }
+
         setHasUserVoted(true);
+
+        await addVoteRecord(
+          postId,
+          proposalId,
+          web3ProposalId,
+          userId,
+          // @ts-ignore
+          account,
+          userVoteOptionId,
+          inputPrice,
+          window.location.pathname,
+        );
       })
       .catch((err) => {
         console.log("======err======", err);
@@ -219,10 +260,80 @@ export default function ProposalCard({
         Validation Staking
       </div>
 
+      <div>
+        <div
+          className="flex mb-[.875rem] rounded-[.625rem] p-[.5rem] items-center cursor-pointer"
+          style={{
+            boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.15)",
+            background:
+              userVoteOptionId === "0"
+                ? "linear-gradient(100deg, rgba(249, 212, 35, 0.1) -12.68%, rgba(248, 54, 0, 0.2) 147.82%)"
+                : "linear-gradient(100deg, rgba(249, 212, 35, 0.03) -12.68%, rgba(248, 54, 0, 0.03) 147.82%)",
+          }}
+          onClick={() => {
+            !isCurUserPost && !hasUserVoted && setUserVoteOptionId("0");
+          }}
+        >
+          <div
+            className="rounded-[.625rem] p-[.5rem] text-[#9B9B9B] text-[.625rem] font-bold shrink-0"
+            style={{
+              background:
+                "linear-gradient(100deg, rgba(249, 212, 35, 0.10) -12.68%, rgba(248, 54, 0, 0.10) 147.82%)",
+            }}
+          >
+            Option1
+          </div>
+          <div className="grow px-[.5rem]">{stakeOption1}</div>
+          <div
+            className="bg-clip-text text-transparent text-lg font-bold shrink-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+            }}
+          >
+            {option1Amount} FLR
+          </div>
+        </div>
+
+        <div
+          className="flex mb-[.875rem] rounded-[.625rem] p-[.5rem] items-center cursor-pointer"
+          style={{
+            boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.15)",
+            background:
+              userVoteOptionId === "1"
+                ? "linear-gradient(100deg, rgba(249, 212, 35, 0.1) -12.68%, rgba(248, 54, 0, 0.2) 147.82%)"
+                : "linear-gradient(100deg, rgba(249, 212, 35, 0.03) -12.68%, rgba(248, 54, 0, 0.03) 147.82%)",
+          }}
+          onClick={() => {
+            !isCurUserPost && !hasUserVoted && setUserVoteOptionId("1");
+          }}
+        >
+          <div
+            className="rounded-[.625rem] p-[.5rem] text-[#9B9B9B] text-[.625rem] font-bold shrink-0"
+            style={{
+              background:
+                "linear-gradient(100deg, rgba(249, 212, 35, 0.10) -12.68%, rgba(248, 54, 0, 0.10) 147.82%)",
+            }}
+          >
+            Option2
+          </div>
+          <div className="grow px-[.5rem]">{stakeOption2}</div>
+          <div
+            className="bg-clip-text text-transparent text-lg font-bold shrink-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+            }}
+          >
+            {option2Amount} FLR
+          </div>
+        </div>
+      </div>
+
       <div className="mb-[1.25rem]">
         <div className="mb-[1.25rem]">
-          <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-medium">
-            Total price
+          <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-normal">
+            Total Number/Price
           </div>
 
           <div>
@@ -240,7 +351,7 @@ export default function ProposalCard({
 
         {proposalResult === 1 ? (
           <div>
-            <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-medium">
+            <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-normal">
               Ends in
             </div>
 
@@ -250,7 +361,7 @@ export default function ProposalCard({
           </div>
         ) : (
           <div>
-            <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-medium">
+            <div className="mb-[.9375rem] text-[#9b9b9b] text-sm font-normal">
               {`Ends in ${new Date(endTime)}`}
             </div>
           </div>
@@ -270,7 +381,12 @@ export default function ProposalCard({
               Your Validation Staking price
             </span>
           </div>
-          <div>
+          <div className="flex items-center justify-center ">
+            {!isCurUserPost && (
+              <span className="text-[#9B9B9B] font-bold text-sm pr-[.5rem]">
+                {userVoteOptionId === "0" ? "Option1" : "Option2"}
+              </span>
+            )}
             <span
               className="bg-clip-text text-transparent font-bold text-2xl"
               style={{
@@ -296,8 +412,9 @@ export default function ProposalCard({
             console.log("stake");
             setShowVoteDialog(true);
           }}
+          disabled={votePending || !userVoteOptionId}
         >
-          Stake
+          Vote
         </Button>
       )}
 

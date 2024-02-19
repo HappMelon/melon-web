@@ -25,6 +25,8 @@ import {
   sleep,
   connectWallet,
   handleSubmitProposalForReview,
+  fetchContractBalance,
+  fetchContractUsedVotingRights,
 } from "@/web3/action";
 
 import {
@@ -46,12 +48,17 @@ export default function MakeStake({
   const [provider, setProvider] = useState();
   const [account, setAccount] = useState();
   const [signer, setSigner] = useState();
+  const [balance, setBalance] = useState("0");
+  const [usedVote, setUsedVote] = useState("0");
 
   const [inputTotalInfluence, setInputTotalInfluence] = useState(100);
   const [inputLikeRate, setInputLikeRate] = useState(0.2);
   const [userStakeId, setUserStakeId] = useState(""); // 设置提案的id
   const [userStakeAmount, setUserStakeAmount] = useState(0); // 设置提案的amount
   const [unLockTime, setUnLockTime] = useState(0); // 设置质押的解锁时间
+  const [stakeOption1, setStakeOption1] = useState(""); // 设置质押的选项 1
+  const [stakeOption2, setStakeOption2] = useState(""); // 设置质押的选项 2
+
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showStakeDialog, setShowStakeDialog] = useState(false);
   const [transactionPending, setTransactionPending] = useState(false); // 链上交易进行中
@@ -64,6 +71,36 @@ export default function MakeStake({
   useEffect(() => {
     initConnectWallet();
   }, []);
+
+  useEffect(() => {
+    if (!signer) return;
+    getBalance(signer, account);
+    getUsedVote(signer, account);
+  }, [signer]);
+
+  // get balance
+  // @ts-ignore
+  const getBalance = (signer, account) => {
+    fetchContractBalance(signer, account).then((balance) => {
+      console.log("======balance======", balance);
+
+      const formattedBalance = parseFloat(balance || "0").toString();
+
+      // @ts-ignore
+      setBalance(formattedBalance);
+    });
+  };
+
+  // get used vote
+  // @ts-ignore
+  const getUsedVote = async (signer, account) => {
+    fetchContractUsedVotingRights(signer, account).then((usedVote) => {
+      console.log("======usedVote======", usedVote);
+      const formattedUsedVote = parseFloat(usedVote || "0").toString();
+      // @ts-ignore
+      setUsedVote(formattedUsedVote);
+    });
+  };
 
   const initConnectWallet = async () => {
     await connectWallet().then((res) => {
@@ -104,6 +141,9 @@ export default function MakeStake({
           res?.stakeAmount,
           new Date(res?.unlockTime * 1000).toLocaleString(),
         );
+        toast({
+          title: "Success to submit proposal!",
+        });
       })
       .catch((err) => {
         toast({
@@ -131,6 +171,8 @@ export default function MakeStake({
       postId,
       inputLikeRate,
       inputTotalInfluence,
+      stakeOption1,
+      stakeOption2,
       staker,
       stakeIndex,
       // @ts-ignore
@@ -247,64 +289,104 @@ export default function MakeStake({
             </DialogTitle>
           </DialogHeader>
 
-          <div className="px-[1.625rem] mb-[1rem] font-semibold text-xl leading-normal">
+          <div className="px-[1.625rem] font-semibold text-xl leading-normal">
             <div className="flex">
               <span className="text-lg font-bold mr-[1rem]">Time</span>
               <span className="text-[#bcbcbc] text-lg font-medium">
                 7 days from the date of publication
               </span>
             </div>
-            <div className="mt-[2rem] text-sm font-medium">
-              <span className=" text-base font-bold">*Results judgment</span>
-              (both of the following need to be met)
+            <div className="text-lg leading-6 font-bold mb-[.25rem] mt-[.875rem]">
+              *Stake Amount
             </div>
-
-            <div className="mt-[.875rem]">
-              <div className="text-sm font-medium mb-[.25rem]">
-                Stake Amount
-              </div>
+            <div className="flex items-center px-[1.5rem] rounded-[50px] bg-[#f8f8f8]">
               <Input
-                placeholder=""
+                placeholder="Stake Amount"
                 value={userStakeAmount}
                 type="number"
                 onChange={(e) => {
                   const value = Number(e.target.value);
                   setUserStakeAmount(value);
                 }}
-                className="text-lg outline-none bg-[#f8f8f8] rounded-[3.125rem] focus-visible:ring-0"
+                className="flex-1 text-lg  shadow-none border-0 outline-none border-none bg-transparent focus-visible:ring-0"
               />
+              <div
+                className="shrink-0 pl-[1.25rem] border-l border-[#e6e6e6] bg-clip-text text-transparent"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                }}
+              >
+                FLR
+              </div>
             </div>
 
             <div className="mt-[.875rem]">
-              <div className="text-sm font-medium mb-[.25rem]">
-                Total number of Likes + Comments + Shares
+              <div className="text-lg leading-6 font-bold mb-[.5rem]">
+                *Option Settings
               </div>
+
+              <div className="text-sm font-normal mb-[.5rem]">*Option 1</div>
               <Input
                 placeholder=""
-                value={inputTotalInfluence}
-                type="number"
+                value={stakeOption1}
+                type="text"
+                maxLength={18}
                 onChange={(e) => {
-                  const value = Number(e.target.value);
-                  setInputTotalInfluence(value);
+                  const value = e.target.value;
+                  setStakeOption1(value);
                 }}
-                className="text-lg outline-none bg-[#f8f8f8] rounded-[3.125rem] focus-visible:ring-0"
+                className="text-sm font-normal outline-none bg-[#f8f8f8] rounded-[3.125rem] focus-visible:ring-0"
+              />
+
+              <div className="text-sm font-normal my-[.5rem]">*Option 2</div>
+              <Input
+                placeholder=""
+                value={stakeOption2}
+                type="text"
+                maxLength={18}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setStakeOption2(value);
+                }}
+                className="text-sm font-normal outline-none bg-[#f8f8f8] rounded-[3.125rem] focus-visible:ring-0"
               />
             </div>
 
-            <div className="mt-[.875rem]">
-              <div className="text-sm font-medium mb-[.25rem]">
-                Like Rate (Likes/Views)
+            <div className="flex items-center mt-[1rem]">
+              <div className="flex-1 flex items-center">
+                <div className="text-xs text-[#9b9b9b] font-medium">
+                  Remaining:
+                </div>
+                <div className="ml-[.5rem] mr-[.3125rem] text-lg font-bold">
+                  {`${Number(balance) - Number(usedVote)}`}
+                </div>
+                <div
+                  className="bg-clip-text text-transparent text-lg font-bold"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                  }}
+                >
+                  FLR
+                </div>
               </div>
-              <Input
-                placeholder=""
-                value={inputLikeRate}
-                type="number"
-                onChange={(e) => {
-                  const value = Number(e.target.value);
-                  setInputLikeRate(value);
-                }}
-                className="text-lg outline-none bg-[#f8f8f8] rounded-[3.125rem] focus-visible:ring-0"
-              />
+
+              <div className="shrink-0 flex items-center font-bold text-xs">
+                <span>1</span>
+                <span
+                  className="mx-[.3125rem] bg-clip-text text-transparent text-lg font-bold"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                  }}
+                >
+                  FLR
+                </span>
+                <span>=</span>
+                <span className="mx-[.3125rem]">0.1</span>
+                <span>USD</span>
+              </div>
             </div>
           </div>
 
@@ -320,8 +402,8 @@ export default function MakeStake({
               }}
               disabled={
                 !userStakeAmount ||
-                !inputTotalInfluence ||
-                !inputLikeRate ||
+                !stakeOption1 ||
+                !stakeOption2 ||
                 transactionPending
               }
             >

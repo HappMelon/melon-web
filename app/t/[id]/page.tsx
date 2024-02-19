@@ -144,6 +144,7 @@ export default async function ThreadPage({
           {!!activeProposal && activeProposal.status <= 1 && (
             <Proposal
               isCurUserPost={isCurUserPost}
+              userId={user?.id || ""}
               proposal={{
                 id: activeProposal.id,
                 postId: activeProposal.postId,
@@ -156,6 +157,8 @@ export default async function ThreadPage({
                 userStakeId: activeProposal.userStakeId,
                 userStakeAmount: activeProposal.userStakeAmount,
                 unLockTime: activeProposal.unLockTime,
+                stakeOption1: activeProposal.option1,
+                stakeOption2: activeProposal.option2,
               }}
             />
           )}

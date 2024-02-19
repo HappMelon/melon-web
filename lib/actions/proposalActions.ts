@@ -7,6 +7,8 @@ export async function createProposal(
   postId: string,
   likeRate: number,
   totalInfluence: number,
+  stakeOption1: string,
+  stakeOption2: string,
   userAddress: string,
   userStakeId: string,
   userStakeAmount: number,
@@ -19,6 +21,10 @@ export async function createProposal(
 
       likeRate: likeRate,
       totalInfluence: totalInfluence,
+
+      option1: stakeOption1,
+      option2: stakeOption2,
+
       userAddress: userAddress,
       userStakeId: userStakeId,
       userStakeAmount: userStakeAmount,
