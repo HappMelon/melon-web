@@ -7,6 +7,9 @@ import {
   permitTokenContractAbi,
 } from "./abi";
 
+const SPENDERCONTRACT_ADDRESS = NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS;
+const PERMITTOKENCONTRACT_ADDRESS = NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS;
+
 export function sleep(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
@@ -354,44 +357,43 @@ export const vote = async (
       }投票权利， 投票数量为${voteAmount}`,
     );
     const tx = await contract.vote(proposalIDInt, optionIDInt, voteAmountInt);
-    await tx.wait(); // Wait for transaction to be mined
+    console.log("Awaiting confirmation...");
+    const receipt = await tx.wait(); // Wait for transaction to be mined
 
-    // alert("投票成功");
+    // 从收据中提取Voted事件
+    const votedEvent = receipt.events?.find((event) => event.event === "Voted");
+    if (votedEvent && votedEvent.args) {
+      const { _address, _proposalId, _optionId, _amount } = votedEvent.args;
+      console.log("投票事件详情：");
+      console.log(`用户: ${_address}`);
+      console.log(`提案ID: ${_proposalId.toString()}`);
+      console.log(`选项ID: ${_optionId.toString()}`);
+      console.log(`投票数量: ${ethers.utils.formatEther(_amount)}`);
+      console.log(
+        `投票成功！提案ID: ${_proposalId}, 选项ID: ${_optionId}, 投票数量: ${ethers.utils.formatEther(
+          _amount,
+        )}`,
+      );
 
-    // Fetch the updated option details and log it
-    // const updatedOption = await contract.options(proposalIDInt, optionIDInt);
-    // console.log("投票的选项是: ", updatedOption.name);
-    // console.log("在哪个id: ", updatedOption.id.toString()); // Convert BigNumber object to string
-    // console.log(
-    //   "这个选项现在有多少票: ",
-    //   ethers.utils.formatEther(updatedOption.voteCount),
-    // ); // Convert BigNumber object to string，
+      return {
+        status: "success",
+        message: "Vote Success",
+      };
+    } else {
+      console.log("No Voted event found or the event had no arguments.");
 
-    return {
-      status: "success",
-      message: "Stake Success",
-      // data: {
-      //   updatedOption,
-      // },
-    };
+      return {
+        status: "fail",
+        message: "No Voted event found or the event had no arguments",
+      };
+    }
   } catch (error) {
-    console.error("投票失败：", error);
-    // alert("投票失败");
+    console.error("投票过程中发生错误：", error);
     return {
       status: "fail",
       message: error.message,
     };
   }
-
-  // Optionally, list all options for the given proposal with updated vote counts
-  // const optionCount = await contract.optionId(proposalIDInt);
-  // for (let i = 1; i <= optionCount; i++) {
-  //   const option = await contract.options(proposalIDInt, i);
-  //   console.log(
-  //     `选项ID: ${option.id.toString()}, 选项名称: ${option.name
-  //     }, 投票数: ${ethers.utils.formatEther(option.voteCount)}`,
-  //   );
-  // }
 };
 
 export const getAccountVotingHistory = async (signer, account) => {
@@ -476,38 +478,60 @@ export const listentingStakeAdded = async (signer, account, callback) => {
   );
 };
 
-export const handleStakeTokensForProposal = async (
+export const handleSubmitProposalForReview = async (
   signer,
   account,
   stakeAmount,
 ) => {
-  console.log("handleStakeTokensForProposal 被调用，质押金额为: ", stakeAmount);
+  console.log(
+    "handleSubmitProposalForReview 被调用，质押金额为: ",
+    stakeAmount,
+  );
   if (!signer) return;
 
-  const permitTokenContract = new ethers.Contract(
-    NEXT_PUBLIC_PERMITTOKENCONTRACT_ADDRESS,
-    permitTokenContractAbi,
-    signer,
-  );
+  try {
+    // 创建VotingContract合约实例
+    const votingContract = new ethers.Contract(
+      SPENDERCONTRACT_ADDRESS,
+      spenderContractAbi,
+      signer,
+    );
 
-  // const allowance_valued = await permitTokenContract.allowance(account, NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS);
-  // if (allowance_valued.lt(depositAmount)) {
-  //   throw new Error("allowance_valued 不足");
-  // }
+    // 调用合约的submitProposalForReview函数
+    const tx = await votingContract.submitProposalForReview(
+      ethers.utils.parseEther(stakeAmount),
+    );
+    const receipt = await tx.wait(); // 等待交易被确认
 
-  const spenderContract = new ethers.Contract(
-    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
-    spenderContractAbi,
-    signer,
-  );
+    // 从事件中提取质押索引
+    const depositForProposalEvent = receipt.events?.find(
+      (event) => event.event === "DepositForProposal",
+    );
+    if (depositForProposalEvent && depositForProposalEvent.args) {
+      const { staker, amount, staked, unlockTime, stakeIndex } =
+        depositForProposalEvent.args;
+      console.log("提案审查提交完成");
+      console.log(`质押者: ${staker}`);
+      console.log(`质押金额(FLARE): ${ethers.utils.formatEther(amount)}`);
+      console.log(`是否质押: ${staked}`);
+      console.log(`解锁时间: ${new Date(unlockTime * 1000).toLocaleString()}`);
+      console.log(`质押索引: ${stakeIndex.toString()}`);
 
-  // 发起质押
-  const tx = await spenderContract.stakeTokensForProposal(
-    ethers.utils.parseEther(stakeAmount),
-  );
+      return {
+        staker,
+        stakeAmount: ethers.utils.formatEther(amount),
+        staked,
+        unlockTime,
+        stakeIndex: stakeIndex.toString(), // 将BigNumber对象转换为字符串
+      };
+    } else {
+      console.log("没有找到DepositForProposal事件，或者事件没有参数。");
 
-  const receipt = await tx.wait(); // 等待交易被挖矿确认
-  console.log("质押交易完成，交易凭据:", receipt);
+      return null;
+    }
+  } catch (error) {
+    console.error("提交提案审查失败:", error);
+  }
 };
 
 export const Add_ProposalWithOptions = async (
@@ -600,42 +624,77 @@ export const listentingProposalForUserAdded = async (signer, callback) => {
 
 export const processStakedProposal = async (
   signer,
-  UserAddress,
+  userAddress,
   proposalDescription,
   stakeAmount,
-  optionDescriptions,
+  optionTexts,
   stakeIndex,
+  endTimeString,
 ) => {
   if (!signer) return;
 
-  const contract = new ethers.Contract(
-    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+  const endTime = new Date(endTimeString).getTime(); // 将时间字符串转换为时间戳（秒数）
+
+  console.log(
+    "处理用户质押的提案：",
+    proposalDescription,
+    "选项：",
+    optionTexts,
+    "质押金额：",
+    stakeAmount,
+    "质押索引：",
+    stakeIndex,
+    "结束时间：",
+    endTime,
+  );
+  const currentTime = new Date().toLocaleString();
+  console.log(`提交时间: ${currentTime}`);
+  console.log(`预期提案结束时间: ${endTimeString} `); // 添加此行以显示提案结束时间
+
+  const votingContract = new ethers.Contract(
+    SPENDERCONTRACT_ADDRESS,
     spenderContractAbi,
     signer,
   );
 
-  const formatOptions = optionDescriptions.split(",");
+  const tx = await votingContract.processUserStakedProposal(
+    userAddress.toString(),
+    proposalDescription.toString(),
+    ethers.utils.parseEther(stakeAmount.toString()),
+    optionTexts.toString().split(","),
+    stakeIndex.toString(),
+    endTime.toString(),
+  );
 
-  try {
-    // 发起处理质押提案的请求
-    const tx = await contract.processUserStakedProposal(
-      UserAddress,
+  // 等待交易被确认
+  const receipt = await tx.wait();
+  // 从事件中提取提案ID
+  const proposalForUserEvent = receipt.events?.find(
+    (event) => event.event === "ProposalForUser",
+  );
+  if (proposalForUserEvent && proposalForUserEvent.args) {
+    const {
+      userAddress,
+      proposalId,
       proposalDescription,
-      ethers.utils.parseUnits(stakeAmount.toString(), "ether"), // 假设stakeAmount是以ether单位
-      formatOptions,
-      stakeIndex,
-    );
-    await tx.wait(); // 等待交易被挖矿确认
-    console.log("提案及选项处理成功");
-
-    const proposalId = await contract.proposalsLength();
-
-    console.log("proposalId", proposalId.toString());
+      stakeAmount,
+      optionDescriptions,
+      endtime,
+    } = proposalForUserEvent.args;
+    console.log("用户质押的提案已处理：");
+    console.log("用户地址:", userAddress);
+    console.log("提案ID:", proposalId.toString());
+    console.log("提案描述:", proposalDescription);
+    console.log("质押金额:", ethers.utils.formatEther(stakeAmount));
+    console.log("选项描述:", optionDescriptions.join(", "));
+    console.log("endtime: " + endtime);
+    console.log("endtime string: " + new Date(endtime).toLocaleString());
+    console.log(`提案及选项已成功处理.提案ID: ${proposalId}`);
 
     return proposalId;
-  } catch (error) {
-    console.error("提案及选项处理失败：", error);
-    alert("提案及选项处理失败");
+  } else {
+    console.log("没有找到ProposalForUser事件，或者事件没有参数。");
+    return null;
   }
 };
 

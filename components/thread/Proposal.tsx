@@ -5,9 +5,11 @@ import ProposalResult from "@/components/thread/ProposalResult";
 
 export default function Proposal({
   isCurUserPost,
+  userId,
   proposal,
 }: {
   isCurUserPost: boolean;
+  userId: string;
   proposal: {
     id: string;
     postId: string;
@@ -20,6 +22,8 @@ export default function Proposal({
     userStakeId: string;
     userStakeAmount: number;
     unLockTime: string;
+    stakeOption1: string;
+    stakeOption2: string;
   };
 }) {
   // case1: user proposaled and waiting for review
@@ -78,6 +82,10 @@ export default function Proposal({
         web3ProposalId={proposal.web3ProposalId}
         proposalStatus={proposal.status}
         proposalResult={proposal.result}
+        stakeOption1={proposal.stakeOption1}
+        stakeOption2={proposal.stakeOption2}
+        postId={proposal.postId}
+        userId={userId}
       />
     </div>
   );

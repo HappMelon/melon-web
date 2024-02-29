@@ -90,7 +90,7 @@ export default function ProposalList({
     setActionPending(true);
 
     // @ts-ignore
-    const returnedProposalId = await processStakedProposal(
+    await processStakedProposal(
       signer,
       // @ts-ignore
       selectedProposal.userAddress,
@@ -99,22 +99,29 @@ export default function ProposalList({
       // @ts-ignore
       selectedProposal.userStakeAmount,
       // default only one option "true"
-      "real,fake",
+      "yes,no",
       // @ts-ignore
       selectedProposal.userStakeId,
-    ).catch((err) => {
-      toast({
-        title: `${err}`,
+      // @ts-ignore
+      selectedProposal.unLockTime,
+    )
+      .then(async (res) => {
+        console.log("=======res=======", res);
+
+        console.log("=====returnedProposalId=====", res);
+
+        setWeb3ProposalId(res);
+
+        await sleep(10000);
+
+        await onProposalAdded(res.toString());
+      })
+      .catch((err) => {
+        console.log("=====approveAndSubmitProposal err", err);
+        toast({
+          title: `${err}`,
+        });
       });
-    });
-
-    console.log("=====returnedProposalId=====", returnedProposalId);
-
-    setWeb3ProposalId(returnedProposalId);
-
-    await sleep(10000);
-
-    await onProposalAdded(returnedProposalId.toString());
 
     setActionPending(false);
   };
