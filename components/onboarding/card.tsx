@@ -4,12 +4,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { onboardData } from "@/lib/actions";
-import { useState, useTransition } from "react";
+import {
+  createInvitation,
+  createInviteCode,
+  getInviteCodeByCode,
+  onboardData,
+} from "@/lib/actions";
+import { useContext, useState, useTransition } from "react";
 import { useToast } from "../ui/use-toast";
 import { AlertCircle } from "lucide-react";
 
 import Filter from "bad-words";
+import { useSearchParams } from "next/navigation";
+import { AnviteContext } from "../layouts/AppLayout";
 import { validateUsername } from "@/lib/utils";
 
 export function OnboardingProfileCard({
@@ -37,6 +44,31 @@ export function OnboardingProfileCard({
   const [bio, setBio] = useState(userData.bio);
 
   const { toast } = useToast();
+
+  const urlParams = useSearchParams();
+  const inviteParam = urlParams.get("invite");
+  const setInviteChange = useContext(AnviteContext);
+  // 新用户初始化数据操作
+  const initSetUpMethod = async () => {
+    // 入库用户数据
+    onboardData(username, name, bio, userData.image, userData.id),
+      //给新用户分配邀请码，试错10次
+      createInviteCode(userData.id);
+    if (inviteParam) {
+      // 查询邀请码关联的用户
+      const inviterId = await getInviteCodeByCode(inviteParam);
+      if (inviterId) {
+        // 创建邀请记录，
+        createInvitation(inviterId, userData.id, 0, 0);
+        //初始化 父组件中的1分钟判断
+        setInviteChange?.(true);
+      } else {
+        toast({
+          title: "The invitation code you used is invalid",
+        });
+      }
+    }
+  };
 
   return (
     <>
@@ -123,9 +155,7 @@ export function OnboardingProfileCard({
       </Card>
       <Button
         onClick={() => {
-          startTransition(() =>
-            onboardData(username, name, bio, userData.image, userData.id),
-          );
+          startTransition(() => initSetUpMethod());
           toast({
             title: "Updated user data",
           });

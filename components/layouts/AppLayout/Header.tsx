@@ -37,6 +37,14 @@ export default function Header() {
           {/* <div className="font-bold text-2xl whitespace-nowrap"></div> */}
         </div>
         <Explore />
+        <Link
+          href={"/invite"}
+          className="font-bold text-sm mx-8 shrink-0 max-md:hidden"
+        >
+          <p className="bg-gradient-to-b from-[#F9D423] to-[#FF6B00] inline-block text-transparent bg-clip-text">
+            Enjoy XX flare by Inviting Friends to Melon!
+          </p>
+        </Link>
       </div>
       <div className="flex items-center">
         {user ? (

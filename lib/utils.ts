@@ -1,5 +1,6 @@
 import Filter from "bad-words";
 import { clsx, type ClassValue } from "clsx";
+import { createContext } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -89,3 +90,32 @@ export const Color = () => {
   ];
   return colorArr;
 };
+
+/**
+ * 生成9位数字字母邀请码
+ *
+ * @return {*}
+ */
+export const generateInviteCode = () => {
+  const charSet =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let inviteCode = "";
+  for (var i = 0; i < 8; i++) {
+    var randomPoz = Math.floor(Math.random() * charSet.length);
+    inviteCode += charSet.substring(randomPoz, randomPoz + 1);
+  }
+  return inviteCode;
+};
+
+export const ExploreDefaultFistPicShowData = [
+  {
+    path: "/entrance_picture.png",
+    alt: "entrance picture",
+    redirect: "/invite",
+  },
+  {
+    path: "/entrance_picture.png",
+    alt: "entrance picture",
+    redirect: "/invite",
+  },
+];

@@ -55,6 +55,8 @@ model User {
   posts             Post[]
   reposts           Repost[]
   likes             Likes[]
+  invitations       Invitation[]        @relation("InvitationInviters")
+  inviteCode        InviteCode?         @relation("InviteCode")
   followedBy        User[]              @relation("UserFollows")
   following         User[]              @relation("UserFollows")
   onboarded         Boolean             @default(false)
@@ -127,4 +129,24 @@ model Mill {
   topics      String[]
   cost        Float               @default(0)
   subscribers MillSubscriptions[]
+}
+model InviteCode {
+  userId String @id
+  code   String @unique
+  user   User   @relation("InviteCode", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Invitation {
+  id                  String   @id @default(cuid())
+  inviterId           String
+  inviteeId           String
+  status              String
+  createdAt           DateTime @default(now())
+  inviterReward       Int
+  inviteeReward       Int
+  inviterRewardIssued Boolean
+  inviteeRewardIssued Boolean
+  inviter             User     @relation("InvitationInviters", fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([inviterId, status])
 }

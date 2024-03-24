@@ -4,3 +4,4 @@ export * from "./noteActions";
 export * from "./proposalActions";
 export * from "./mill-action";
 export * from "./voteActions";
+export * from "./inviteAction";

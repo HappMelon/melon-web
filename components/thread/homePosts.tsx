@@ -1,13 +1,18 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "@/components/ui/use-toast";
 import { Prisma } from "@prisma/client";
-import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import Item from ".";
-
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { ExploreDefaultFistPicShowData } from "@/lib/utils";
+import Image from "next/image";
 export default function HomePosts({
   posts,
   follows,
@@ -83,6 +88,30 @@ export default function HomePosts({
       <div
         className={`grid grid-cols-${column} gap-[2.25rem] rounded-[15px] pt-10 px-[25px] bg-white`}
       >
+        <div className="bg-[#F4F4F4] rounded-xl min-w-[13rem]">
+          <Carousel className="w-full h-full">
+            <CarouselContent className="w-full h-full ml-0">
+              {ExploreDefaultFistPicShowData.map((i, index) => (
+                <CarouselItem
+                  key={index}
+                  className="pl-0 w-full h-full opacity-70"
+                >
+                  <a href={i.redirect} className="">
+                    <Image
+                      src={i.path}
+                      alt={i.alt}
+                      width={358}
+                      height={546}
+                      className="w-full h-full"
+                    />
+                  </a>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="w-9 h-9 left-2 z-10 bg-gradient-to-b from-[#F9D423] to-[#FF6B00]" />
+            <CarouselNext className="w-9 h-9 right-2 z-10 bg-gradient-to-b from-[#F9D423] to-[#FF6B00]" />
+          </Carousel>
+        </div>
         {items.map((item, i) => {
           if (i === items.length - 1)
             return (
