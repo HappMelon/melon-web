@@ -25,20 +25,19 @@ export const CenterContent = () => {
     ACTIVITYSTATUS.ACTIVE,
   );
 
-  const activityStatusColor = useMemo(
-    () =>
-      activityStatus === ACTIVITYSTATUS["ACTIVE"]
-        ? ACTIVITYSTATUS_COLOR["Active"]
-        : ACTIVITYSTATUS_COLOR["Ended"],
-    [activityStatus],
-  );
-  const activityStatusText = useMemo(
-    () =>
-      activityStatus === ACTIVITYSTATUS["ACTIVE"]
-        ? ACTIVITYSTATUS["ACTIVE"]
-        : ACTIVITYSTATUS["ENDED"],
-    [activityStatus],
-  );
+  const activity = useMemo(() => {
+    const color =
+      activityStatus === ACTIVITYSTATUS.ACTIVE
+        ? ACTIVITYSTATUS_COLOR.Active
+        : ACTIVITYSTATUS_COLOR.Ended;
+
+    const text =
+      activityStatus === ACTIVITYSTATUS.ACTIVE
+        ? ACTIVITYSTATUS.ACTIVE
+        : ACTIVITYSTATUS.ENDED;
+    return [color, text];
+  }, [activityStatus]);
+
   const changeActivityStatus = (status: string) => {
     setActivityStatus(status);
   };
@@ -96,7 +95,7 @@ export const CenterContent = () => {
               cy="12"
               r="3"
               fill="none"
-              stroke={activityStatusColor}
+              stroke={activity[0]}
               stroke-width="10"
             />
             <circle
@@ -113,7 +112,7 @@ export const CenterContent = () => {
               y1="7"
               x2="10"
               y2="13"
-              stroke={activityStatusColor}
+              stroke={activity[0]}
               stroke-width="2"
             />
             <line
@@ -121,17 +120,17 @@ export const CenterContent = () => {
               y1="2"
               x2="15"
               y2="2"
-              stroke={activityStatusColor}
+              stroke={activity[0]}
               stroke-width="2"
             />
           </svg>
           <span
             className="ml-[0.3rem]"
             style={{
-              color: activityStatusColor,
+              color: activity[0],
             }}
           >
-            {activityStatusText}
+            {activity[1]}
           </span>
         </div>
       </div>

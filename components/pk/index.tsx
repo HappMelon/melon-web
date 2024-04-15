@@ -8,9 +8,15 @@ export const PkPage = () => {
       style={{
         backgroundImage: "url('/pk.jpg')",
         backgroundPosition: "top right",
+        // overflowY: 'auto',
       }}
     >
-      <div className="h-[35rem]" />
+      <div
+        style={{
+          height: "35rem",
+          // height: '32%'
+        }}
+      />
       <CenterContent />
       <UserList />
     </div>

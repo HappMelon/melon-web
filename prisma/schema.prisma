@@ -128,3 +128,34 @@ model Mill {
   cost        Float               @default(0)
   subscribers MillSubscriptions[]
 }
+
+model PopularTag {
+  id            Int          @id @default(autoincrement())
+  PopularList   PopularList? @relation(fields: [popularListId], references: [id])
+  popularListId Int?
+}
+
+model PopularList {
+  id          Int          @id @default(autoincrement())
+  name        String
+  createdAt   DateTime
+  tagList     PopularTag[]
+  message     String
+  views       Int
+  comments    Int
+  collections Int
+  shares      Int
+  Popular     Popular?     @relation(fields: [popularId], references: [id])
+  popularId   String?
+}
+
+model Popular {
+  id        String        @id @default(cuid())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  name      String
+  image     String
+  bio       String?
+  lists     PopularList[]
+  // owner       User                @relation(fields: [ownerId], references: [id])
+}
