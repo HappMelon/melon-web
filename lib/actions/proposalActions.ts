@@ -58,3 +58,14 @@ export async function updateProposal(
 
   return proposal;
 }
+
+export async function upProposal(id: string, result: number) {
+  const proposal = await prisma.proposal.update({
+    where: { id },
+    data: {
+      result: result,
+    },
+  });
+
+  return proposal;
+}

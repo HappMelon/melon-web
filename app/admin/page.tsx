@@ -22,7 +22,10 @@ export default async function Page() {
   console.log("======userAddress", userAddress);
 
   // TODO: HARD CODE for addmin address
-  if (userAddress !== "0x9148fc8a19d8381d84da57457f04712e05e57a5c") {
+  if (
+    userAddress?.toLocaleLowerCase() !==
+    "0xc0ee714715108b1a6795391f7e05a044d795ba70"
+  ) {
     return (
       <div className="flex w-full h-full box-border pl-[1.875rem]">
         <div className="w-full bg-white rounded-t-[.9375rem] p-[1.875rem] font-bold text-xl text-center ">

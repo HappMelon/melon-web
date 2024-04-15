@@ -53,6 +53,108 @@ export const fetchContractBalance = async (signer, account) => {
   return ethers.utils.formatEther(balance);
 };
 
+/**
+ * 积分兑换代币，代币是合约转账到个人账户
+ *
+ * @param {*} signer
+ * @param {*} account
+ * @param {*} amount
+ */
+export const withdrawFlr = async (signer, account, amount) => {
+  const contract = new ethers.Contract(
+    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+
+  const amountEth = ethers.utils.parseEther(amount.toString());
+  await contract.exchangePoints(amountEth);
+};
+
+/**
+ * 判定对赌哪一选项是获胜
+ *
+ * @param {*} signer
+ * @param {*} proposalId
+ * @param {*} winningOptionId
+ */
+export const settleRewards = async (signer, proposalId, winningOptionId) => {
+  const contract = new ethers.Contract(
+    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  try {
+    // 停用提案
+    console.log("stop proposal:", proposalId);
+    const tx = await contract.deactivateProposal(proposalId);
+    await tx.wait();
+
+    // 设置提案获胜方
+    console.log("chose win option:", winningOptionId);
+    await contract.settleRewards(proposalId, winningOptionId);
+  } catch (err) {
+    throw err;
+  }
+};
+
+/**
+ * 获取对赌的详情
+ *
+ * @param {*} signer
+ * @param {*} proposalId
+ * @return {*}
+ */
+export const getProposalsDetail = async (signer, proposalId) => {
+  const contract = new ethers.Contract(
+    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  return await contract.proposals(proposalId);
+};
+
+/**
+ * 获取提案获胜方
+ *
+ * @param {*} signer
+ * @param {*} proposalId
+ * @return {*}
+ */
+export const getWinningOptionByProposal = async (signer, proposalId) => {
+  const contract = new ethers.Contract(
+    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  const res = await contract.winningOptionByProposal(proposalId);
+  return res.toNumber();
+};
+
+/**
+ * 获取提案奖励
+ *
+ * @param {*} signer
+ * @param {*} proposalId
+ * @return {*}
+ */
+export const rewardOrPenaltyInSettledProposal = async (
+  signer,
+  account,
+  proposalId,
+) => {
+  const contract = new ethers.Contract(
+    NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
+    spenderContractAbi,
+    signer,
+  );
+  const res = await contract.rewardOrPenaltyInSettledProposal(
+    proposalId,
+    account,
+  );
+  return ethers.utils.formatEther(res);
+};
+
 export const fetchContractUsedVotingRights = async (signer, account) => {
   const contract = new ethers.Contract(
     NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,

@@ -57,6 +57,7 @@ model User {
   likes             Likes[]
   invitations       Invitation[]        @relation("InvitationInviters")
   inviteCode        InviteCode?         @relation("InviteCode")
+  points            Point?               @relation("Point")
   followedBy        User[]              @relation("UserFollows")
   following         User[]              @relation("UserFollows")
   onboarded         Boolean             @default(false)
@@ -95,7 +96,7 @@ model Proposal {
   status          Int      @default(0) // 0 - pending, 1 - approved, 2 - rejected
   likeRate        Float    @default(0)
   totalInfluence  Float    @default(0)
-  result          Int      @default(0) // 0 - notstarted, 1 - onGoing  2 - good, 3 - bad
+  result          Int      @default(0) // 0 - notstarted, 1 - onGoing  2 - good, 3 - bad，4 - end
   userAddress     String   @default("")
   userStakeId     String   @default("")
   userStakeAmount Float    @default(0)
@@ -138,15 +139,29 @@ model InviteCode {
 
 model Invitation {
   id                  String   @id @default(cuid())
-  inviterId           String
-  inviteeId           String
-  status              String
+  inviterId           String //邀请人
+  inviteeId           String //被邀请人
+  status              String //邀请状态InProgress、Completed
   createdAt           DateTime @default(now())
-  inviterReward       Int
-  inviteeReward       Int
-  inviterRewardIssued Boolean
-  inviteeRewardIssued Boolean
+  inviterReward       Int //邀请人奖励积分数
+  inviteeReward       Int //被邀请人奖励积分数
+  inviterRewardIssued Boolean //邀请人奖励发方状态
+  inviteeRewardIssued Boolean //被邀请人奖励发方状态
   inviter             User     @relation("InvitationInviters", fields: [inviterId], references: [id], onDelete: Cascade)
 
   @@index([inviterId, status])
+}
+
+model Point {
+  userId String @id
+  points Int
+  user   User   @relation("Point", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AppConfig {
+  id Int @id @default(autoincrement())
+  inviterAwardPoint Int //邀请人奖励积分数
+  inviteeAwardPoint Int //被邀请人奖励积分数
+  pointConvertFlrDefault   Float //积分兑换flR默认, 当计算结果是0的时候，使用此默认
+  pointConvertFlrPercentage   Float //积分兑换flr百分比
 }

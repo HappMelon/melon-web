@@ -187,7 +187,7 @@ const LeaderBoard = ({ data }: { data: ShowData[] }) => {
                     </div>
                     <div className="flex flex-row justify-end items-center font-normal text-sm gap-2">
                       <p className="">{item.count}</p>
-                      <p className="">FLR</p>
+                      <p className="">Points</p>
                     </div>
                   </div>
                 </div>

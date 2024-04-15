@@ -3,9 +3,12 @@ import React, { createContext, useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import { Sidebar } from "./Nav";
 import {
+  getAppConfig,
   getCurrentUser,
+  getInvitation,
   getInvitationByInvitee,
   updateInvitation,
+  updateUserPoints,
 } from "@/lib/actions";
 import { InvateStatus } from "@/lib/types";
 import { toast } from "@/components/ui/use-toast";
@@ -84,10 +87,26 @@ export default function Index({ children }: { children: React.ReactNode }) {
       localStorage.removeItem("latestBehavior");
       localStorage.removeItem("invitationId");
       if (invitationId) {
-        updateInvitation(invitationId, InvateStatus.Completed, 5, 2);
-        toast({
-          title: "Complete the Invitation Reward",
-        });
+        getInvitation(invitationId)
+          .then((c) => {
+            if (!c) {
+              throw new Error("No points order found");
+            }
+            return updateUserPoints(
+              c.inviterId,
+              c.inviterReward,
+              c.inviteeId,
+              c.inviteeReward,
+            );
+          })
+          .then(() => updateInvitation(invitationId, InvateStatus.Completed))
+          .then(() => {
+            toast({ title: "Complete the Invitation Reward" });
+          })
+          .catch((e) => {
+            // 错误处理
+            toast({ title: "Failed the Invitation Reward" });
+          });
       }
     }
   }

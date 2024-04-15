@@ -94,20 +94,13 @@ export async function createInvitation(
   });
 }
 
-export async function updateInvitation(
-  id: string,
-  status: InvateStatus,
-  inviterReward: number = 0,
-  inviteeReward: number = 0,
-) {
+export async function updateInvitation(id: string, status: InvateStatus) {
   await prisma.invitation.update({
     where: {
       id: id,
     },
     data: {
       status: status,
-      inviterReward: inviterReward,
-      inviteeReward: inviteeReward,
       inviterRewardIssued: true,
       inviteeRewardIssued: true,
     },
@@ -156,10 +149,85 @@ export async function getInvitationByInvitee(inviteeId: string) {
   });
 }
 
+export async function getInvitation(id: string) {
+  return await prisma.invitation.findUnique({
+    where: {
+      id: id,
+    },
+  });
+}
+
 export async function getCurrentUser() {
   const user = await currentUser();
   if (user) {
     return user.id;
   }
   return null;
+}
+
+/**
+ * 获取系统配置
+ *
+ * @export
+ * @return {*}
+ */
+export async function getAppConfig() {
+  return await prisma.appConfig.findFirst();
+}
+
+/**
+ *使用事务 悲观锁并发处理积分
+ *
+ * @export
+ * @param {string} userId
+ * @return {*}
+ */
+export async function updateUserPoints(
+  inviterUserId: string,
+  inviterReward: number,
+  inviteeUserId: string,
+  inviteeReward: number,
+) {
+  return await prisma.$transaction(async (prisma) => {
+    // 邀请人积分更新
+    let inviterUserPoints = await prisma.point.findUnique({
+      where: { userId: inviterUserId },
+    });
+    if (!inviterUserPoints) {
+      inviterUserPoints = await prisma.point.create({
+        data: { userId: inviterUserId, points: inviterReward },
+      });
+    } else {
+      inviterUserPoints = await prisma.point.update({
+        where: { userId: inviterUserId },
+        data: { points: { increment: inviterReward } },
+      });
+    }
+    // 被邀请人积分更新
+    let inviteeUserPoints = await prisma.point.findUnique({
+      where: { userId: inviteeUserId },
+    });
+    if (!inviteeUserPoints) {
+      inviteeUserPoints = await prisma.point.create({
+        data: { userId: inviteeUserId, points: inviteeReward },
+      });
+    } else {
+      inviteeUserPoints = await prisma.point.update({
+        where: { userId: inviteeUserId },
+        data: { points: { increment: inviteeReward } },
+      });
+    }
+    return [inviterUserPoints, inviteeUserPoints];
+  });
+}
+
+export async function getPointsByUserId(userId: string) {
+  return prisma.point.findUnique({ where: { userId } });
+}
+
+export async function updatePointsByUserId(userId: string, points: number) {
+  await prisma.point.update({
+    where: { userId: userId },
+    data: { points: { decrement: points } },
+  });
 }

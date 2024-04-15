@@ -6,6 +6,7 @@ import Currency from "@/components/wallet/currency";
 import Address from "@/components/wallet/address";
 import Balance from "@/components/wallet/balance";
 import TransactionList from "@/components/wallet/transactionList";
+import PointsCard from "@/components/wallet/pointsCard";
 
 export default async function Page() {
   const user = await currentUser();
@@ -33,7 +34,10 @@ export default async function Page() {
           {isWeb3User && <Address address={user?.web3Wallets[0]?.web3Wallet} />}
         </div>
 
-        {isWeb3User && <Balance />}
+        <div className="w-ful gap-16 flex flex-row">
+          {isWeb3User && <Balance />}
+          <PointsCard userId={getUser.id} isWeb3User={isWeb3User} />
+        </div>
 
         {isWeb3User && (
           <div className="mt-[1.875rem] text-xl font-bold">

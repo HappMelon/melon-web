@@ -20,11 +20,15 @@ import {
   fetchContractBalance,
   fetchContractUsedVotingRights,
   fetchProposalOptions,
+  getProposalsDetail,
+  getWinningOptionByProposal,
+  rewardOrPenaltyInSettledProposal,
 } from "@/web3/action";
 import { useToast } from "@/components/ui/use-toast";
 
 import { use, useEffect, useState } from "react";
 import { addVoteRecord, getVoteRecords } from "@/lib/actions";
+import Image from "next/image";
 
 export default function ProposalCard({
   isCurUserPost,
@@ -72,10 +76,18 @@ export default function ProposalCard({
 
   const [option1Amount, setOption1Amount] = useState(0);
   const [option2Amount, setOption2Amount] = useState(0);
+  const [proposalEnd, setProposalEnd] = useState(false);
+  const [windOption, setWinOption] = useState(null);
+  const [winValue, setWinValue] = useState(null);
 
   const { toast } = useToast();
 
   useEffect(() => {
+    setWinOption(null);
+    setWinValue(null);
+    if (Date.now() > new Date(unLockTime).getTime()) {
+      setVotePending(true);
+    }
     initConnectWallet();
   }, []);
 
@@ -89,6 +101,7 @@ export default function ProposalCard({
   useEffect(() => {
     if (!web3ProposalId || !signer || !account) return;
     getUserVoted();
+    getProposalsDetailFunc();
   }, [web3ProposalId, signer, account]);
 
   const initConnectWallet = async () => {
@@ -241,6 +254,32 @@ export default function ProposalCard({
     console.log("======Vote Done======");
   };
 
+  useEffect(() => {
+    if (!proposalEnd) return;
+    getWinningOptionByProposal(signer, Number(web3ProposalId))
+      .then((winOptionId: any) => {
+        setWinOption(winOptionId);
+      })
+      .catch((err: any) => {
+        console.log("======getWinningOptionByProposal======", err);
+      });
+    rewardOrPenaltyInSettledProposal(signer, account, Number(web3ProposalId))
+      .then((res: any) => {
+        setWinValue(res);
+      })
+      .catch((err: any) => {
+        console.log("======getRewardOrPenaltyInSettledProposal======", err);
+      });
+  }, [proposalEnd]);
+
+  const getProposalsDetailFunc = () => {
+    getProposalsDetail(signer, Number(web3ProposalId)).then(
+      (res: { isSettled: boolean | ((prevState: boolean) => boolean) }) => {
+        setProposalEnd(res.isSettled);
+      },
+    );
+  };
+
   return (
     <div className="w-full box-border px-[1.75rem] py-[1.5rem] bg-white border border-[#e6e6e6] rounded-[10px] shadow-[0_0_4px_0_rgba(0,0,0,0.15)]">
       {!hasUserVoted && !isCurUserPost && (
@@ -262,7 +301,7 @@ export default function ProposalCard({
 
       <div>
         <div
-          className="flex mb-[.875rem] rounded-[.625rem] p-[.5rem] items-center cursor-pointer"
+          className="flex mb-[.875rem] rounded-[.625rem] p-[.5rem] items-center cursor-pointer relative"
           style={{
             boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.15)",
             background:
@@ -274,6 +313,16 @@ export default function ProposalCard({
             !isCurUserPost && !hasUserVoted && setUserVoteOptionId("0");
           }}
         >
+          {" "}
+          {proposalEnd && windOption === 0 && (
+            <Image
+              className="absolute top-[-15px] left-[-15px]"
+              src="/win.svg"
+              width={38}
+              height={38}
+              alt="win image"
+            />
+          )}
           <div
             className="rounded-[.625rem] p-[.5rem] text-[#9B9B9B] text-[.625rem] font-bold shrink-0"
             style={{
@@ -296,7 +345,7 @@ export default function ProposalCard({
         </div>
 
         <div
-          className="flex mb-[.875rem] rounded-[.625rem] p-[.5rem] items-center cursor-pointer"
+          className="flex mb-[.875rem] rounded-[.625rem] p-[.5rem] items-center cursor-pointer relative"
           style={{
             boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.15)",
             background:
@@ -308,6 +357,15 @@ export default function ProposalCard({
             !isCurUserPost && !hasUserVoted && setUserVoteOptionId("1");
           }}
         >
+          {proposalEnd && windOption === 1 && (
+            <Image
+              className="absolute top-[-15px] left-[-15px]"
+              src="/win.svg"
+              width={38}
+              height={38}
+              alt="win image"
+            />
+          )}
           <div
             className="rounded-[.625rem] p-[.5rem] text-[#9B9B9B] text-[.625rem] font-bold shrink-0"
             style={{
@@ -395,6 +453,36 @@ export default function ProposalCard({
               }}
             >
               {isCurUserPost ? userStakeAmount : inputPrice} FLR
+            </span>
+          </div>
+        </div>
+      )}
+
+      {proposalEnd && (
+        <div className="my-[1.25rem] text-center py-[.9375rem] border rounded-[15px] border-[#f9d423]">
+          <div>
+            <span
+              className="mb-[.3125rem] bg-clip-text text-transparent text-sm font-bold"
+              style={{
+                backgroundImage:
+                  "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+              }}
+            >
+              Your reward
+            </span>
+          </div>
+          <div className="flex items-center justify-center ">
+            <span
+              className="bg-clip-text text-transparent font-bold text-2xl"
+              style={{
+                backgroundImage:
+                  "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+              }}
+            >
+              {winValue && winValue > 0
+                ? "+" + String(winValue)
+                : Number(winValue)}{" "}
+              FLR
             </span>
           </div>
         </div>

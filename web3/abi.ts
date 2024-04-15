@@ -21,6 +21,11 @@ export const permitTokenContractAbi = [
 
 export const spenderContractAbi = [
   "function balances(address) view returns (uint256)",
+  "function exchangePoints(uint256 amount) external",
+  "function getUserBalance(address) external view returns (uint256)",
+  "function getUserVotingRights(address userAddress) external view returns (uint256)",
+  "function winningOptionByProposal(uint256 proposalId) external view returns (uint)", // 根据提案获取胜出的选项
+  "function rewardOrPenaltyInSettledProposal(uint256 proposalId, address account) external view returns (int)", // 根据提案获取奖励或惩罚
   "function deposit(uint256 amount)",
   "function submitProposalForReview(uint256 amount)", // 用户提交提案审查请求，质押一定数量的代币
   "function createProposalWithOptions(string memory proposalDescription, string[] memory optionDescriptions, uint amount, uint256 endtime) returns (uint256)", // 创建提案及其选项，返回新创建的提案ID。
@@ -35,6 +40,7 @@ export const spenderContractAbi = [
   "function unpause()", // 取消暂停合约功能
   "function getUserVotingHistory(address _user) view returns (uint256[] proposalIds, uint256[] optionIds, uint256[] amounts)", // 获取用户的投票历史记录
   "function proposalsLength() view returns (uint256)", // 获取提案的数量
+  "function proposals(uint256 proposalId) view returns (address proposer, string description, uint256 stakeAmount, bool active, bool isSettled, bool isWagered, uint256 endTime)", // 获取提案数据
   "function getOptionsCount(uint256 proposalId) view returns (uint256)", // 获取特定提案的选项数量
   "function getOptionVoteCount(uint256 proposalId, uint256 optionIndex) view returns (uint256)", // 获取特定提案特定选项的投票数量
   "function getCurrentProposalId() view returns (uint256)", //获取当前的提案ID

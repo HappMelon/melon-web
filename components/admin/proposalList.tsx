@@ -15,18 +15,23 @@ import {
   connectWallet,
   processStakedProposal,
   listentingProposalForUserAdded,
+  fetchProposalOptions,
+  settleRewards,
+  getProposalsDetail,
+  getWinningOptionByProposal,
 } from "@/web3/action";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { updateProposal } from "@/lib/actions";
+import { upProposal, updateProposal } from "@/lib/actions";
 import { useToast } from "@/components/ui/use-toast";
 
 import {
   NEXT_PUBLIC_PROPOSAL_ID,
   NEXT_PUBLIC_PROPOSAL_OPTION_ID,
 } from "@/web3/abi";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function ProposalList({
   proposalList,
@@ -55,7 +60,13 @@ export default function ProposalList({
   const [showReviewDialog, setShowReviewDialog] = useState(false);
   const [selectedProposal, setSelectedProposal] = useState(null);
   const [actionPending, setActionPending] = useState(false);
-
+  const [showJudgmentDialog, setShowJudgmentDialog] = useState(false);
+  const [userVoteOptionId, setUserVoteOptionId] = useState("");
+  const [option1Amount, setOption1Amount] = useState(0);
+  const [option2Amount, setOption2Amount] = useState(0);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [selectedProposalEnd, setSelectedProposalEnd] = useState(false);
+  const [proposalEnd, setProposalEnd] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -147,6 +158,114 @@ export default function ProposalList({
         setShowReviewDialog(false);
       });
   };
+
+  const upProposalFunc = () => {
+    // @ts-ignore
+    upProposal(selectedProposal.id, 4)
+      .then(() => {
+        console.log("update Proposal end");
+      })
+      .catch((err) => {
+        console.log("update Proposal end err:", err);
+      });
+  };
+
+  const getProposalDetails = (wpid: number, userStakeAmount: number) => {
+    fetchProposalOptions(signer, wpid)
+      .then((proposalDetails) => {
+        let totalPrice = 0;
+        let option1Amount = 0;
+        let option2Amount = 0;
+        proposalDetails?.options.map((option) => {
+          totalPrice += Number(option.voteCount);
+
+          if (option.index === 0) {
+            option1Amount += Number(option.voteCount);
+          } else {
+            option2Amount += Number(option.voteCount);
+          }
+        });
+        // @ts-ignore
+        setTotalPrice(totalPrice + userStakeAmount);
+        setOption1Amount(option1Amount);
+        setOption2Amount(option2Amount);
+      })
+      .catch((err) => {
+        console.log("======err======", err);
+      });
+  };
+
+  const judgmentFunc = () => {
+    if (userVoteOptionId === "") {
+      toast({
+        title: "Please select an option",
+      });
+      return;
+    }
+    settleRewards(signer, web3ProposalId, userVoteOptionId)
+      .then(() => {
+        toast({
+          title: "Settlement successful",
+        });
+        upProposalFunc();
+        setShowJudgmentDialog(false);
+      })
+      .catch((err) => {
+        console.log("======err======", err);
+        toast({
+          title: `Settlement failed`,
+        });
+      });
+  };
+
+  const getProposalsDetailFunc = (wpid: number) => {
+    getProposalsDetail(signer, wpid).then(
+      (res: {
+        endTime: number;
+        isSettled: boolean | ((prevState: boolean) => boolean);
+      }) => {
+        setProposalEnd(res.isSettled);
+        if (!res.isSettled) return;
+        getWinningOptionByProposal(signer, wpid)
+          .then((winOptionId: any) => {
+            setUserVoteOptionId(String(winOptionId));
+          })
+          .catch((err: any) => {
+            console.log("======getWinningOptionByProposal======", err);
+          });
+      },
+    );
+  };
+
+  const jJudgmentClickFunc = (proposal: any) => {
+    setUserVoteOptionId("");
+    // @ts-ignore
+    setSelectedProposal(proposal);
+    setShowJudgmentDialog(true);
+  };
+
+  useEffect(() => {
+    if (selectedProposal === null) return;
+    // @ts-ignore
+    const t =
+      Date.now() > new Date(selectedProposal.unLockTime).getTime()
+        ? true
+        : false;
+    setSelectedProposalEnd(t);
+    // @ts-ignore
+    setWeb3ProposalId(selectedProposal.web3ProposalId);
+  }, [selectedProposal]);
+  // @ts-ignore
+  useEffect(() => {
+    if (web3ProposalId === null || selectedProposal === null) return;
+    // @ts-ignore
+    getProposalDetails(
+      Number(selectedProposal.web3ProposalId),
+      selectedProposal.userStakeAmount,
+    );
+    // @ts-ignore
+    getProposalsDetailFunc(selectedProposal.web3ProposalId);
+  }, [web3ProposalId]);
 
   return (
     <div>
@@ -248,6 +367,7 @@ export default function ProposalList({
                         {proposal.result === 1 && "On Going"}
                         {proposal.result === 2 && "Good"}
                         {proposal.result === 3 && "Bad"}
+                        {proposal.result === 4 && "End"}
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <div
@@ -261,6 +381,14 @@ export default function ProposalList({
                           }}
                         >
                           Review
+                        </div>
+                      </td>
+                      <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                        <div
+                          className="cursor-pointer text-indigo-600 hover:text-indigo-900"
+                          onClick={() => jJudgmentClickFunc(proposal)}
+                        >
+                          Judgment
                         </div>
                       </td>
                     </tr>
@@ -309,6 +437,122 @@ export default function ProposalList({
               disabled={actionPending}
             >
               Approve
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={showJudgmentDialog} onOpenChange={setShowJudgmentDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="mb-[1rem] text-[2rem] font-bold text-center">
+              Proposal Result Judgment
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="flex px-[1.625rem] mb-[1rem] space-y-8 flex-col">
+            <div className="space-y-4">
+              <div className="flex flex-row space-x-4 items-center">
+                <Checkbox
+                  id="Option1"
+                  checked={userVoteOptionId === "0"}
+                  onCheckedChange={() => setUserVoteOptionId("0")}
+                  disabled={proposalEnd}
+                />
+                <label htmlFor="Option1" className="w-full items-center">
+                  <div
+                    className="flex rounded-[.625rem] p-[.5rem] items-center cursor-pointer space-x-8"
+                    style={{
+                      boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.15)",
+                      background:
+                        userVoteOptionId === "0"
+                          ? "linear-gradient(100deg, rgba(249, 212, 35, 0.1) -12.68%, rgba(248, 54, 0, 0.2) 147.82%)"
+                          : "linear-gradient(100deg, rgba(249, 212, 35, 0.03) -12.68%, rgba(248, 54, 0, 0.03) 147.82%)",
+                    }}
+                    onClick={() => {
+                      if (!proposalEnd) setUserVoteOptionId("0");
+                    }}
+                  >
+                    <div
+                      className="rounded-[.625rem] p-[.5rem] text-[#9B9B9B] text-sm font-bold shrink-0 pr-8"
+                      style={{
+                        background:
+                          "linear-gradient(100deg, rgba(249, 212, 35, 0.10) -12.68%, rgba(248, 54, 0, 0.10) 147.82%)",
+                      }}
+                    >
+                      Option 1
+                    </div>
+                    <div
+                      className="bg-clip-text text-transparent text-lg font-bold shrink-0"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                      }}
+                    >
+                      {option1Amount} ({totalPrice} FLR)
+                    </div>
+                  </div>
+                </label>
+              </div>
+
+              <div className="flex flex-row space-x-4 items-center">
+                <Checkbox
+                  id="Option2"
+                  checked={userVoteOptionId === "1"}
+                  onCheckedChange={() => setUserVoteOptionId("1")}
+                  disabled={proposalEnd}
+                />
+                <label htmlFor="Option2" className="w-full items-center">
+                  <div
+                    className="flex rounded-[.625rem] p-[.5rem] items-center cursor-pointer space-x-8"
+                    style={{
+                      boxShadow: "0px 0px 4px 0px rgba(0, 0, 0, 0.15)",
+                      background:
+                        userVoteOptionId === "1"
+                          ? "linear-gradient(100deg, rgba(249, 212, 35, 0.1) -12.68%, rgba(248, 54, 0, 0.2) 147.82%)"
+                          : "linear-gradient(100deg, rgba(249, 212, 35, 0.03) -12.68%, rgba(248, 54, 0, 0.03) 147.82%)",
+                    }}
+                    onClick={() => {
+                      if (!proposalEnd) setUserVoteOptionId("1");
+                    }}
+                  >
+                    <div
+                      className="rounded-[.625rem] p-[.5rem] text-[#9B9B9B] text-sm font-bold shrink-0  pr-8"
+                      style={{
+                        background:
+                          "linear-gradient(100deg, rgba(249, 212, 35, 0.10) -12.68%, rgba(248, 54, 0, 0.10) 147.82%)",
+                      }}
+                    >
+                      Option 2
+                    </div>
+                    <div
+                      className="bg-clip-text text-transparent text-lg font-bold shrink-0"
+                      style={{
+                        backgroundImage:
+                          "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+                      }}
+                    >
+                      {option2Amount} ({totalPrice} FLR)
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <Button
+              className={"w-full rounded-[40px] text-lg mt-16"}
+              style={{
+                background:
+                  !selectedProposalEnd || proposalEnd
+                    ? "bg-[#9B9B9B]"
+                    : "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
+              }}
+              onClick={() => {
+                judgmentFunc();
+              }}
+              disabled={!selectedProposalEnd || proposalEnd}
+            >
+              Confirm
             </Button>
           </div>
         </DialogContent>

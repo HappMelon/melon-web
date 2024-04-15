@@ -90,9 +90,8 @@ export default function Balance() {
         !!formattedAllowance,
         parseFloat(allowance || "0") > 0,
       );
-
       if (parseFloat(allowance || "0") > 0) {
-        // setAuthorized(true);
+        setAuthorized(true);
       } else {
         setAuthorized(false);
       }

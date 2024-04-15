@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import {
   createInvitation,
   createInviteCode,
+  getAppConfig,
   getInviteCodeByCode,
   onboardData,
 } from "@/lib/actions";
@@ -58,8 +59,14 @@ export function OnboardingProfileCard({
       // 查询邀请码关联的用户
       const inviterId = await getInviteCodeByCode(inviteParam);
       if (inviterId) {
+        const appConfig = await getAppConfig();
         // 创建邀请记录，
-        createInvitation(inviterId, userData.id, 0, 0);
+        createInvitation(
+          inviterId,
+          userData.id,
+          appConfig?.inviterAwardPoint,
+          appConfig?.inviteeAwardPoint,
+        );
         //初始化 父组件中的1分钟判断
         setInviteChange?.(true);
       } else {
