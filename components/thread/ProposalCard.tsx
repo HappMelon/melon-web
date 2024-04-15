@@ -15,7 +15,6 @@ import Countdown from "@/components/thread/Countdown";
 
 import {
   connectWallet,
-  // fetchProposalDetails,
   vote,
   fetchContractBalance,
   fetchContractUsedVotingRights,
