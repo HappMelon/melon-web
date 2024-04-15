@@ -247,10 +247,8 @@ export default function ProposalList({
   useEffect(() => {
     if (selectedProposal === null) return;
     // @ts-ignore
-    const t =
-      Date.now() > new Date(selectedProposal.unLockTime).getTime()
-        ? true
-        : false;
+    const ti = new Date(selectedProposal.unLockTime).getTime();
+    const t = Date.now() > ti ? true : false;
 
     setSelectedProposalEnd(t);
     // @ts-ignore
@@ -261,7 +259,7 @@ export default function ProposalList({
     if (web3ProposalId === null || selectedProposal === null) return;
     // @ts-ignore
     getProposalDetails(
-      Number(selectedProposal.web3ProposalId),
+      Number(selectedProposal?.web3ProposalId),
       selectedProposal.userStakeAmount,
     );
     // @ts-ignore
