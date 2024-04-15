@@ -257,13 +257,12 @@ export default function ProposalList({
   // @ts-ignore
   useEffect(() => {
     if (web3ProposalId === null || selectedProposal === null) return;
-    // @ts-ignore
     getProposalDetails(
-      Number(selectedProposal?.web3ProposalId),
-      selectedProposal.userStakeAmount,
+      Number((selectedProposal as any)?.web3ProposalId),
+      (selectedProposal as any)?.userStakeAmount,
     );
-    // @ts-ignore
-    getProposalsDetailFunc(selectedProposal.web3ProposalId);
+
+    getProposalsDetailFunc((selectedProposal as any)?.web3ProposalId);
   }, [web3ProposalId]);
 
   return (
