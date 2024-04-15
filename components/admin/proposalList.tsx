@@ -251,6 +251,7 @@ export default function ProposalList({
       Date.now() > new Date(selectedProposal.unLockTime).getTime()
         ? true
         : false;
+
     setSelectedProposalEnd(t);
     // @ts-ignore
     setWeb3ProposalId(selectedProposal.web3ProposalId);
