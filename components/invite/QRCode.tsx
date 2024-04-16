@@ -117,7 +117,7 @@ interface QRCodeProps {
 
 // QRCode 组件
 const QRCode: React.FC<QRCodeProps> = ({ inviteLink, userName, userImage }) => {
-  const [imageUrl, setImageUrl] = useState("");
+  const [imageUrl, setImageUrl] = useState("/avatar-bg.svg");
   const [dialogOpen, setDialogOpen] = useState(false);
   const qrCodeRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();

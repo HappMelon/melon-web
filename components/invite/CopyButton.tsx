@@ -1,8 +1,17 @@
 "use client";
 import React from "react";
 import { toast } from "@/components/ui/use-toast";
+import { Button } from "../ui/button";
 
-const CopyButton = ({ value, des }: { value: string; des: string }) => {
+const CopyButton = ({
+  value,
+  des,
+  className,
+}: {
+  value: string;
+  des: string;
+  className?: string;
+}) => {
   const copyInviteLink = async () => {
     try {
       await navigator.clipboard.writeText(value);
@@ -16,7 +25,11 @@ const CopyButton = ({ value, des }: { value: string; des: string }) => {
     }
   };
 
-  return <button onClick={copyInviteLink}>{des}</button>;
+  return (
+    <Button onClick={copyInviteLink} className={className}>
+      {des}
+    </Button>
+  );
 };
 
 export default CopyButton;

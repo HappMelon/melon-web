@@ -15,6 +15,7 @@ import dynamic from "next/dynamic";
 import ImageGallery from "react-image-gallery";
 
 import "react-image-gallery/styles/css/image-gallery.css";
+import { useEffect } from "react";
 
 const MarkdownPreview = dynamic(
   () => import("@uiw/react-markdown-preview").then((mod) => mod.default),
@@ -54,7 +55,9 @@ export default function MainItem({
   }>[];
 }) {
   const colors = Color();
-  updateViews(data.id);
+  useEffect(() => {
+    updateViews(data.id);
+  }, [data.id]);
 
   return (
     <div className="pt-[0.9375rem] flex flex-col px-[1.875rem]">

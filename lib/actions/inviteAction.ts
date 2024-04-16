@@ -1,8 +1,6 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
-import { currentUser } from "@clerk/nextjs";
 import { generateInviteCode } from "../utils";
 import { InvateStatus } from "../types";
 const MAX_RETRIES = 10; // 设置最大重试次数
@@ -155,14 +153,6 @@ export async function getInvitation(id: string) {
       id: id,
     },
   });
-}
-
-export async function getCurrentUser() {
-  const user = await currentUser();
-  if (user) {
-    return user.id;
-  }
-  return null;
 }
 
 /**

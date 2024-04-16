@@ -3,8 +3,6 @@ import React, { createContext, useEffect, useRef, useState } from "react";
 import Header from "./Header";
 import { Sidebar } from "./Nav";
 import {
-  getAppConfig,
-  getCurrentUser,
   getInvitation,
   getInvitationByInvitee,
   updateInvitation,
@@ -12,12 +10,14 @@ import {
 } from "@/lib/actions";
 import { InvateStatus } from "@/lib/types";
 import { toast } from "@/components/ui/use-toast";
+import { useUser } from "@clerk/nextjs";
 
 export const AnviteContext = createContext<React.Dispatch<
   React.SetStateAction<boolean>
 > | null>(null);
 
 export default function Index({ children }: { children: React.ReactNode }) {
+  const { user } = useUser();
   const [inviteChange, setInviteChange] = useState<boolean>(false);
   // 对新用户1分钟活动判断
   const defaultUserBehaviorQueue = Array(6).fill({ start: 0, end: 0, val: 0 });
@@ -113,7 +113,7 @@ export default function Index({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userId = await getCurrentUser();
+      const userId = user?.id;
       if (userId) {
         const invitation = await getInvitationByInvitee(userId);
         if (invitation) {

@@ -17,6 +17,7 @@ import {
 
 const page = async () => {
   const user = await currentUser();
+  const webDomain = process.env.NEXT_PUBLIC_WEB_DOMAIN;
   if (!user) {
     redirect("/sign-in");
   }
@@ -47,7 +48,7 @@ const page = async () => {
     invateCode: invateCode,
   };
 
-  const invite_link = `http://localhost:2222/onboarding?invite=${userData.invateCode}`;
+  const invite_link = `${webDomain}/onboarding?invite=${userData.invateCode}`;
 
   const CopyButton = dynamic(() => import("@/components/invite/CopyButton"), {
     ssr: false,
@@ -186,9 +187,11 @@ const page = async () => {
               value={invite_link}
               className="bg-[#F2F4F5] w-full rounded-full h-12"
             />
-            <Button className="bg-[#2AC984] w-[234px] h-12 rounded-full max-md:w-full">
-              <CopyButton value={invite_link} des="Copy Invite Link" />
-            </Button>
+            <CopyButton
+              value={invite_link}
+              des="Copy Invite Link"
+              className="bg-[#2AC984] w-[234px] h-12 rounded-full max-md:w-full"
+            />
           </div>
         </div>
 

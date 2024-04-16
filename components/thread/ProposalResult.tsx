@@ -40,8 +40,8 @@ export default function ProposalResult({
                   y2="-6.16462"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#F9D423" />
-                  <stop offset="1" stop-color="#F83600" />
+                  <stop stopColor="#F9D423" />
+                  <stop offset="1" stopColor="#F83600" />
                 </linearGradient>
               </defs>
             </svg>
@@ -70,8 +70,8 @@ export default function ProposalResult({
                     y2="-8.93838"
                     gradientUnits="userSpaceOnUse"
                   >
-                    <stop stop-color="#F9D423" />
-                    <stop offset="1" stop-color="#F83600" />
+                    <stop stopColor="#F9D423" />
+                    <stop offset="1" stopColor="#F83600" />
                   </linearGradient>
                 </defs>
               </svg>

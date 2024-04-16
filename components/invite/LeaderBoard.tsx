@@ -56,7 +56,7 @@ const LeaderBoard = ({ data }: { data: ShowData[] }) => {
 
                 <div className="rounded-full overflow-hidden border-[#2AC984] border-[3px] bg-[#2AC984]">
                   <Image
-                    src={firstData.avatar || ""}
+                    src={firstData.avatar || "/avatar-bg.svg"}
                     alt={"user.avatar"}
                     height={84}
                     width={84}
@@ -93,7 +93,7 @@ const LeaderBoard = ({ data }: { data: ShowData[] }) => {
                 <div className="relative">
                   <div className="rounded-full overflow-hidden border-[#2AC984] bg-[#2AC984] border-[3px]">
                     <Image
-                      src={secondData.avatar || ""}
+                      src={secondData.avatar || "/avatar-bg.svg"}
                       alt={"user.avatar"}
                       height={74}
                       width={74}
@@ -128,7 +128,7 @@ const LeaderBoard = ({ data }: { data: ShowData[] }) => {
                 <div className="relative flex justify-center items-center">
                   <div className="rounded-full overflow-hidden border-[#2AC984] bg-[#2AC984] border-[3px]">
                     <Image
-                      src={thirdData.avatar || ""}
+                      src={thirdData.avatar || "/avatar-bg.svg"}
                       alt={"user.avatar"}
                       height={74}
                       width={74}
@@ -174,7 +174,7 @@ const LeaderBoard = ({ data }: { data: ShowData[] }) => {
                     <div className="flex flex-row justify-start items-center flex-1">
                       <div className="flex flex-row justify-center items-center gap-4">
                         <Image
-                          src={item.avatar || ""}
+                          src={item.avatar || "/avatar-bg.svg"}
                           alt="user-avatar"
                           width={32}
                           height={32}
