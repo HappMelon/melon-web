@@ -66,7 +66,7 @@ export function TribeTabs({
           <div className="w-[1.1912rem] h-[1.5883rem] relative">
             <Image
               fill
-              src="/🦆 icon _dashboard customize_.svg"
+              src="/icon _dashboard customize_.svg"
               alt=""
               className="w-[1.1912rem] h-[1.5883rem]"
             />

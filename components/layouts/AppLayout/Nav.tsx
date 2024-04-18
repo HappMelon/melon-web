@@ -33,7 +33,7 @@ export function Sidebar({ className }: SidebarProps) {
           }}
         >
           <img
-            src="/🦆 icon _fire_.svg"
+            src="/icon _fire_.svg"
             alt=""
             className="w-[1.1912rem] h-[1.5883rem]"
           />
@@ -46,7 +46,7 @@ export function Sidebar({ className }: SidebarProps) {
           }}
         >
           <img
-            src="/🦆 icon _purchase tag_.svg"
+            src="/icon _purchase tag_.svg"
             alt=""
             className="w-[1.1912rem] h-[1.5883rem]"
           />
@@ -59,7 +59,7 @@ export function Sidebar({ className }: SidebarProps) {
           }}
         >
           <img
-            src="/🦆 icon _Wallet_.svg"
+            src="/icon _Wallet_.svg"
             alt=""
             className="w-[1.1912rem] h-[1.5883rem]"
           />
@@ -77,7 +77,7 @@ export function Sidebar({ className }: SidebarProps) {
         }}
       >
         <img
-          src="/🦆 icon _dashboard customize_.svg"
+          src="/icon _dashboard customize_.svg"
           alt=""
           className="w-[1.1912rem] h-[1.5883rem]"
         />

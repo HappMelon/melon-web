@@ -14,7 +14,11 @@ export function sleep(milliseconds) {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
-export const connectWallet = async (onAccountChange) => {
+export const connectWallet = async (
+  onAccountChange = () => {
+    console.log("onAccountChange");
+  },
+) => {
   if (!window.ethereum) return;
 
   const providerWeb3 = new ethers.providers.Web3Provider(window.ethereum);

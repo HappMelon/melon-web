@@ -112,11 +112,15 @@ export default function Index({ children }: { children: React.ReactNode }) {
   }
 
   useEffect(() => {
+    console.log("invite user func start");
+    if (!user) return;
     const fetchData = async () => {
       const userId = user?.id;
+      console.log("invite user userId");
       if (userId) {
         const invitation = await getInvitationByInvitee(userId);
         if (invitation) {
+          console.log("invite user invitation");
           userBehaviorQueue.current = JSON.parse(
             localStorage.getItem("userBehaviorQueue") ||
               JSON.stringify(defaultUserBehaviorQueue),
@@ -140,7 +144,7 @@ export default function Index({ children }: { children: React.ReactNode }) {
         window.removeEventListener(e, onUserAction);
       });
     };
-  }, [inviteChange]);
+  }, [user, inviteChange]);
   return (
     <AnviteContext.Provider value={setInviteChange}>
       <div className="w-auto h-full">

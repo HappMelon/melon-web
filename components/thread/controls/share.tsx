@@ -61,7 +61,7 @@ export default function ShareButton({
           }}
           className="cursor-pointer"
         >
-          <img src="/🦆 icon _Twitter_.svg" alt="" />
+          <img src="/icon _Twitter_.svg" alt="" />
           <div className="ml-[1rem] font-bold text-[1.125rem]">
             Share to Twitter
           </div>

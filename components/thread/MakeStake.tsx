@@ -216,8 +216,8 @@ export default function MakeStake({
                   y2="-8.93838"
                   gradientUnits="userSpaceOnUse"
                 >
-                  <stop stop-color="#F9D423" />
-                  <stop offset="1" stop-color="#F83600" />
+                  <stop stopColor="#F9D423" />
+                  <stop offset="1" stopColor="#F83600" />
                 </linearGradient>
               </defs>
             </svg>
@@ -289,14 +289,14 @@ export default function MakeStake({
             </DialogTitle>
           </DialogHeader>
 
-          <div className="px-[1.625rem] font-semibold text-xl leading-normal">
+          <div className="px-[1.625rem] font-semibold text-xl leading-normal space-y-8">
             <div className="flex">
               <span className="text-lg font-bold mr-[1rem]">Time</span>
               <span className="text-[#bcbcbc] text-lg font-medium">
                 7 days from the date of publication
               </span>
             </div>
-            <div className="text-lg leading-6 font-bold mb-[.25rem] mt-[.875rem]">
+            {/* <div className="text-lg leading-6 font-bold mb-[.25rem] mt-[.875rem]">
               *Stake Amount
             </div>
             <div className="flex items-center px-[1.5rem] rounded-[50px] bg-[#f8f8f8]">
@@ -319,14 +319,14 @@ export default function MakeStake({
               >
                 FLR
               </div>
-            </div>
+            </div> */}
 
             <div className="mt-[.875rem]">
               <div className="text-lg leading-6 font-bold mb-[.5rem]">
-                *Option Settings
+                Option Settings
               </div>
 
-              <div className="text-sm font-normal mb-[.5rem]">*Option 1</div>
+              <div className="text-sm font-normal mb-[.5rem]">Option 1</div>
               <Input
                 placeholder=""
                 value={stakeOption1}
@@ -339,7 +339,7 @@ export default function MakeStake({
                 className="text-sm font-normal outline-none bg-[#f8f8f8] rounded-[3.125rem] focus-visible:ring-0"
               />
 
-              <div className="text-sm font-normal my-[.5rem]">*Option 2</div>
+              <div className="text-sm font-normal my-[.5rem]">Option 2</div>
               <Input
                 placeholder=""
                 value={stakeOption2}
@@ -401,10 +401,8 @@ export default function MakeStake({
                 onMakeStakeConfirm();
               }}
               disabled={
-                !userStakeAmount ||
-                !stakeOption1 ||
-                !stakeOption2 ||
-                transactionPending
+                // !userStakeAmount ||
+                !stakeOption1 || !stakeOption2 || transactionPending
               }
             >
               Confirm

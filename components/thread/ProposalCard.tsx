@@ -281,7 +281,7 @@ export default function ProposalCard({
 
   return (
     <div className="w-full box-border px-[1.75rem] py-[1.5rem] bg-white border border-[#e6e6e6] rounded-[10px] shadow-[0_0_4px_0_rgba(0,0,0,0.15)]">
-      {!hasUserVoted && !isCurUserPost && (
+      {!hasUserVoted && (
         <div
           className="mb-[1.875rem] px-[1.25rem] py-[1rem] rounded-[10px] border border-[#e6e6e6] shadow-[0_0_4px_0_rgba(0,0,0,0.15)] text-white text-sm font-bold leading-normal "
           style={{
@@ -309,7 +309,7 @@ export default function ProposalCard({
                 : "linear-gradient(100deg, rgba(249, 212, 35, 0.03) -12.68%, rgba(248, 54, 0, 0.03) 147.82%)",
           }}
           onClick={() => {
-            !isCurUserPost && !hasUserVoted && setUserVoteOptionId("0");
+            !hasUserVoted && setUserVoteOptionId("0");
           }}
         >
           {" "}
@@ -353,7 +353,7 @@ export default function ProposalCard({
                 : "linear-gradient(100deg, rgba(249, 212, 35, 0.03) -12.68%, rgba(248, 54, 0, 0.03) 147.82%)",
           }}
           onClick={() => {
-            !isCurUserPost && !hasUserVoted && setUserVoteOptionId("1");
+            !hasUserVoted && setUserVoteOptionId("1");
           }}
         >
           {proposalEnd && windOption === 1 && (
@@ -425,7 +425,7 @@ export default function ProposalCard({
         )}
       </div>
 
-      {(hasUserVoted || isCurUserPost) && (
+      {hasUserVoted && (
         <div className="my-[1.25rem] text-center py-[.9375rem] border rounded-[15px] border-[#f9d423]">
           <div>
             <span
@@ -439,11 +439,9 @@ export default function ProposalCard({
             </span>
           </div>
           <div className="flex items-center justify-center ">
-            {!isCurUserPost && (
-              <span className="text-[#9B9B9B] font-bold text-sm pr-[.5rem]">
-                {userVoteOptionId === "0" ? "Option1" : "Option2"}
-              </span>
-            )}
+            <span className="text-[#9B9B9B] font-bold text-sm pr-[.5rem]">
+              {userVoteOptionId === "0" ? "Option1" : "Option2"}
+            </span>
             <span
               className="bg-clip-text text-transparent font-bold text-2xl"
               style={{
@@ -451,7 +449,7 @@ export default function ProposalCard({
                   "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
               }}
             >
-              {isCurUserPost ? userStakeAmount : inputPrice} FLR
+              {inputPrice} FLR
             </span>
           </div>
         </div>
@@ -487,7 +485,7 @@ export default function ProposalCard({
         </div>
       )}
 
-      {!isCurUserPost && !hasUserVoted && (
+      {!hasUserVoted && (
         <Button
           className="w-full rounded-[40px] text-lg"
           style={{
@@ -520,6 +518,7 @@ export default function ProposalCard({
                   placeholder="Price"
                   value={inputPrice}
                   type="number"
+                  min={0}
                   onChange={(e) => {
                     const value = Number(e.target.value);
                     setInputPrice(value);

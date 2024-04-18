@@ -161,7 +161,7 @@ export default function ProposalList({
 
   const upProposalFunc = () => {
     // @ts-ignore
-    upProposal(selectedProposal.id, 4)
+    upProposal(selectedProposal.id, 5)
       .then(() => {
         console.log("update Proposal end");
       })
@@ -256,13 +256,17 @@ export default function ProposalList({
   }, [selectedProposal]);
   // @ts-ignore
   useEffect(() => {
-    if (web3ProposalId === null || selectedProposal === null) return;
+    if (
+      web3ProposalId === null ||
+      web3ProposalId === "" ||
+      selectedProposal === null
+    )
+      return;
     getProposalDetails(
-      Number((selectedProposal as any)?.web3ProposalId),
+      Number(web3ProposalId),
       (selectedProposal as any)?.userStakeAmount,
     );
-
-    getProposalsDetailFunc((selectedProposal as any)?.web3ProposalId);
+    getProposalsDetailFunc(Number(web3ProposalId));
   }, [web3ProposalId]);
 
   return (
@@ -365,7 +369,7 @@ export default function ProposalList({
                         {proposal.result === 1 && "On Going"}
                         {proposal.result === 2 && "Good"}
                         {proposal.result === 3 && "Bad"}
-                        {proposal.result === 4 && "End"}
+                        {proposal.result === 5 && "End"}
                       </td>
                       <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
                         <div
