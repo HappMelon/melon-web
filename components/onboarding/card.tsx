@@ -66,9 +66,13 @@ export function OnboardingProfileCard({
           userData.id,
           appConfig?.inviterAwardPoint,
           appConfig?.inviteeAwardPoint,
-        );
-        //初始化 父组件中的1分钟判断
-        setInviteChange?.(true);
+        ).then((res) => {
+          localStorage.setItem("invitationId", res.id);
+          localStorage.setItem("currentCount", "0");
+          localStorage.setItem("timerStatus", "false");
+          //初始化 父组件中的1分钟判断
+          setInviteChange?.(true);
+        });
       } else {
         toast({
           title: "The invitation code you used is invalid",

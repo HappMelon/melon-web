@@ -108,8 +108,8 @@ export default function HomePosts({
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="w-9 h-9 left-2 z-10 bg-gradient-to-b from-[#F9D423] to-[#FF6B00]" />
-            <CarouselNext className="w-9 h-9 right-2 z-10 bg-gradient-to-b from-[#F9D423] to-[#FF6B00]" />
+            <CarouselPrevious className="w-9 h-9 left-2 bg-gradient-to-b from-[#F9D423] to-[#FF6B00]" />
+            <CarouselNext className="w-9 h-9 right-2 bg-gradient-to-b from-[#F9D423] to-[#FF6B00]" />
           </Carousel>
         </div>
         {items.map((item, i) => {

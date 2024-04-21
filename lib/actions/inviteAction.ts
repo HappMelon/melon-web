@@ -79,7 +79,7 @@ export async function createInvitation(
   inviterReward: number = 0,
   inviteeReward: number = 0,
 ) {
-  await prisma.invitation.create({
+  return await prisma.invitation.create({
     data: {
       inviterId: inviterId,
       inviteeId: inviteeId,
