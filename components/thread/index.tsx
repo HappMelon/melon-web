@@ -48,6 +48,8 @@ export default function Item({
   const likes = data.likes.map((like) => like.userId);
   const colors = Color();
 
+  console.log("data.images", data.images);
+
   return (
     <div className="bg-[#F4F4F4] px-[1rem] py-[1.25rem] rounded-xl min-w-[13rem]">
       <div className="flex justify-between items-center">

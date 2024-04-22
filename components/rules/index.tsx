@@ -7,11 +7,11 @@ export const Rules: React.FC = () => {
         <svg width="150" height="8" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="gradient" x1="100%" y1="0%" x2="0%" y2="0%">
-              <stop offset="0%" stop-color="rgba(42, 201, 132, 1)" />
+              <stop offset="0%" stopColor="rgba(42, 201, 132, 1)" />
               <stop
                 offset="100%"
-                stop-color="rgba(42, 201, 132, 1)"
-                stop-opacity="0"
+                stopColor="rgba(42, 201, 132, 1)"
+                stopOpacity="0"
               />
             </linearGradient>
           </defs>
@@ -34,10 +34,10 @@ export const Rules: React.FC = () => {
             <linearGradient id="gradientOne" x1="100%" y1="0%" x2="0%" y2="0%">
               <stop
                 offset="0%"
-                stop-color="rgba(42, 201, 132, 1)"
-                stop-opacity="0"
+                stopColor="rgba(42, 201, 132, 1)"
+                stopOpacity="0"
               />
-              <stop offset="100%" stop-color="rgba(42, 201, 132, 1)" />
+              <stop offset="100%" stopColor="rgba(42, 201, 132, 1)" />
             </linearGradient>
           </defs>
           <rect x="4" y="3" width="146" height="2" fill="url(#gradientOne)" />

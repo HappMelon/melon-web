@@ -28,7 +28,7 @@ export default function Q({
   create,
   mill,
 }: {
-  mill: Prisma.MillGetPayload<{}> | null;
+  mill: Prisma.MillGetPayload<{}> | null | Prisma.PopularGetPayload<{}>;
   create: { id: string; name: string; image: string };
 }) {
   const [title, setTitle] = useState("");

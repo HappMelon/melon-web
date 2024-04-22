@@ -89,3 +89,18 @@ export const Color = () => {
   ];
   return colorArr;
 };
+
+export const dateFamate = (val: string | number | Date) => {
+  if (!val) return "";
+  let time = new Date(val);
+  let Y = time.getFullYear() + "";
+  let M = time.getMonth() + 1 + "";
+  M = Number(M) < 10 ? "0" + M : M; // 不够两位补充0
+  let D = time.getDate() + "";
+  D = Number(D) < 10 ? "0" + D : D;
+  let H = time.getHours() + "";
+  H = Number(H) < 10 ? "0" + H : H;
+  let Mi = time.getMinutes() + "";
+  Mi = Number(Mi) < 10 ? "0" + Mi : Mi;
+  return M + "/" + D + "/" + Y + " " + H + ":" + Mi;
+};

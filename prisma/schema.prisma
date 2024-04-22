@@ -129,33 +129,30 @@ model Mill {
   subscribers MillSubscriptions[]
 }
 
-model PopularTag {
-  id            Int          @id @default(autoincrement())
+model Tag {
+  text          String
+  id            String       @id @default(cuid())
   PopularList   PopularList? @relation(fields: [popularListId], references: [id])
   popularListId Int?
 }
 
 model PopularList {
-  id          Int          @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   createdAt   DateTime
-  tagList     PopularTag[]
   message     String
   views       Int
   comments    Int
   collections Int
   shares      Int
-  Popular     Popular?     @relation(fields: [popularId], references: [id])
+  // Popular     Popular? @relation(fields: [popularId], references: [id])
   popularId   String?
+  tagList     Tag[]
 }
 
 model Popular {
-  id        String        @id @default(cuid())
-  createdAt DateTime      @default(now())
-  updatedAt DateTime      @updatedAt
+  id        String   @id @default(cuid())
+  startTime DateTime @default(now())
+  endTime   DateTime @default(now())
   name      String
-  image     String
-  bio       String?
-  lists     PopularList[]
-  // owner       User                @relation(fields: [ownerId], references: [id])
 }

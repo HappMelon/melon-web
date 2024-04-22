@@ -1,7 +1,12 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+
 import { Rules } from "../rules";
+import { useToast } from "../ui/use-toast";
+import { AttendActividy } from "@/lib/actions/activityAction";
 
 const ACTIVITYSTATUS = {
   ACTIVE: "Active",
@@ -20,10 +25,20 @@ const PKBACKGROUNDSTYLE = {
   color: "rgba(42, 201, 132, 1)",
 };
 
-export const CenterContent = () => {
+const host = typeof window !== "undefined" ? window.location.host : "";
+const shareData = {
+  url: "http://" + host + "/pk",
+};
+
+export const CenterContent: React.FC<{
+  activityConfig: any[];
+}> = ({ activityConfig }) => {
+  const path = usePathname();
   const [activityStatus, setActivityStatus] = useState<string>(
     ACTIVITYSTATUS.ACTIVE,
   );
+
+  const { toast } = useToast();
 
   const activity = useMemo(() => {
     const color =
@@ -96,7 +111,7 @@ export const CenterContent = () => {
               r="3"
               fill="none"
               stroke={activity[0]}
-              stroke-width="10"
+              strokeWidth="10"
             />
             <circle
               cx="10"
@@ -104,7 +119,7 @@ export const CenterContent = () => {
               r="1"
               fill="none"
               stroke="white"
-              stroke-width="10"
+              strokeWidth="10"
             />
 
             <line
@@ -113,7 +128,7 @@ export const CenterContent = () => {
               x2="10"
               y2="13"
               stroke={activity[0]}
-              stroke-width="2"
+              strokeWidth="2"
             />
             <line
               x1="5"
@@ -121,7 +136,7 @@ export const CenterContent = () => {
               x2="15"
               y2="2"
               stroke={activity[0]}
-              stroke-width="2"
+              strokeWidth="2"
             />
           </svg>
           <span
@@ -135,22 +150,38 @@ export const CenterContent = () => {
         </div>
       </div>
       <div className="flex justify-center items-center mb-[2rem]">
-        <div
-          className="rounded-[24rem] w-[10.1875rem] text-center h-[3rem] leading-[3rem] mr-4 cursor-pointer"
-          style={{
-            background: "rgba(42, 201, 132, 1)",
-            color: "#fff",
-            fontWeight: "500",
-          }}
-        >
-          Attend
-        </div>
+        <Link href={`/post?activityId=${activityConfig?.[0]?.id || ""}`}>
+          <div
+            className="rounded-[24rem] w-[10.1875rem] text-center h-[3rem] leading-[3rem] mr-4 cursor-pointer"
+            style={{
+              background: "rgba(42, 201, 132, 1)",
+              color: "#fff",
+              fontWeight: "500",
+            }}
+            onClick={() => {
+              toast({
+                title: "Attendance success!",
+              });
+              AttendActividy({ path });
+            }}
+          >
+            Attend
+          </div>
+        </Link>
         <div
           style={{
             color: "rgba(42, 201, 132, 1)",
             fontWeight: "500",
           }}
           className="rounded-[24rem] w-[10.1875rem] text-center h-[3rem] leading-[3rem] bg-white cursor-pointer border border-green-500"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigator.clipboard.writeText(shareData.url);
+            toast({
+              title: "Copy success!",
+            });
+          }}
         >
           Share
         </div>

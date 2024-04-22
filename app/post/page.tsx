@@ -8,7 +8,7 @@ import "react-quill/dist/quill.snow.css";
 export default async function Page({
   searchParams,
 }: {
-  searchParams: { millId: string };
+  searchParams: { millId: string; activityId: string };
 }) {
   const user = await currentUser();
   console.log(searchParams);
@@ -16,6 +16,13 @@ export default async function Page({
     ? await prisma.mill.findUnique({
         where: {
           id: searchParams.millId,
+        },
+      })
+    : null;
+  const activity = searchParams.activityId
+    ? await prisma.popular.findUnique({
+        where: {
+          id: searchParams.activityId,
         },
       })
     : null;
@@ -32,7 +39,7 @@ export default async function Page({
 
   return (
     <Q
-      mill={mill}
+      mill={mill || activity}
       create={{
         id: getUser!.id,
         name: getUser!.name,
