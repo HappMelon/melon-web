@@ -90,7 +90,7 @@ export const Color = () => {
   return colorArr;
 };
 
-export const dateFamate = (val: string | number | Date) => {
+export const dateFormate = (val: string | number | Date, type?: string) => {
   if (!val) return "";
   let time = new Date(val);
   let Y = time.getFullYear() + "";
@@ -102,5 +102,23 @@ export const dateFamate = (val: string | number | Date) => {
   H = Number(H) < 10 ? "0" + H : H;
   let Mi = time.getMinutes() + "";
   Mi = Number(Mi) < 10 ? "0" + Mi : Mi;
+
+  if (type === "month") {
+    return M + "/" + D;
+  }
   return M + "/" + D + "/" + Y + " " + H + ":" + Mi;
+};
+
+export const thousandUnit = (num: string | number) => {
+  let numCopy: string | number = Number(num);
+  numCopy >= 1000
+    ? (() => {
+        if (numCopy % 1000 === 0) {
+          numCopy = parseInt(numCopy / 1000 + "") + "k";
+        } else {
+          numCopy = parseInt(numCopy / 1000 + "") + "k+";
+        }
+      })()
+    : numCopy;
+  return numCopy;
 };

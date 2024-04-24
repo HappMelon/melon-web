@@ -25,13 +25,15 @@ export const PkPage: React.FC<{
 }> = ({ user, posts }) => {
   const path = usePathname();
 
-  const [activityConfig, setActivityConfig] = useState<any[]>([]);
+  const [activityConfig, setActivityConfig] =
+    useState<Prisma.PopularGetPayload<{}>>();
   const [activityList, setActivityList] = useState(posts);
+
   const getActivity = async () => {
     const res = await GetActivities();
 
     if (res.length > 0) {
-      setActivityConfig(res);
+      setActivityConfig(res[0]);
     } else {
       (async () => {
         await CreateActivity({

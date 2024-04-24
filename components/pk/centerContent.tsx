@@ -1,16 +1,18 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Prisma } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
 import { Rules } from "../rules";
 import { useToast } from "../ui/use-toast";
-import { AttendActividy } from "@/lib/actions/activityAction";
+import { dateFormate } from "@/lib/utils";
 
 const ACTIVITYSTATUS = {
   ACTIVE: "Active",
   ENDED: "Ended",
+  NOSTART: "NOSTART",
 };
 
 const ACTIVITYSTATUS_COLOR = {
@@ -31,14 +33,33 @@ const shareData = {
 };
 
 export const CenterContent: React.FC<{
-  activityConfig: any[];
+  activityConfig?: Prisma.PopularGetPayload<{}>;
 }> = ({ activityConfig }) => {
   const path = usePathname();
   const [activityStatus, setActivityStatus] = useState<string>(
-    ACTIVITYSTATUS.ACTIVE,
+    ACTIVITYSTATUS.NOSTART,
   );
 
   const { toast } = useToast();
+
+  useEffect(() => {
+    const nowDate = new Date().getTime();
+
+    if (activityConfig) {
+      if (activityConfig.endTime.getTime() <= nowDate) {
+        setActivityStatus(ACTIVITYSTATUS.ENDED);
+      } else if (
+        activityConfig.startTime.getTime() <= nowDate &&
+        activityConfig.endTime.getTime() >= nowDate
+      ) {
+        setActivityStatus(ACTIVITYSTATUS.ACTIVE);
+      } else if (activityConfig.startTime.getTime() >= nowDate) {
+        setActivityStatus(ACTIVITYSTATUS.NOSTART);
+      }
+    }
+
+    return;
+  }, [activityConfig, activityConfig?.endTime, activityConfig?.startTime]);
 
   const activity = useMemo(() => {
     const color =
@@ -53,9 +74,13 @@ export const CenterContent: React.FC<{
     return [color, text];
   }, [activityStatus]);
 
-  const changeActivityStatus = (status: string) => {
-    setActivityStatus(status);
-  };
+  const renderTimeInterVal = () => (
+    <>
+      {dateFormate(activityConfig?.startTime || "", "month")}
+      <span className="ml-[0.3rem] mr-[0.3rem]">-</span>
+      {dateFormate(activityConfig?.endTime || "", "month")}
+    </>
+  );
   return (
     <>
       <div className="h-[6.5625rem] text-white flex items-center justify-center ml-[1.5rem] mr-[1.5rem] relative">
@@ -85,7 +110,7 @@ export const CenterContent: React.FC<{
           }}
           className="absolute left-5 top-[4.375rem]"
         >
-          10/10 - 14/11
+          {renderTimeInterVal()}
         </span>
         <span
           style={{
@@ -93,64 +118,80 @@ export const CenterContent: React.FC<{
           }}
           className="absolute right-5 top-[4.375rem]"
         >
-          10/10 - 14/11
+          {renderTimeInterVal()}
         </span>
       </div>
-      <div className="flex justify-center mt-[1rem] items-center mb-8 leading-8 text-[1rem]">
-        <div
-          style={{
-            ...PKBACKGROUNDSTYLE,
-            textAlign: "center",
-          }}
-          className="flex justify-center items-center"
-        >
-          <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-            <circle
-              cx="10"
-              cy="12"
-              r="3"
-              fill="none"
-              stroke={activity[0]}
-              strokeWidth="10"
-            />
-            <circle
-              cx="10"
-              cy="12"
-              r="1"
-              fill="none"
-              stroke="white"
-              strokeWidth="10"
-            />
-
-            <line
-              x1="10"
-              y1="7"
-              x2="10"
-              y2="13"
-              stroke={activity[0]}
-              strokeWidth="2"
-            />
-            <line
-              x1="5"
-              y1="2"
-              x2="15"
-              y2="2"
-              stroke={activity[0]}
-              strokeWidth="2"
-            />
-          </svg>
-          <span
-            className="ml-[0.3rem]"
+      {activityStatus !== ACTIVITYSTATUS.NOSTART ? (
+        <div className="flex justify-center mt-[1rem] items-center mb-8 leading-8 text-[1rem]">
+          <div
             style={{
-              color: activity[0],
+              ...PKBACKGROUNDSTYLE,
+              textAlign: "center",
             }}
+            className="flex justify-center items-center"
           >
-            {activity[1]}
-          </span>
+            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+              <circle
+                cx="10"
+                cy="12"
+                r="3"
+                fill="none"
+                stroke={activity[0]}
+                strokeWidth="10"
+              />
+              <circle
+                cx="10"
+                cy="12"
+                r="1"
+                fill="none"
+                stroke="white"
+                strokeWidth="10"
+              />
+
+              <line
+                x1="10"
+                y1="7"
+                x2="10"
+                y2="13"
+                stroke={activity[0]}
+                strokeWidth="2"
+              />
+              <line
+                x1="5"
+                y1="2"
+                x2="15"
+                y2="2"
+                stroke={activity[0]}
+                strokeWidth="2"
+              />
+            </svg>
+            <span
+              className="ml-[0.3rem]"
+              style={{
+                color: activity[0],
+              }}
+            >
+              {activity[1]}
+            </span>
+          </div>
         </div>
-      </div>
+      ) : null}
+
       <div className="flex justify-center items-center mb-[2rem]">
-        <Link href={`/post?activityId=${activityConfig?.[0]?.id || ""}`}>
+        {activityStatus === ACTIVITYSTATUS.ACTIVE ? (
+          <Link href={`/post?activityId=${activityConfig?.id || ""}`}>
+            <div
+              className="rounded-[24rem] w-[10.1875rem] text-center h-[3rem] leading-[3rem] mr-4 cursor-pointer"
+              style={{
+                background: "rgba(42, 201, 132, 1)",
+                color: "#fff",
+                fontWeight: "500",
+              }}
+            >
+              Attend
+            </div>
+          </Link>
+        ) : (
           <div
             className="rounded-[24rem] w-[10.1875rem] text-center h-[3rem] leading-[3rem] mr-4 cursor-pointer"
             style={{
@@ -159,15 +200,15 @@ export const CenterContent: React.FC<{
               fontWeight: "500",
             }}
             onClick={() => {
-              toast({
-                title: "Attendance success!",
-              });
-              AttendActividy({ path });
+              const view = document.getElementById("userList");
+              if (view) {
+                view.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
             }}
           >
-            Attend
+            View
           </div>
-        </Link>
+        )}
         <div
           style={{
             color: "rgba(42, 201, 132, 1)",
