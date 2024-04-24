@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Prisma } from "@prisma/client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -8,17 +14,7 @@ import Link from "next/link";
 import { Rules } from "../rules";
 import { useToast } from "../ui/use-toast";
 import { dateFormate } from "@/lib/utils";
-
-const ACTIVITYSTATUS = {
-  ACTIVE: "Active",
-  ENDED: "Ended",
-  NOSTART: "NOSTART",
-};
-
-const ACTIVITYSTATUS_COLOR = {
-  [ACTIVITYSTATUS.ACTIVE]: "rgba(42, 201, 132, 1)",
-  [ACTIVITYSTATUS.ENDED]: "rgba(151, 156, 158, 1)",
-};
+import { ACTIVITYSTATUS, ACTIVITYSTATUS_COLOR } from ".";
 
 const PKBACKGROUNDSTYLE = {
   width: "18.9375rem",
@@ -34,17 +30,13 @@ const shareData = {
 
 export const CenterContent: React.FC<{
   activityConfig?: Prisma.PopularGetPayload<{}>;
-}> = ({ activityConfig }) => {
-  const path = usePathname();
-  const [activityStatus, setActivityStatus] = useState<string>(
-    ACTIVITYSTATUS.NOSTART,
-  );
-
+  activityStatus: string;
+  setActivityStatus: Dispatch<SetStateAction<string>>;
+}> = ({ activityConfig, activityStatus, setActivityStatus }) => {
   const { toast } = useToast();
 
   useEffect(() => {
     const nowDate = new Date().getTime();
-
     if (activityConfig) {
       if (activityConfig.endTime.getTime() <= nowDate) {
         setActivityStatus(ACTIVITYSTATUS.ENDED);
@@ -57,7 +49,6 @@ export const CenterContent: React.FC<{
         setActivityStatus(ACTIVITYSTATUS.NOSTART);
       }
     }
-
     return;
   }, [activityConfig, activityConfig?.endTime, activityConfig?.startTime]);
 
@@ -70,7 +61,9 @@ export const CenterContent: React.FC<{
     const text =
       activityStatus === ACTIVITYSTATUS.ACTIVE
         ? ACTIVITYSTATUS.ACTIVE
-        : ACTIVITYSTATUS.ENDED;
+        : activityStatus === ACTIVITYSTATUS.ENDED
+        ? ACTIVITYSTATUS.ENDED
+        : ACTIVITYSTATUS.NOSTART;
     return [color, text];
   }, [activityStatus]);
 

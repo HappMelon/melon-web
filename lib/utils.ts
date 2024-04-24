@@ -95,7 +95,7 @@ export const dateFormate = (val: string | number | Date, type?: string) => {
   let time = new Date(val);
   let Y = time.getFullYear() + "";
   let M = time.getMonth() + 1 + "";
-  M = Number(M) < 10 ? "0" + M : M; // 不够两位补充0
+  M = Number(M) < 10 ? "0" + M : M;
   let D = time.getDate() + "";
   D = Number(D) < 10 ? "0" + D : D;
   let H = time.getHours() + "";

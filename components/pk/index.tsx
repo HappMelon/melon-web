@@ -8,6 +8,17 @@ import { UserList } from "./userList";
 import { CreateActivity, GetActivities } from "@/lib/actions/activityAction";
 import { usePathname } from "next/navigation";
 
+export const ACTIVITYSTATUS = {
+  ACTIVE: "Active",
+  ENDED: "Ended",
+  NOSTART: "NOSTART",
+};
+
+export const ACTIVITYSTATUS_COLOR = {
+  [ACTIVITYSTATUS.ACTIVE]: "rgba(42, 201, 132, 1)",
+  [ACTIVITYSTATUS.ENDED]: "rgba(151, 156, 158, 1)",
+};
+
 export const PkPage: React.FC<{
   user: any;
   posts: Prisma.PostGetPayload<{
@@ -25,6 +36,9 @@ export const PkPage: React.FC<{
 }> = ({ user, posts }) => {
   const path = usePathname();
 
+  const [activityStatus, setActivityStatus] = useState<string>(
+    ACTIVITYSTATUS.NOSTART,
+  );
   const [activityConfig, setActivityConfig] =
     useState<Prisma.PopularGetPayload<{}>>();
   const [activityList, setActivityList] = useState(posts);
@@ -62,8 +76,16 @@ export const PkPage: React.FC<{
           // height: '32%'
         }}
       />
-      <CenterContent activityConfig={activityConfig} />
-      <UserList user={user} activityList={activityList} />
+      <CenterContent
+        activityStatus={activityStatus}
+        setActivityStatus={setActivityStatus}
+        activityConfig={activityConfig}
+      />
+      <UserList
+        activityStatus={activityStatus}
+        user={user}
+        activityList={activityList}
+      />
     </div>
   );
 };

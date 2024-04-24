@@ -8,8 +8,13 @@ export async function CreateActivity(params: { path: string }) {
   const activity = prisma.popular.create({
     data: {
       name: "测试活动",
-      startTime: new Date("2024.2.30"),
-      endTime: new Date("2024.3.30"),
+
+      startTime: new Date("2024.4.10"),
+      endTime: new Date("2024.5.10"),
+
+      // startTime: new Date("2024.2.30"),
+      // endTime: new Date("2024.3.30"),
+
       // startTime: new Date("2024.11.20"),
       // endTime: new Date("2024.11.30"),
     },

@@ -7,6 +7,7 @@ import NameLink from "@/components/thread/nameLink";
 import { dateFormate } from "@/lib/utils";
 import { IconList } from "./iconLIst";
 import { useState } from "react";
+import { ACTIVITYSTATUS } from ".";
 
 export const UserList: React.FC<{
   user: any;
@@ -22,7 +23,8 @@ export const UserList: React.FC<{
       likes: true;
     };
   }>[];
-}> = ({ user, activityList }) => {
+  activityStatus: string;
+}> = ({ user, activityList, activityStatus }) => {
   console.log("activityList", activityList);
 
   const [more, setMore] = useState(false);
@@ -104,7 +106,7 @@ export const UserList: React.FC<{
                       </div>
                     </Link>
 
-                    {index <= 2 ? (
+                    {activityStatus === ACTIVITYSTATUS.ENDED && index <= 2 ? (
                       <div
                         style={{
                           borderRadius: "1rem 0 0 1rem",
