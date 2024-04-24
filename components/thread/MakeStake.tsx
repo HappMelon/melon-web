@@ -6,13 +6,10 @@ import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
-import { ethers } from "ethers";
 
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -22,20 +19,16 @@ import { usePathname } from "next/navigation";
 import { createProposal } from "@/lib/actions";
 
 import {
-  sleep,
   connectWallet,
-  handleSubmitProposalForReview,
   fetchContractBalance,
   fetchContractUsedVotingRights,
 } from "@/web3/action";
 
-import {
-  NEXT_PUBLIC_PROPOSAL_ID,
-  NEXT_PUBLIC_PROPOSAL_OPTION_ID,
-  NEXT_PUBLIC_SPENDERCONTRACT_ADDRESS,
-  spenderContractAbi,
-} from "@/web3/abi";
-
+type TimeChoose = {
+  day: number;
+  hour: number;
+  minute: number;
+};
 export default function MakeStake({
   isWeb3User,
   postId,
@@ -62,6 +55,11 @@ export default function MakeStake({
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [showStakeDialog, setShowStakeDialog] = useState(false);
   const [transactionPending, setTransactionPending] = useState(false); // 链上交易进行中
+  const [timeChoose, setTimeChoose] = useState<TimeChoose>({
+    day: 0,
+    hour: 0,
+    minute: 0,
+  }); // 设置质押的解锁时间
 
   const { toast } = useToast();
   const pathname = usePathname();
@@ -127,27 +125,16 @@ export default function MakeStake({
   const onMakeStakeConfirm = async () => {
     console.log("======onMakeStakeConfirm======");
     setTransactionPending(true);
-
-    await handleSubmitProposalForReview(
-      signer,
+    await createProposalToDB(
       account,
-      userStakeAmount.toString(),
+      "",
+      0,
+      "",
+      timeChoose.day * 24 * 60 + timeChoose.hour * 60 + timeChoose.minute,
     )
-      .then(async (res) => {
-        console.log("======make stake res", res);
-        await createProposalToDB(
-          res?.staker,
-          res?.stakeIndex,
-          res?.stakeAmount,
-          new Date(res?.unlockTime * 1000).toLocaleString(),
-        );
+      .then(() => {
         toast({
           title: "Success to submit proposal!",
-        });
-      })
-      .catch((err) => {
-        toast({
-          title: `${err}`,
         });
       })
       .finally(() => {
@@ -166,6 +153,8 @@ export default function MakeStake({
     stakeAmount,
     // @ts-ignore
     unLockTime,
+    // @ts-ignore
+    duration,
   ) => {
     createProposal(
       postId,
@@ -179,6 +168,7 @@ export default function MakeStake({
       parseFloat(stakeAmount),
       unLockTime.toString(),
       pathname,
+      duration,
     );
   };
 
@@ -290,36 +280,56 @@ export default function MakeStake({
           </DialogHeader>
 
           <div className="px-[1.625rem] font-semibold text-xl leading-normal space-y-8">
-            <div className="flex">
+            <div className="flex flex-col gap-1">
               <span className="text-lg font-bold mr-[1rem]">Time</span>
-              <span className="text-[#bcbcbc] text-lg font-medium">
-                7 days from the date of publication
-              </span>
-            </div>
-            {/* <div className="text-lg leading-6 font-bold mb-[.25rem] mt-[.875rem]">
-              *Stake Amount
-            </div>
-            <div className="flex items-center px-[1.5rem] rounded-[50px] bg-[#f8f8f8]">
-              <Input
-                placeholder="Stake Amount"
-                value={userStakeAmount}
-                type="number"
-                onChange={(e) => {
-                  const value = Number(e.target.value);
-                  setUserStakeAmount(value);
-                }}
-                className="flex-1 text-lg  shadow-none border-0 outline-none border-none bg-transparent focus-visible:ring-0"
-              />
-              <div
-                className="shrink-0 pl-[1.25rem] border-l border-[#e6e6e6] bg-clip-text text-transparent"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(100deg, #F9D423 -12.68%, #F83600 147.82%)",
-                }}
-              >
-                FLR
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex flex-row  items-center justify-start gap-2">
+                  <span className="col-span-1 text-sm leading-6 font-normal">
+                    Day
+                  </span>
+                  <Input
+                    type="number"
+                    max={7}
+                    min={0}
+                    value={timeChoose.day}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setTimeChoose({ ...timeChoose, day: Number(value) });
+                    }}
+                  />
+                </div>
+                <div className="flex flex-row  items-center justify-start gap-2">
+                  <span className="col-span-1 text-sm leading-6 font-normal">
+                    Hour
+                  </span>
+                  <Input
+                    type="number"
+                    max={23}
+                    min={0}
+                    value={timeChoose.hour}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setTimeChoose({ ...timeChoose, hour: Number(value) });
+                    }}
+                  />
+                </div>
+                <div className="flex flex-row  items-center justify-start gap-2">
+                  <span className="col-span-1 text-sm leading-6 font-normal">
+                    Minute
+                  </span>
+                  <Input
+                    type="number"
+                    max={59}
+                    min={0}
+                    value={timeChoose.minute}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setTimeChoose({ ...timeChoose, minute: Number(value) });
+                    }}
+                  />
+                </div>
               </div>
-            </div> */}
+            </div>
 
             <div className="mt-[.875rem]">
               <div className="text-lg leading-6 font-bold mb-[.5rem]">

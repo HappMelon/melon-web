@@ -39,3 +39,12 @@ export async function getVoteRecords(web3ProposalId: string, account: string) {
 
   return voteRecords;
 }
+
+export async function getUserVotingHistory(account: string) {
+  const voteRecords = await prisma.voteRecord.findMany({
+    where: {
+      userAddress: account,
+    },
+  });
+  return voteRecords;
+}

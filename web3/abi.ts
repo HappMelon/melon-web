@@ -20,6 +20,8 @@ export const permitTokenContractAbi = [
 ];
 
 export const spenderContractAbi = [
+  "function createProposal(address user,string memory description,uint256 amount,string[] memory options,uint256 endtime) external",
+  "event CreateProposal(address indexed user,uint256 indexed id,string description,uint256 amount,string[] options,uint256 endtime)",
   "function balances(address) view returns (uint256)",
   "function exchangePoints(uint256 amount) external",
   "function getUserBalance(address) external view returns (uint256)",
@@ -29,7 +31,7 @@ export const spenderContractAbi = [
   "function deposit(uint256 amount)",
   "function submitProposalForReview(uint256 amount)", // 用户提交提案审查请求，质押一定数量的代币
   "function createProposalWithOptions(string memory proposalDescription, string[] memory optionDescriptions, uint amount, uint256 endtime) returns (uint256)", // 创建提案及其选项，返回新创建的提案ID。
-  "function processUserStakedProposal(address userAddress, string memory proposalDescription, uint256 stakeAmount, string[] memory optionDescriptions, uint256 stakeIndex, uint256 endtime) returns (uint256)", // 处理用户质押的提案，返回新创建的提案ID。
+  "function processUserStakedProposal(address userAddress, string memory proposalDescription, string[] memory optionDescriptions, uint256 endtime)", // 处理用户质押的提案，返回新创建的提案ID。
   "function withdraw(uint256 amount)", // 提款函数，用户可以调用此函数从合约中提取代币
   "function getAvailableWithdrawBalance(address user) view returns (uint256)", // 获取可提取余额，返回指定地址可以提取的余额数量
   "function setProposalEndTime(uint256 _proposalId, uint256 _newEndTime)", // 设置提案的结束时间

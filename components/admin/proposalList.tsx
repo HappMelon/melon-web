@@ -2,9 +2,7 @@
 
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -14,7 +12,6 @@ import {
   sleep,
   connectWallet,
   processStakedProposal,
-  listentingProposalForUserAdded,
   fetchProposalOptions,
   settleRewards,
   getProposalsDetail,
@@ -27,10 +24,6 @@ import { useEffect, useState } from "react";
 import { upProposal, updateProposal } from "@/lib/actions";
 import { useToast } from "@/components/ui/use-toast";
 
-import {
-  NEXT_PUBLIC_PROPOSAL_ID,
-  NEXT_PUBLIC_PROPOSAL_OPTION_ID,
-} from "@/web3/abi";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function ProposalList({
@@ -99,7 +92,10 @@ export default function ProposalList({
   const approveAndSubmitProposal = async () => {
     if (selectedProposal === null) return;
     setActionPending(true);
-
+    let date = new Date();
+    // @ts-ignore
+    date.setTime(date.getTime() + selectedProposal.duration * 60 * 1000);
+    const readUnLockTime = date.toString();
     // @ts-ignore
     await processStakedProposal(
       signer,
@@ -114,7 +110,7 @@ export default function ProposalList({
       // @ts-ignore
       selectedProposal.userStakeId,
       // @ts-ignore
-      selectedProposal.unLockTime,
+      readUnLockTime,
     )
       .then(async (res) => {
         console.log("=======res=======", res);
@@ -125,7 +121,7 @@ export default function ProposalList({
 
         await sleep(10000);
 
-        await onProposalAdded(res.toString());
+        await onProposalAdded(res.toString(), readUnLockTime);
       })
       .catch((err) => {
         console.log("=====approveAndSubmitProposal err", err);
@@ -137,12 +133,16 @@ export default function ProposalList({
     setActionPending(false);
   };
 
-  const onProposalAdded = async (proposalId: string) => {
+  const onProposalAdded = async (
+    proposalId: string,
+    readUnLockTime: string,
+  ) => {
     console.log("=====onProposalAdded=====", proposalId);
     console.log("=====selectedProposal=====", selectedProposal);
+    console.log("=====readUnLockTime=====", readUnLockTime);
 
     // @ts-ignore
-    await updateProposal(selectedProposal.id, 1, 1, proposalId)
+    await updateProposal(selectedProposal.id, 1, 1, proposalId, readUnLockTime)
       .then(() => {
         toast({
           title: "Proposal approved",

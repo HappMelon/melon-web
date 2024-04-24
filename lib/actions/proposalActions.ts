@@ -14,6 +14,7 @@ export async function createProposal(
   userStakeAmount: number,
   unLockTime: string,
   path: string,
+  duration: number, // minute
 ) {
   await prisma.proposal.create({
     data: {
@@ -31,7 +32,7 @@ export async function createProposal(
       unLockTime: unLockTime,
 
       // default values
-      duration: 604800, // 7 days
+      duration: duration, // 7 days
       web3ProposalId: "",
       status: 0,
       result: 0,
@@ -46,6 +47,7 @@ export async function updateProposal(
   status: number,
   result: number,
   web3ProposalId: string,
+  unLockTime: string,
 ) {
   const proposal = await prisma.proposal.update({
     where: { id },
@@ -53,6 +55,7 @@ export async function updateProposal(
       status: status,
       result: result,
       web3ProposalId: web3ProposalId,
+      unLockTime: unLockTime,
     },
   });
 

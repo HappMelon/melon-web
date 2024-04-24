@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { connectWallet, getAccountVotingHistory } from "@/web3/action";
 
 import { useToast } from "@/components/ui/use-toast";
+import { getUserVotingHistory } from "@/lib/actions";
 
 export default function TransactionList() {
   const [provider, setProvider] = useState();
@@ -34,11 +35,10 @@ export default function TransactionList() {
   // get transaction history
   // @ts-ignore
   const getTransactionHistory = (signer, account) => {
-    getAccountVotingHistory(signer, account).then((transactionHistory) => {
-      console.log("======transactionList======", transactionHistory);
-
+    getUserVotingHistory(account).then((res) => {
+      console.log("======transactionList======", res);
       // @ts-ignore
-      setTransactionHistory(transactionHistory);
+      setTransactionHistory(res);
     });
   };
 
@@ -99,7 +99,7 @@ export default function TransactionList() {
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         {/* @ts-ignore */}
-                        {transaction.amount}
+                        {transaction.voteAmount}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                         --

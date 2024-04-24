@@ -763,12 +763,11 @@ export const processStakedProposal = async (
     signer,
   );
 
-  const tx = await votingContract.processUserStakedProposal(
+  const tx = await votingContract.createProposal(
     userAddress.toString(),
     proposalDescription.toString(),
-    ethers.utils.parseEther(stakeAmount.toString()),
+    stakeAmount,
     optionTexts.toString().split(","),
-    stakeIndex.toString(),
     endTime.toString(),
   );
 
@@ -776,28 +775,22 @@ export const processStakedProposal = async (
   const receipt = await tx.wait();
   // 从事件中提取提案ID
   const proposalForUserEvent = receipt.events?.find(
-    (event) => event.event === "ProposalForUser",
+    (event) => event.event === "CreateProposal",
   );
   if (proposalForUserEvent && proposalForUserEvent.args) {
-    const {
-      userAddress,
-      proposalId,
-      proposalDescription,
-      stakeAmount,
-      optionDescriptions,
-      endtime,
-    } = proposalForUserEvent.args;
+    const { user, id, description, amount, options, endtime } =
+      proposalForUserEvent.args;
     console.log("用户质押的提案已处理：");
-    console.log("用户地址:", userAddress);
-    console.log("提案ID:", proposalId.toString());
-    console.log("提案描述:", proposalDescription);
-    console.log("质押金额:", ethers.utils.formatEther(stakeAmount));
-    console.log("选项描述:", optionDescriptions.join(", "));
+    console.log("用户地址:", user);
+    console.log("提案ID:", id.toString());
+    console.log("提案描述:", description);
+    console.log("质押金额:", ethers.utils.formatEther(amount));
+    console.log("选项描述:", options.join(", "));
     console.log("endtime: " + endtime);
     console.log("endtime string: " + new Date(endtime).toLocaleString());
-    console.log(`提案及选项已成功处理.提案ID: ${proposalId}`);
+    console.log(`提案及选项已成功处理.提案ID: ${id}`);
 
-    return proposalId;
+    return id;
   } else {
     console.log("没有找到ProposalForUser事件，或者事件没有参数。");
     return null;
