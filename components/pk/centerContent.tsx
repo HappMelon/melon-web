@@ -213,7 +213,7 @@ export const CenterContent: React.FC<{
             e.stopPropagation();
             navigator.clipboard.writeText(shareData.url);
             toast({
-              title: "Copy success!",
+              title: "Copy Success!",
             });
           }}
         >

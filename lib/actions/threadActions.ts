@@ -5,15 +5,25 @@ import { cleanup } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
 
-export async function createNotes(
-  title: string,
-  text: string,
-  tags: string[],
-  images: string[],
-  authorId: string,
-  path: string,
-  millId?: string,
-) {
+export async function createNotes({
+  title,
+  text,
+  tags,
+  images,
+  authorId,
+  path,
+  millId,
+  popularId,
+}: {
+  title: string;
+  text: string;
+  tags: string[];
+  images: string[];
+  authorId: string;
+  path: string;
+  millId?: string;
+  popularId?: string;
+}) {
   const data: { data: Prisma.PostCreateInput } = {
     data: {
       title: title,
@@ -34,6 +44,14 @@ export async function createNotes(
       },
     };
   }
+  if (popularId) {
+    data.data.popular = {
+      connect: {
+        id: popularId,
+      },
+    };
+  }
+
   await prisma.post.create(data);
 
   revalidatePath(path);

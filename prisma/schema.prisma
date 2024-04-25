@@ -30,6 +30,8 @@ model Post {
   parent    Post?      @relation("ParentChildren", fields: [parentId], references: [id])
   children  Post[]     @relation("ParentChildren")
   proposals Proposal[]
+  popular   Popular?   @relation(fields: [popularId], references: [id])
+  popularId String?
 }
 
 model TagsFrequencies {
@@ -129,30 +131,10 @@ model Mill {
   subscribers MillSubscriptions[]
 }
 
-model Tag {
-  text          String
-  id            String       @id @default(cuid())
-  PopularList   PopularList? @relation(fields: [popularListId], references: [id])
-  popularListId Int?
-}
-
-model PopularList {
-  id          Int      @id @default(autoincrement())
-  name        String
-  createdAt   DateTime
-  message     String
-  views       Int
-  comments    Int
-  collections Int
-  shares      Int
-  // Popular     Popular? @relation(fields: [popularId], references: [id])
-  popularId   String?
-  tagList     Tag[]
-}
-
 model Popular {
   id        String   @id @default(cuid())
   startTime DateTime @default(now())
   endTime   DateTime @default(now())
   name      String
+  post      Post[]
 }

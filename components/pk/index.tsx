@@ -21,19 +21,23 @@ export const ACTIVITYSTATUS_COLOR = {
 
 export const PkPage: React.FC<{
   user: any;
-  posts: Prisma.PostGetPayload<{
+  popular: Prisma.PopularGetPayload<{
     include: {
-      author: true;
-      children: {
+      post: {
         include: {
           author: true;
+          parent: true;
+          likes: true;
+          children: {
+            include: {
+              author: true;
+            };
+          };
         };
       };
-      parent: true;
-      likes: true;
     };
   }>[];
-}> = ({ user, posts }) => {
+}> = ({ user, popular }) => {
   const path = usePathname();
 
   const [activityStatus, setActivityStatus] = useState<string>(
@@ -41,7 +45,6 @@ export const PkPage: React.FC<{
   );
   const [activityConfig, setActivityConfig] =
     useState<Prisma.PopularGetPayload<{}>>();
-  const [activityList, setActivityList] = useState(posts);
 
   const getActivity = async () => {
     const res = await GetActivities();
@@ -81,11 +84,7 @@ export const PkPage: React.FC<{
         setActivityStatus={setActivityStatus}
         activityConfig={activityConfig}
       />
-      <UserList
-        activityStatus={activityStatus}
-        user={user}
-        activityList={activityList}
-      />
+      <UserList activityStatus={activityStatus} user={user} popular={popular} />
     </div>
   );
 };

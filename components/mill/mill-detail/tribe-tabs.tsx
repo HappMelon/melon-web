@@ -30,6 +30,8 @@ export function TribeTabs({
     };
   }>;
 }) {
+  console.log("mill", mill);
+
   return (
     <div className="flex-1 overflow-y-scroll pr-2">
       <Tabs defaultValue="most">

@@ -27,8 +27,10 @@ const MarkdownEditor = dynamic(
 export default function Q({
   create,
   mill,
+  activity,
 }: {
-  mill: Prisma.MillGetPayload<{}> | Prisma.PopularGetPayload<{}> | null;
+  mill: Prisma.MillGetPayload<{}> | null;
+  activity: Prisma.PopularGetPayload<{}> | null;
   create: { id: string; name: string; image: string };
 }) {
   const [title, setTitle] = useState("");
@@ -53,6 +55,11 @@ export default function Q({
         {mill && (
           <span className="text-xs bg-orange-300 text-white font-semibold px-2 py-1 rounded">
             {mill.name}
+          </span>
+        )}
+        {activity && (
+          <span className="text-xs bg-orange-300 text-white font-semibold px-2 py-1 rounded">
+            {activity.name}
           </span>
         )}
       </div>
@@ -136,15 +143,16 @@ export default function Q({
           }}
           onClick={() => {
             startTransition(async () => {
-              await createNotes(
+              await createNotes({
                 title,
-                value,
-                tags?.map((i) => i.name) ?? [],
-                uploadImg,
-                create.id,
-                pathname,
-                mill?.id,
-              ).catch(() => {
+                text: value,
+                tags: tags?.map((i) => i.name) ?? [],
+                images: uploadImg,
+                authorId: create.id,
+                path: pathname,
+                millId: mill?.id,
+                popularId: activity?.id,
+              }).catch(() => {
                 toast({
                   title: "Failed publish Post.",
                 });

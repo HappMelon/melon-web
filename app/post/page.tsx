@@ -39,7 +39,8 @@ export default async function Page({
 
   return (
     <Q
-      mill={mill || activity}
+      mill={mill}
+      activity={activity}
       create={{
         id: getUser!.id,
         name: getUser!.name,
