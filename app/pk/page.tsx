@@ -18,28 +18,11 @@ export default async function Page() {
     redirect("/onboarding");
   }
 
-  const defaultPosts = await prisma.popular.findMany({
-    include: {
-      post: {
-        include: {
-          author: true,
-          parent: true,
-          likes: true,
-          children: {
-            include: {
-              author: true,
-            },
-          },
-        },
-      },
-    },
-  });
-
   return (
     <div className="w-full box-border pl-[1.875rem] h-full">
       <div className="bg-white rounded-[.9375rem] p-[1.875rem]">
         <BackIcon title="Trending" />
-        <PkPage user={user} popular={defaultPosts} />
+        <PkPage user={user} />
       </div>
     </div>
   );

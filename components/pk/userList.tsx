@@ -11,7 +11,7 @@ import { ACTIVITYSTATUS } from ".";
 
 export const UserList: React.FC<{
   user: any;
-  popular: Prisma.PopularGetPayload<{
+  popular?: Prisma.PopularGetPayload<{
     include: {
       post: {
         include: {
@@ -26,10 +26,11 @@ export const UserList: React.FC<{
         };
       };
     };
-  }>[];
+  }>;
   activityStatus: string;
-}> = ({ user, activityStatus, popular }) => {
-  const [more, setMore] = useState(false);
+  getMore: () => void;
+  isMore: boolean;
+}> = ({ user, activityStatus, popular, getMore, isMore }) => {
   return (
     <div className="ml-[1.5rem] mr-[1.5rem] mt-[2rem] h-auto">
       <div id="userList" className="font-bold text-38 mb-[0.9375rem]">
@@ -37,105 +38,104 @@ export const UserList: React.FC<{
       </div>
       <div className="flex flex-wrap">
         {(() => {
-          if (popular?.[0]?.post?.length > 0) {
-            return popular[0].post
-              .slice(0, more ? popular[0].post.length : 6)
-              .map((data, index) => {
-                return (
-                  <div
-                    key={index}
-                    style={{
-                      marginLeft: index % 2 === 0 ? "0" : "20px",
-                      // marginRight: "1.25rem",
-                    }}
-                    // [calc(50%-10px)] 28rem
-                    className="w-[calc(50%-10px)] bg-white h-[11.25rem] rounded-[1rem] pl-[1.25rem] pr-[1.25rem] p-[1rem] mb-[0.9375rem] border border-green-500 relative"
-                  >
-                    <Link key={index} href={`/t/${data.id}`}>
-                      <div className="flex">
-                        <Avatar
-                          className="rounded-full w-[1.5rem] h-[1.5rem]"
-                          src={data.author.image}
-                          alt={data.author.name + "'s profile image"}
-                        ></Avatar>
-                        <div className="ml-[0.625rem]">
-                          <NameLink
-                            id={data.author.id}
-                            username={data.author.name}
-                          />
-                        </div>
+          if (popular && popular?.post?.length > 0) {
+            return popular.post.map((data, index) => {
+              return (
+                <div
+                  key={index}
+                  style={{
+                    marginLeft: index % 2 === 0 ? "0" : "20px",
+                    // marginRight: "1.25rem",
+                  }}
+                  // [calc(50%-10px)] 28rem
+                  className="w-[calc(50%-10px)] bg-white h-[11.25rem] rounded-[1rem] pl-[1.25rem] pr-[1.25rem] p-[1rem] mb-[0.9375rem] border border-green-500 relative"
+                >
+                  <Link key={index} href={`/t/${data.id}`}>
+                    <div className="flex">
+                      <Avatar
+                        className="rounded-full w-[1.5rem] h-[1.5rem]"
+                        src={data.author.image}
+                        alt={data.author.name + "'s profile image"}
+                      ></Avatar>
+                      <div className="ml-[0.625rem]">
+                        <NameLink
+                          id={data.author.id}
+                          username={data.author.name}
+                        />
                       </div>
+                    </div>
 
-                      <div className="flex mt-[0.625rem]">
-                        <div className="w-[5.25rem] h-[5.25rem] rounded-[1rem] mr-[0.625rem]">
-                          {data.images.length > 0 ? (
-                            <img
-                              src={data.images[0]}
-                              className="w-full h-full"
-                            ></img>
-                          ) : (
-                            <img
-                              src="/item-bg.png"
-                              className="w-full h-full"
-                            ></img>
-                          )}
+                    <div className="flex mt-[0.625rem]">
+                      <div className="w-[5.25rem] h-[5.25rem] rounded-[1rem] mr-[0.625rem]">
+                        {data.images.length > 0 ? (
+                          <img
+                            src={data.images[0]}
+                            className="w-full h-full"
+                          ></img>
+                        ) : (
+                          <img
+                            src="/item-bg.png"
+                            className="w-full h-full"
+                          ></img>
+                        )}
+                      </div>
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div
+                          title={data.title}
+                          className="flex-1 overflow-hidden overflow-ellipsis w-full mb-2"
+                        >
+                          {data.title}
                         </div>
-                        <div className="flex-1 flex flex-col justify-between">
-                          <div
-                            title={data.title}
-                            className="flex-1 overflow-hidden overflow-ellipsis w-full mb-2"
-                          >
-                            {data.title}
-                          </div>
-                          <div className="text-emerald-400 cursor-pointer">
-                            {data.tags.map((tag: any) => {
-                              return (
-                                <span
-                                  key={tag}
-                                  className="mr-[0.3125rem] text-[0.75rem]"
-                                >{`#${tag}`}</span>
-                              );
-                            })}
-                          </div>
+                        <div className="text-emerald-400 cursor-pointer">
+                          {data.tags.map((tag: any) => {
+                            return (
+                              <span
+                                key={tag}
+                                className="mr-[0.3125rem] text-[0.75rem]"
+                              >{`#${tag}`}</span>
+                            );
+                          })}
                         </div>
                       </div>
+                    </div>
 
-                      <div className="flex justify-between mt-[0.625rem] text-gray-300 text-[0.875rem]">
-                        <div className="text-[0.75rem]">
-                          {dateFormate(data.createdAt)}
-                        </div>
-                        <IconList data={data}></IconList>
+                    <div className="flex justify-between mt-[0.625rem] text-gray-300 text-[0.875rem]">
+                      <div className="text-[0.75rem]">
+                        {dateFormate(data.createdAt)}
                       </div>
-                    </Link>
+                      <IconList data={data}></IconList>
+                    </div>
+                  </Link>
 
-                    {activityStatus === ACTIVITYSTATUS.ENDED && index <= 2 ? (
-                      <div
-                        style={{
-                          borderRadius: "1rem 0 0 1rem",
-                        }}
-                        className="h-[1.875rem] w-[3.75rem] absolute right-0 top-[1rem] bg-[#62c68a] flex justify-center items-center"
-                      >
-                        {icons(index)}
-                      </div>
-                    ) : null}
-                  </div>
-                );
-              });
+                  {activityStatus === ACTIVITYSTATUS.ENDED && index <= 2 ? (
+                    <div
+                      style={{
+                        borderRadius: "1rem 0 0 1rem",
+                      }}
+                      className="h-[1.875rem] w-[3.75rem] absolute right-0 top-[1rem] bg-[#62c68a] flex justify-center items-center"
+                    >
+                      {icons(index)}
+                    </div>
+                  ) : null}
+                </div>
+              );
+            });
           }
           return "Looks like there isn't any posts from your following users~";
         })()}
       </div>
 
-      {popular?.[0]?.post?.length > 6 ? (
+      {
         <div
           className="text-center cursor-pointer"
           onClick={() => {
-            setMore(!more);
+            // setMore(!more);
+            isMore ? getMore() : null;
           }}
         >
-          {more ? "pack up" : "read more"}
+          {isMore ? "read more" : "no any more"}
         </div>
-      ) : null}
+      }
     </div>
   );
 };
